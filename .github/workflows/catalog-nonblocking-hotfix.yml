@@ -14,67 +14,76 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Make local catalog render before remote sync
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
 
-          path=Path('app.js')
-          text=path.read_text(encoding='utf-8')
-          text=text.replace("const APP_VERSION='0.5.1';","const APP_VERSION='0.5.2';")
+          path = Path('app.js')
+          text = path.read_text(encoding='utf-8')
+          text = text.replace("const APP_VERSION='0.5.1';", "const APP_VERSION='0.5.2';")
 
-          old="""async function loadCatalog({preferCurrent=true}={}){
-  const current=session?.id;
-  const fallback=await loadFallback();
-  let remote=null;try{remote=await loadRemote()}catch(error){console.warn(error)}
-  catalog=remote?.sessions?.length?remote:fallback;
-  const selected=preferCurrent&&current?catalog.sessions.find(s=>s.id===current):null;
-  session=selected||chooseSession();
-  state=getState(session.id);
-  $('contentSummary').textContent=`${catalog.contentVersion} · ${catalog.sessions.length} sessões · PWA ${APP_VERSION}`;
-}"""
+          catalog_pattern = re.compile(
+              r"async function loadCatalog\(\{preferCurrent=true\}=\{\}\)\{.*?\n\}(?=\n\nfunction updateClock)",
+              re.S,
+          )
+          catalog_replacement = """function applyCatalog(nextCatalog,{preferCurrent=true}={}){
+            const current=session?.id;
+            catalog=nextCatalog;
+            const selected=preferCurrent&&current?catalog.sessions.find(s=>s.id===current):null;
+            session=selected||chooseSession();
+            if(!session)throw new Error('Nenhuma sessão disponível no catálogo.');
+            state=getState(session.id);
+            $('contentSummary').textContent=`${catalog.contentVersion} · ${catalog.sessions.length} sessões · PWA ${APP_VERSION}`;
+          }
+          async function loadCatalog({preferCurrent=true,includeRemote=true}={}){
+            const fallback=await loadFallback();
+            applyCatalog(fallback,{preferCurrent});
+            if(!includeRemote)return;
+            let remote=null;
+            try{remote=await loadRemote()}catch(error){console.warn('Consulta remota não bloqueante:',error)}
+            if(remote?.sessions?.length)applyCatalog(remote,{preferCurrent:true});
+          }"""
+          text, catalog_count = catalog_pattern.subn(catalog_replacement, text, count=1)
+          if catalog_count != 1:
+              raise SystemExit('Bloco loadCatalog esperado não encontrado; nenhuma alteração aplicada.')
 
-          new="""function applyCatalog(nextCatalog,{preferCurrent=true}={}){
-  const current=session?.id;
-  catalog=nextCatalog;
-  const selected=preferCurrent&&current?catalog.sessions.find(s=>s.id===current):null;
-  session=selected||chooseSession();
-  if(!session)throw new Error('Nenhuma sessão disponível no catálogo.');
-  state=getState(session.id);
-  $('contentSummary').textContent=`${catalog.contentVersion} · ${catalog.sessions.length} sessões · PWA ${APP_VERSION}`;
-}
-async function loadCatalog({preferCurrent=true,includeRemote=true}={}){
-  const fallback=await loadFallback();
-  applyCatalog(fallback,{preferCurrent});
-  if(!includeRemote)return;
-  let remote=null;try{remote=await loadRemote()}catch(error){console.warn('Consulta remota não bloqueante:',error)}
-  if(remote?.sessions?.length)applyCatalog(remote,{preferCurrent:true});
-}"""
+          bootstrap_pattern = re.compile(
+              r"async function bootstrap\(\)\{.*?\n\}(?=\nbootstrap\(\);)",
+              re.S,
+          )
+          bootstrap_replacement = """async function bootstrap(){
+            migrateLegacy();
+            const cfg=readConfig();
+            $('endpointInput').value=cfg.endpoint;
+            $('tokenInput').value=cfg.token;
+            $('deviceInput').value=cfg.deviceId;
+            try{
+              await loadCatalog({preferCurrent:false,includeRemote:false});
+              render();
+              tick=setInterval(()=>{if(state){updateClock();renderStats()}},1000);
+              if('serviceWorker'in navigator)navigator.serviceWorker.register('./service-worker.js').catch(console.warn);
+              void loadCatalog({preferCurrent:true,includeRemote:true})
+                .then(()=>render())
+                .catch(error=>console.warn('Atualização remota em segundo plano:',error));
+            }catch(error){
+              $('catalogCard').innerHTML=`<div class=\"feedback bad\"><b>Falha ao carregar.</b><br>${esc(error.message)}</div>`;
+            }
+          }"""
+          text, bootstrap_count = bootstrap_pattern.subn(bootstrap_replacement, text, count=1)
+          if bootstrap_count != 1:
+              raise SystemExit('Bloco bootstrap esperado não encontrado; nenhuma alteração aplicada.')
 
-          if old not in text:
-            raise SystemExit('Bloco loadCatalog esperado não encontrado; nenhuma alteração aplicada.')
-          text=text.replace(old,new)
+          path.write_text(text, encoding='utf-8')
 
-          old_boot="""  try{await loadCatalog({preferCurrent:false});render();tick=setInterval(()=>{if(state){updateClock();renderStats()}},1000);if('serviceWorker'in navigator)navigator.serviceWorker.register('./service-worker.js').catch(console.warn)}catch(error){$('catalogCard').innerHTML=`<div class=\"feedback bad\"><b>Falha ao carregar.</b><br>${esc(error.message)}</div>`}
-}"""
-          new_boot="""  try{
-    await loadCatalog({preferCurrent:false,includeRemote:false});
-    render();
-    tick=setInterval(()=>{if(state){updateClock();renderStats()}},1000);
-    if('serviceWorker'in navigator)navigator.serviceWorker.register('./service-worker.js').catch(console.warn);
-    void loadCatalog({preferCurrent:true,includeRemote:true}).then(()=>render()).catch(error=>console.warn('Atualização remota em segundo plano:',error));
-  }catch(error){$('catalogCard').innerHTML=`<div class=\"feedback bad\"><b>Falha ao carregar.</b><br>${esc(error.message)}</div>`}
-}"""
-          if old_boot not in text:
-            raise SystemExit('Bloco bootstrap esperado não encontrado; nenhuma alteração aplicada.')
-          text=text.replace(old_boot,new_boot)
-          path.write_text(text,encoding='utf-8')
-
-          sw=Path('service-worker.js')
-          sw_text=sw.read_text(encoding='utf-8')
-          sw_text=sw_text.replace("dataprev-sessoes-standalone-v2","dataprev-sessoes-standalone-v3")
-          sw.write_text(sw_text,encoding='utf-8')
+          sw = Path('service-worker.js')
+          sw_text = sw.read_text(encoding='utf-8')
+          sw_text = sw_text.replace('dataprev-sessoes-standalone-v2', 'dataprev-sessoes-standalone-v3')
+          sw.write_text(sw_text, encoding='utf-8')
           PY
+
       - name: Commit hotfix
         run: |
           git config user.name "github-actions[bot]"
@@ -83,6 +92,6 @@ async function loadCatalog({preferCurrent=true,includeRemote=true}={}){
           if git diff --cached --quiet; then
             echo "No changes"
           else
-            git commit -m "Render local Sessions catalog before remote sync [skip ci]"
+            git commit -m "Render local Sessions catalog before remote sync"
             git push
           fi
