@@ -1,5 +1,5 @@
 'use strict';
-const APP_VERSION='0.5.1';
+const APP_VERSION='0.5.2';
 const CONTENT_VERSION='2026.08.06-sessoes-02';
 const STATE_MAP_KEY='dataprev_sessoes_states_v2';
 const LEGACY_STATE_KEY='dataprev_sessoes_state_v1';
@@ -88,15 +88,22 @@ function chooseSession(){
   if(inProgress.length)return inProgress[0];
   return catalog.sessions.find(s=>status(s.id)!=='Concluída')||catalog.sessions[0];
 }
-async function loadCatalog({preferCurrent=true}={}){
+function applyCatalog(nextCatalog,{preferCurrent=true}={}){
   const current=session?.id;
-  const fallback=await loadFallback();
-  let remote=null;try{remote=await loadRemote()}catch(error){console.warn(error)}
-  catalog=remote?.sessions?.length?remote:fallback;
+  catalog=nextCatalog;
   const selected=preferCurrent&&current?catalog.sessions.find(s=>s.id===current):null;
   session=selected||chooseSession();
+  if(!session)throw new Error('Nenhuma sessão disponível no catálogo.');
   state=getState(session.id);
   $('contentSummary').textContent=`${catalog.contentVersion} · ${catalog.sessions.length} sessões · PWA ${APP_VERSION}`;
+}
+async function loadCatalog({preferCurrent=true,includeRemote=true}={}){
+  const fallback=await loadFallback();
+  applyCatalog(fallback,{preferCurrent});
+  if(!includeRemote)return;
+  let remote=null;
+  try{remote=await loadRemote()}catch(error){console.warn('Consulta remota não bloqueante:',error)}
+  if(remote?.sessions?.length)applyCatalog(remote,{preferCurrent:true});
 }
 
 function updateClock(){
@@ -235,7 +242,21 @@ $('importBtn').onclick=async()=>{try{const parsed=JSON.parse(await navigator.cli
 document.addEventListener('visibilitychange',()=>document.visibilityState==='hidden'?updateClock():(state&&(state.lastTick=Date.now())));window.addEventListener('beforeunload',updateClock);
 
 async function bootstrap(){
-  migrateLegacy();const cfg=readConfig();$('endpointInput').value=cfg.endpoint;$('tokenInput').value=cfg.token;$('deviceInput').value=cfg.deviceId;
-  try{await loadCatalog({preferCurrent:false});render();tick=setInterval(()=>{if(state){updateClock();renderStats()}},1000);if('serviceWorker'in navigator)navigator.serviceWorker.register('./service-worker.js').catch(console.warn)}catch(error){$('catalogCard').innerHTML=`<div class="feedback bad"><b>Falha ao carregar.</b><br>${esc(error.message)}</div>`}
+  migrateLegacy();
+  const cfg=readConfig();
+  $('endpointInput').value=cfg.endpoint;
+  $('tokenInput').value=cfg.token;
+  $('deviceInput').value=cfg.deviceId;
+  try{
+    await loadCatalog({preferCurrent:false,includeRemote:false});
+    render();
+    tick=setInterval(()=>{if(state){updateClock();renderStats()}},1000);
+    if('serviceWorker'in navigator)navigator.serviceWorker.register('./service-worker.js').catch(console.warn);
+    void loadCatalog({preferCurrent:true,includeRemote:true})
+      .then(()=>render())
+      .catch(error=>console.warn('Atualização remota em segundo plano:',error));
+  }catch(error){
+    $('catalogCard').innerHTML=`<div class="feedback bad"><b>Falha ao carregar.</b><br>${esc(error.message)}</div>`;
+  }
 }
 bootstrap();
