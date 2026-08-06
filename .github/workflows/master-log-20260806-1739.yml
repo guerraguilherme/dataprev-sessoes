@@ -1,0 +1,40 @@
+name: Sync master log 2026-08-06 17h39
+
+on:
+  push:
+    paths:
+      - '.github/workflows/master-log-20260806-1739.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-master:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update Documento Mestre Markdown
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('DOCUMENTO_MESTRE.md')
+          text=p.read_text(encoding='utf-8')
+          text=text.replace('**Status atual:** PWA 0.5 publicada no repositório independente e aguardando validação inicial no iPhone  ', '**Status atual:** PWA 0.5.1 autônoma, auditorias de caminhos concluídas; aguardando validação e recuperação de MAT-ALG-002 no iPhone  ')
+          text=text.replace('**Última atualização:** 06/08/2026, 14h37, horário local do usuário', '**Última atualização:** 06/08/2026, 17h39, horário local do usuário')
+          marker='### 06/08/2026, 17h39 — Auditorias concluídas e arquitetura isolada validada'
+          block='''\n\n### 06/08/2026, 17h39 — Auditorias concluídas e arquitetura isolada validada\n- O workflow `Standalone migration` do repositório `dataprev-sessoes` concluiu com sucesso após correção da referência antiga do ícone no `index.html`.\n- O relatório `PATH_AUDIT.md` confirmou: `No obsolete runtime path found.`\n- `app.js` passou para PWA `0.5.1` e usa `CONTENT_BASE='./'`, eliminando a dependência de `dataprev-cards/sessoes` para carregar o catálogo local.\n- `manifest.webmanifest` passou a usar `start_url`, `scope` e ícones locais do próprio repositório `dataprev-sessoes`.\n- O workflow `Update DATAPREV Sessions link` do repositório `dataprev-cards` também concluiu com sucesso.\n- O relatório `SESSIONS_PATH_AUDIT.md` confirmou `Remaining obsolete runtime references: None.`\n- Busca adicional no repositório dos Cards não encontrou referência ao caminho antigo `github.io/dataprev-cards/sessoes`.\n- Conclusão técnica: Cards e Sessões estão agora isolados em repositórios, escopos, service workers, caches e ativos próprios, sem dependência obsoleta de runtime entre os dois aplicativos.\n- Próximo passo: abrir `https://guerraguilherme.github.io/dataprev-sessoes/?v=051` no Safari do iPhone, confirmar `PWA 0.5.1`, verificar catálogo e recuperar o progresso de `MAT-ALG-002` antes de instalar a PWA definitiva.\n'''
+          if marker not in text:
+              text += block
+          p.write_text(text,encoding='utf-8')
+          PY
+      - name: Commit master update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add DOCUMENTO_MESTRE.md
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Update Documento Mestre after path audits [skip ci]"
+            git push
+          fi
