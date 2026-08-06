@@ -35,10 +35,22 @@ jobs:
           from pathlib import Path
           import json
 
-          app = Path('app.js').read_text(encoding='utf-8')
+          app_path = Path('app.js')
+          app = app_path.read_text(encoding='utf-8')
           app = app.replace("const APP_VERSION='0.5';", "const APP_VERSION='0.5.1';")
           app = app.replace("const CONTENT_BASE='https://guerraguilherme.github.io/dataprev-cards/sessoes/';", "const CONTENT_BASE='./';")
-          Path('app.js').write_text(app, encoding='utf-8')
+          app_path.write_text(app, encoding='utf-8')
+
+          index_path = Path('index.html')
+          index = index_path.read_text(encoding='utf-8')
+          index = index.replace(
+              'https://guerraguilherme.github.io/dataprev-cards/icons/apple-touch-icon.png',
+              './icons/apple-touch-icon.png'
+          )
+          index = index.replace('DATAPREV Sessões — PWA 0.5', 'DATAPREV Sessões — PWA 0.5.1')
+          index = index.replace('Carregando catálogo · PWA 0.5', 'Carregando catálogo · PWA 0.5.1')
+          index = index.replace('./app.js?v=050', './app.js?v=051')
+          index_path.write_text(index, encoding='utf-8')
 
           manifest = {
             'name': 'DATAPREV Sessões',
@@ -55,7 +67,10 @@ jobs:
               {'src':'./icons/icon-512.png','sizes':'512x512','type':'image/png'}
             ]
           }
-          Path('manifest.webmanifest').write_text(json.dumps(manifest, ensure_ascii=False, separators=(',',':')), encoding='utf-8')
+          Path('manifest.webmanifest').write_text(
+              json.dumps(manifest, ensure_ascii=False, separators=(',',':')),
+              encoding='utf-8'
+          )
 
           sw = """const CACHE_NAME='dataprev-sessoes-standalone-v2';
           const CORE=['./','./index.html','./app.js','./manifest.webmanifest','./sessions.json','./PY-COND-R01.json','./MAT-ALG-002.json','./BD-NORM-002.json','./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png'];
@@ -64,7 +79,10 @@ jobs:
           async function networkFirst(request,fallback){const cache=await caches.open(CACHE_NAME);try{const response=await fetch(request,{cache:'no-store'});if(!response||!response.ok)throw new Error('network');cache.put(request,response.clone());return response}catch{return(await cache.match(request))||(fallback?await cache.match(fallback):null)||new Response('Indisponível offline.',{status:503})}}
           self.addEventListener('fetch',event=>{if(event.request.method!=='GET')return;const url=new URL(event.request.url);if(url.origin!==self.location.origin)return;if(event.request.mode==='navigate'){event.respondWith(networkFirst(event.request,'./index.html'));return}event.respondWith(networkFirst(event.request))});
           """
-          Path('service-worker.js').write_text('\n'.join(line.strip() for line in sw.splitlines() if line.strip())+'\n', encoding='utf-8')
+          Path('service-worker.js').write_text(
+              '\n'.join(line.strip() for line in sw.splitlines() if line.strip())+'\n',
+              encoding='utf-8'
+          )
 
           runtime_files=['app.js','index.html','service-worker.js','manifest.webmanifest']
           forbidden=['dataprev-cards/sessoes','sessoes-v04','github.io/dataprev-cards/icons']
@@ -74,7 +92,15 @@ jobs:
             for token in forbidden:
               if token in text:
                 findings.append(f'{name}: {token}')
-          report=['# Runtime path audit','','Date: 2026-08-06','Repository: guerraguilherme/dataprev-sessoes','', '## Result']
+
+          report=[
+            '# Runtime path audit',
+            '',
+            'Date: 2026-08-06',
+            'Repository: guerraguilherme/dataprev-sessoes',
+            '',
+            '## Result'
+          ]
           report.append('No obsolete runtime path found.' if not findings else '\n'.join(f'- {x}' for x in findings))
           Path('PATH_AUDIT.md').write_text('\n'.join(report)+'\n',encoding='utf-8')
           if findings:
@@ -85,7 +111,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add app.js service-worker.js manifest.webmanifest sessions.json PY-COND-R01.json MAT-ALG-002.json BD-NORM-002.json icons PATH_AUDIT.md
+          git add app.js index.html service-worker.js manifest.webmanifest sessions.json PY-COND-R01.json MAT-ALG-002.json BD-NORM-002.json icons PATH_AUDIT.md
           if git diff --cached --quiet; then
             echo "No changes"
           else
