@@ -1,0 +1,94 @@
+name: Standalone migration
+
+on:
+  push:
+    paths:
+      - '.github/workflows/standalone-migration.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Copy session data and icons into this repository
+        run: |
+          set -euo pipefail
+          mkdir -p icons
+          SESSION_BASE="https://raw.githubusercontent.com/guerraguilherme/dataprev-cards/main/sessoes"
+          ICON_BASE="https://raw.githubusercontent.com/guerraguilherme/dataprev-cards/main/icons"
+          curl -fsSL "$SESSION_BASE/sessions.json" -o sessions.json
+          curl -fsSL "$SESSION_BASE/PY-COND-R01.json" -o PY-COND-R01.json
+          curl -fsSL "$SESSION_BASE/MAT-ALG-002.json" -o MAT-ALG-002.json
+          curl -fsSL "$SESSION_BASE/BD-NORM-002.json" -o BD-NORM-002.json
+          curl -fsSL "$ICON_BASE/icon-192.png" -o icons/icon-192.png
+          curl -fsSL "$ICON_BASE/icon-512.png" -o icons/icon-512.png
+          curl -fsSL "$ICON_BASE/apple-touch-icon.png" -o icons/apple-touch-icon.png
+
+      - name: Make runtime paths independent
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          app = Path('app.js').read_text(encoding='utf-8')
+          app = app.replace("const APP_VERSION='0.5';", "const APP_VERSION='0.5.1';")
+          app = app.replace("const CONTENT_BASE='https://guerraguilherme.github.io/dataprev-cards/sessoes/';", "const CONTENT_BASE='./';")
+          Path('app.js').write_text(app, encoding='utf-8')
+
+          manifest = {
+            'name': 'DATAPREV Sessões',
+            'short_name': 'Sessões',
+            'start_url': './',
+            'scope': './',
+            'display': 'standalone',
+            'background_color': '#f3f6fb',
+            'theme_color': '#155eef',
+            'lang': 'pt-BR',
+            'description': 'Estudo guiado e adaptativo para o DATAPREV 2026 — Perfil 4.',
+            'icons': [
+              {'src':'./icons/icon-192.png','sizes':'192x192','type':'image/png'},
+              {'src':'./icons/icon-512.png','sizes':'512x512','type':'image/png'}
+            ]
+          }
+          Path('manifest.webmanifest').write_text(json.dumps(manifest, ensure_ascii=False, separators=(',',':')), encoding='utf-8')
+
+          sw = """const CACHE_NAME='dataprev-sessoes-standalone-v2';
+          const CORE=['./','./index.html','./app.js','./manifest.webmanifest','./sessions.json','./PY-COND-R01.json','./MAT-ALG-002.json','./BD-NORM-002.json','./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png'];
+          self.addEventListener('install',event=>{self.skipWaiting();event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(CORE)))});
+          self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('dataprev-sessoes-standalone-')&&k!==CACHE_NAME).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
+          async function networkFirst(request,fallback){const cache=await caches.open(CACHE_NAME);try{const response=await fetch(request,{cache:'no-store'});if(!response||!response.ok)throw new Error('network');cache.put(request,response.clone());return response}catch{return(await cache.match(request))||(fallback?await cache.match(fallback):null)||new Response('Indisponível offline.',{status:503})}}
+          self.addEventListener('fetch',event=>{if(event.request.method!=='GET')return;const url=new URL(event.request.url);if(url.origin!==self.location.origin)return;if(event.request.mode==='navigate'){event.respondWith(networkFirst(event.request,'./index.html'));return}event.respondWith(networkFirst(event.request))});
+          """
+          Path('service-worker.js').write_text('\n'.join(line.strip() for line in sw.splitlines() if line.strip())+'\n', encoding='utf-8')
+
+          runtime_files=['app.js','index.html','service-worker.js','manifest.webmanifest']
+          forbidden=['dataprev-cards/sessoes','sessoes-v04','github.io/dataprev-cards/icons']
+          findings=[]
+          for name in runtime_files:
+            text=Path(name).read_text(encoding='utf-8')
+            for token in forbidden:
+              if token in text:
+                findings.append(f'{name}: {token}')
+          report=['# Runtime path audit','','Date: 2026-08-06','Repository: guerraguilherme/dataprev-sessoes','', '## Result']
+          report.append('No obsolete runtime path found.' if not findings else '\n'.join(f'- {x}' for x in findings))
+          Path('PATH_AUDIT.md').write_text('\n'.join(report)+'\n',encoding='utf-8')
+          if findings:
+            raise SystemExit('Obsolete runtime paths remain: '+', '.join(findings))
+          PY
+
+      - name: Commit standalone assets and path fixes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.js service-worker.js manifest.webmanifest sessions.json PY-COND-R01.json MAT-ALG-002.json BD-NORM-002.json icons PATH_AUDIT.md
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Make DATAPREV Sessions fully standalone [skip ci]"
+            git push
+          fi
