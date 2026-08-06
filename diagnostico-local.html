@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>DATAPREV Sessões — Diagnóstico local</title>
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#172033;background:#f3f6fb}body{margin:0;padding:20px}main{max-width:820px;margin:auto}.card{background:#fff;border:1px solid #d9e1ec;border-radius:22px;padding:20px;margin:14px 0;box-shadow:0 6px 20px rgba(20,40,80,.05)}h1{font-size:28px;margin:8px 0}h2{font-size:20px;margin:0 0 12px}.muted{color:#66738c}.ok{color:#147a46}.warn{color:#9a6400}.bad{color:#a92d24}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f7f9fc;border:1px solid #e0e6ef;border-radius:14px;padding:14px;font-size:14px}button{font:inherit;font-weight:700;border:0;border-radius:14px;padding:14px 18px;background:#155eef;color:#fff;width:100%;margin-top:10px}.pill{display:inline-block;border:1px solid #d5deeb;border-radius:999px;padding:5px 9px;margin:3px;font-size:13px;color:#586780}.row{border-top:1px solid #e7ebf1;padding:14px 0}.row:first-child{border-top:0}</style>
+</head>
+<body><main>
+<div class="card"><div class="muted">DATAPREV Sessões</div><h1>Diagnóstico local seguro</h1><p>Esta página lê apenas o progresso armazenado neste navegador. Não mostra URL do Apps Script, token, chave privada nem conteúdo da sincronização.</p><button id="refresh">Atualizar leitura</button></div>
+<div class="card"><h2>Estados por sessão</h2><div id="states">Carregando…</div></div>
+<div class="card"><h2>Estado legado</h2><div id="legacy">Carregando…</div></div>
+<div class="card"><h2>Resumo para captura</h2><pre id="summary"></pre></div>
+</main>
+<script>
+const MAP='dataprev_sessoes_states_v2', LEGACY='dataprev_sessoes_state_v1';
+function read(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch{return null}}
+function safeState(id,s){
+ const concepts=Object.keys(s?.conceptsCompleted||{}).length;
+ const immediate=Object.values(s?.immediate||{}).filter(x=>x?.correct).length;
+ const finals=Object.values(s?.final||{}).filter(x=>x?.submitted).length;
+ const supports=Object.keys(s?.support||{}).length;
+ return {sessionId:id||s?.sessionId||'—',phase:s?.phase||'—',conceptIndex:Number.isFinite(s?.conceptIndex)?s.conceptIndex:null,finalIndex:Number.isFinite(s?.finalIndex)?s.finalIndex:null,conceptsCompleted:concepts,immediateCorrect:immediate,finalAnswered:finals,supportEntries:supports,startedAt:s?.startedAt||'',completedAt:s?.completedAt||'',activeMs:s?.activeMs||0,lastTick:s?.lastTick||0,contentVersion:s?.contentVersion||''};
+}
+function fmtMs(ms){const sec=Math.floor((ms||0)/1000);return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0')}
+function row(x){return `<div class="row"><b>${x.sessionId}</b><br><span class="pill">fase: ${x.phase}</span><span class="pill">conceptIndex: ${x.conceptIndex??'—'}</span><span class="pill">conceitos: ${x.conceptsCompleted}</span><span class="pill">fixações corretas: ${x.immediateCorrect}</span><span class="pill">finais: ${x.finalAnswered}</span><span class="pill">tempo: ${fmtMs(x.activeMs)}</span><br><small class="muted">completedAt: ${x.completedAt||'—'}<br>lastTick: ${x.lastTick||'—'}<br>conteúdo: ${x.contentVersion||'—'}</small></div>`}
+function render(){
+ const map=read(MAP)||{}; const entries=Object.entries(map).map(([id,s])=>safeState(id,s));
+ document.getElementById('states').innerHTML=entries.length?entries.map(row).join(''):'<p class="warn">Nenhum estado encontrado em states_v2.</p>';
+ const legacy=read(LEGACY); const lg=legacy?safeState(legacy.sessionId,legacy):null;
+ document.getElementById('legacy').innerHTML=lg?row(lg):'<p class="muted">Nenhum estado legado encontrado.</p>';
+ const lines=['DATAPREV SESSÕES — DIAGNÓSTICO LOCAL',`Estados v2: ${entries.length}`];
+ for(const x of entries)lines.push(`${x.sessionId} | phase=${x.phase} | conceptIndex=${x.conceptIndex??'—'} | concepts=${x.conceptsCompleted} | immediate=${x.immediateCorrect} | finals=${x.finalAnswered} | completed=${x.completedAt?'sim':'não'} | time=${fmtMs(x.activeMs)} | lastTick=${x.lastTick}`);
+ if(lg)lines.push(`LEGACY ${lg.sessionId} | phase=${lg.phase} | conceptIndex=${lg.conceptIndex??'—'} | concepts=${lg.conceptsCompleted} | immediate=${lg.immediateCorrect} | finals=${lg.finalAnswered} | completed=${lg.completedAt?'sim':'não'} | time=${fmtMs(lg.activeMs)} | lastTick=${lg.lastTick}`);
+ document.getElementById('summary').textContent=lines.join('\n');
+}
+document.getElementById('refresh').onclick=render;render();
+</script></body></html>
