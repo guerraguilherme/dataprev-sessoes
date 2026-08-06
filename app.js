@@ -1,11 +1,11 @@
 'use strict';
-const APP_VERSION='0.5';
+const APP_VERSION='0.5.1';
 const CONTENT_VERSION='2026.08.06-sessoes-02';
 const STATE_MAP_KEY='dataprev_sessoes_states_v2';
 const LEGACY_STATE_KEY='dataprev_sessoes_state_v1';
 const SESSIONS_CFG_KEY='dataprev_sessoes_sync_config_v1';
 const CARDS_CFG_KEY='dataprev_cards_sync_config_v1';
-const CONTENT_BASE='https://guerraguilherme.github.io/dataprev-cards/sessoes/';
+const CONTENT_BASE='./';
 const CONTENT_FILES=['sessions.json','PY-COND-R01.json','MAT-ALG-002.json','BD-NORM-002.json'];
 const REASONS={symbols:'Símbolos e nomenclatura',intuition:'Ideia intuitiva',calculation:'Cálculo ou passos',connection:'Conexão com o que já estudei'};
 let catalog={contentVersion:CONTENT_VERSION,sessions:[]};
