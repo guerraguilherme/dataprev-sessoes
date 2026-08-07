@@ -1,5 +1,5 @@
 'use strict';
-const APP_VERSION='0.5.2';
+const APP_VERSION='0.5.3';
 const CONTENT_VERSION='2026.08.06-sessoes-02';
 const STATE_MAP_KEY='dataprev_sessoes_states_v2';
 const LEGACY_STATE_KEY='dataprev_sessoes_state_v1';
@@ -109,7 +109,7 @@ async function loadCatalog({preferCurrent=true,includeRemote=true}={}){
 function updateClock(){
   if(!state)return;
   const now=Date.now();
-  if(state.timerRunning&&document.visibilityState==='visible')state.activeMs+=Math.max(0,now-(state.lastTick||now));
+  if(state.timerRunning&&document.visibilityState==='visible'){const delta=Math.max(0,now-(state.lastTick||now));if(delta<=15000)state.activeMs+=delta;}
   state.lastTick=now;saveState();$('timeStat').textContent=fmt(state.activeMs);
 }
 function startTimer(){if(!state.startedAt)state.startedAt=new Date().toISOString();state.timerRunning=true;state.lastTick=Date.now();saveState();renderStats()}
@@ -161,6 +161,7 @@ function supportData(concept){
     },
     check:{prompt:'Se i × j = k, então j × i é:',options:['−k','k','0','1'],answer:0,explanation:'Inverter a ordem inverte o sinal.'}
   };
+  if(concept.support)return concept.support;
   return {intro:'Abra apenas o tipo de ajuda necessário. Isso não conta como erro.',sections:{symbols:{title:'Símbolos e termos',html:`<pre>${esc(concept.code||concept.what||'')}</pre>`},intuition:{title:'Ideia em linguagem direta',html:`<p>${esc(concept.what||'')}</p><p>${esc(concept.explanation||'')}</p>`},calculation:{title:'Sequência prática',html:`<ol><li>Identifique os dados.</li><li>Localize a propriedade central.</li><li>Aplique em um exemplo pequeno.</li><li>Confira a pegadinha: ${esc(concept.trap||'')}</li></ol>`},connection:{title:'Ligação com conhecimentos anteriores',html:`<p>${esc(concept.connection||'')}</p>`}},check:null};
 }
 function renderAdaptive(concept){
