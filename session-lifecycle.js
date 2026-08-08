@@ -9,7 +9,7 @@
     .session-page-nav{display:flex;justify-content:flex-end;gap:6px;margin:-2px 0 10px}.session-page-nav button{padding:7px 10px;min-width:42px;border-radius:999px;background:#f7f9fc;color:var(--muted);font-size:.8rem}.session-page-nav button:not(:disabled):active{background:var(--accent2);color:#173f91;border-color:#bfd0ff}
   `;document.head.appendChild(style);
 
-  function toast(msg){document.querySelector('.dp-toast')?.remove();const el=document.createElement('div');el.className='dp-toast';el.textContent=msg;document.body.appendChild(el);setTimeout(()=>el.remove(),2800)}
+  function toast(msg){document.querySelector('.dp-toast')?.remove();const el=document.createElement('div');el.className='dp-toast';el.textContent=msg;document.body.appendChild(el);setTimeout(()=>el.remove(),3600)}
   window.dpSessionToast=toast;
 
   function readObj(key){try{return JSON.parse(localStorage.getItem(key)||'{}')||{}}catch{return{}}}
@@ -21,28 +21,32 @@
     }
     return null;
   }
+  function markGenerationFailure(nextId,title,error){
+    if(typeof plannerQueue!=='function'||typeof savePlannerQueue!=='function')return;
+    const q=plannerQueue().filter(x=>x.sessionId!==nextId);
+    q.push({sessionId:nextId,status:'erro_geracao',requestedAt:new Date().toISOString(),requestId:'',triggerType:'auto_buffer',error:String(error?.message||error||'falha não especificada')});
+    savePlannerQueue(q);
+    toast(`Buffer não entrou na fila: ${title}. A trilha mostrará “Tentar novamente”.`);
+    if(typeof renderHome==='function'&&state?.phase==='home')renderHome();
+  }
   async function ensureNextBuffered(currentId){
     const nextId=nextRoadmapId(currentId);if(!nextId)return;
     if(typeof catalogById==='function'&&catalogById().has(nextId))return;
-    if(typeof plannerQueue==='function'&&plannerQueue().some(x=>x.sessionId===nextId))return;
+    if(typeof plannerQueue==='function'&&plannerQueue().some(x=>x.sessionId===nextId&&x.status==='pendente_geracao'))return;
     const marks=readObj(AUTO_KEY);if(marks[nextId])return;
-    const cfg=typeof readConfig==='function'?readConfig():{};if(!cfg.endpoint||!cfg.token||!cfg.deviceId)return;
+    const cfg=typeof readConfig==='function'?readConfig():{};if(!cfg.endpoint||!cfg.token||!cfg.deviceId){markGenerationFailure(nextId,nextId,new Error('sincronização não configurada'));return}
     const row=Object.values(ROADMAP).flat().find(x=>x[0]===nextId),title=row?.[1]||nextId;
     marks[nextId]=new Date().toISOString();writeObj(AUTO_KEY,marks);
     try{
       const response=await jsonp(cfg.endpoint,{action:'request_session_generation',token:cfg.token,device_id:cfg.deviceId,session_id:nextId,title,trigger_type:'auto_buffer',requested_sessions:1,content_version:catalog.contentVersion},20000);
-      const q=plannerQueue().filter(x=>x.sessionId!==nextId);q.push({sessionId:nextId,status:'pendente_geracao',requestedAt:new Date().toISOString(),requestId:response?.request_id||'',triggerType:'auto_buffer'});savePlannerQueue(q);
-      toast(`Próxima sessão entrou em preparação: ${title}`);
+      if(!response?.request_id)throw new Error('o serviço não confirmou um código de fila');
+      const q=plannerQueue().filter(x=>x.sessionId!==nextId);q.push({sessionId:nextId,status:'pendente_geracao',requestedAt:new Date().toISOString(),requestId:response.request_id,triggerType:'auto_buffer'});savePlannerQueue(q);
+      toast(`Próxima sessão confirmada na fila: ${title}`);
       if(typeof renderHome==='function'&&state?.phase==='home')renderHome();
-    }catch(err){delete marks[nextId];writeObj(AUTO_KEY,marks);console.warn('Buffer automático não solicitado:',err)}
+    }catch(err){delete marks[nextId];writeObj(AUTO_KEY,marks);markGenerationFailure(nextId,title,err);console.warn('Buffer automático não solicitado:',err)}
   }
 
   if(typeof manualUsed==='function')manualUsed=function(){return plannerQueue().filter(x=>['pendente_geracao','pronta'].includes(x.status)&&x.triggerType!=='auto_buffer').length};
-
-  if(typeof requestPreparation==='function'){
-    const baseRequest=requestPreparation;
-    requestPreparation=async function(id,title){await baseRequest(id,title);const item=plannerQueue().find(x=>x.sessionId===id);if(item?.status==='pendente_geracao')toast('Pedido recebido. A sessão ficará pronta assim que o conteúdo for publicado.')}
-  }
 
   if(typeof openSession==='function'){
     const baseOpen=openSession;
