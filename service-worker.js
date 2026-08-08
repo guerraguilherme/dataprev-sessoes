@@ -1,4 +1,4 @@
-const CACHE_NAME='dataprev-sessoes-standalone-v9';
+const CACHE_NAME='dataprev-sessoes-standalone-v10';
 const CORE=['./','./index.html','./app.js','./planner.js','./planner.css','./sync-v2.js','./simulados.js','./simulados/catalog.json','./manifest.webmanifest','./sessions.json','./PY-COND-R01.json','./MAT-ALG-002.json','./BD-NORM-002.json','./restaurar-no-app.html','./restaurar-progresso.html','./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png'];
 self.addEventListener('install',event=>{self.skipWaiting();event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(CORE)))});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('dataprev-sessoes-standalone-')&&k!==CACHE_NAME).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
