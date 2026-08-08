@@ -1,7 +1,7 @@
 'use strict';
 
-// Solicitação manual: o serviço rejeita request_session_generation por GET.
-// A chamada passa a usar POST simples (form-urlencoded) e mantém feedback honesto.
+// Solicitação manual: o Web App aceita POST, mas o doPost espera JSON no corpo.
+// Enviamos JSON como text/plain para evitar preflight CORS no Safari e permitir JSON.parse no Apps Script.
 (function(){
   function feedback(message,type='bad'){
     const el=document.getElementById('prepareFeedback');
@@ -14,13 +14,21 @@
     savePlannerQueue(q);
   }
   async function postGeneration(cfg,payload){
-    const body=new URLSearchParams(payload);
-    const response=await fetch(cfg.endpoint,{method:'POST',body,redirect:'follow',cache:'no-store'});
+    const response=await fetch(cfg.endpoint,{
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify(payload),
+      redirect:'follow',
+      cache:'no-store'
+    });
     const text=await response.text();
-    let data=null;try{data=JSON.parse(text)}catch{}
+    let data=null;
+    try{data=JSON.parse(text)}catch{
+      throw new Error(`Resposta inválida do serviço: ${String(text||'').slice(0,120)}`);
+    }
     if(!response.ok)throw new Error(`HTTP ${response.status}`);
     if(data?.ok===false)throw new Error(data.error||'Falha no serviço.');
-    return data||{ok:true,unparsed:true};
+    return data;
   }
 
   if(typeof confirmPrepare==='function'){
@@ -38,20 +46,17 @@
     const cfg=readConfig();
     if(!cfg.endpoint||!cfg.token||!cfg.deviceId){feedback('A sincronização não está configurada neste aparelho. O pedido não foi enviado.');return}
     const btn=document.getElementById('confirmPrepareBtn');if(btn){btn.disabled=true;btn.textContent='Solicitando…'}
-    const payload={action:'request_session_generation',token:cfg.token,device_id:cfg.deviceId,session_id:id,title,trigger_type:'manual_prepare',requested_sessions:'1',content_version:catalog.contentVersion};
+    const payload={action:'request_session_generation',token:cfg.token,device_id:cfg.deviceId,session_id:id,title,trigger_type:'manual_prepare',requested_sessions:1,content_version:catalog.contentVersion};
     try{
       const response=await postGeneration(cfg,payload);
       if(response?.request_id){
         queueLocal(id,'pendente_geracao',{requestId:response.request_id});
         closePlannerModal();setStatus(`Pedido confirmado na fila (${response.request_id}). A preparação será materializada pelo publicador.`,'ok');renderHome();return;
       }
-      // Alguns Web Apps aceitam o POST mas não expõem a resposta por CORS/redirect.
-      queueLocal(id,'pendente_geracao',{requestId:'',confirmation:'post_sent'});
-      closePlannerModal();setStatus('Pedido enviado por POST. Aguardando a fila compartilhada/publicação confirmar a sessão.','ok');renderHome();
+      queueLocal(id,'pendente_geracao',{requestId:'',confirmation:'post_accepted'});
+      closePlannerModal();setStatus('Pedido aceito pelo serviço. Aguardando a fila compartilhada/publicação confirmar a sessão.','ok');renderHome();
     }catch(error){
       const msg=String(error?.message||error||'Falha desconhecida');
-      // TypeError em fetch pode ocorrer depois de o navegador já ter enviado o POST ao Apps Script.
-      // Não repetimos automaticamente para evitar duplicidade; registramos estado de confirmação pendente.
       if(/fetch|network|load failed|failed to fetch/i.test(msg)){
         queueLocal(id,'pendente_geracao',{requestId:'',confirmation:'transport_uncertain',error:msg});
         closePlannerModal();setStatus('O POST foi disparado, mas o navegador não conseguiu ler a confirmação. O app vai aguardar a fila compartilhada antes de permitir novo envio.','ok');renderHome();return;
@@ -64,7 +69,7 @@
 
 // Hotfix seguro de qualidade, sem MutationObserver recursivo.
 (function(){
-  const UI_VERSION='0.7.9';
+  const UI_VERSION='0.7.10';
   const style=document.createElement('style');
   style.textContent=`
     .dp-toast{top:calc(8px + env(safe-area-inset-top))!important;bottom:auto!important;max-width:min(88vw,440px)!important;border-radius:13px!important;padding:8px 11px!important;font-size:.72rem!important;line-height:1.28!important;font-weight:700!important;opacity:.96!important}
