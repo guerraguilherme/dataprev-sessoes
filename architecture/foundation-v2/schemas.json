@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "foundationVersion": "2",
+  "definitions": {
+    "coverageRegistryEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coverage_id", "canonical_key", "discipline_id", "program_ref", "semantic_scope", "mapping_state", "registry_version"],
+      "properties": {
+        "coverage_id": {"type": "string", "pattern": "^COV-[A-Z0-9]+-[0-9]{4,}$"},
+        "canonical_key": {"type": "string", "minLength": 1},
+        "discipline_id": {"type": "string", "minLength": 1},
+        "program_ref": {"type": "string", "minLength": 1},
+        "item_edital": {"type": "string"},
+        "semantic_scope": {"type": "object"},
+        "prerequisites": {"type": "array", "items": {"type": "string"}},
+        "legacy_matrix_id": {"type": ["string", "null"]},
+        "legacy_coverage_keys": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "mapping_state": {"enum": ["mapped_proposed", "mapped_validated"]},
+        "materialization_state": {"enum": ["not_materialized", "materialized"]},
+        "lifecycle_state": {"enum": ["mapped_proposed", "mapped_validated", "materialized", "taught", "practiced", "reviewed", "assessed", "mastered"]},
+        "registry_version": {"type": "string", "minLength": 1},
+        "source_revision": {"type": ["string", "null"]},
+        "created_at": {"type": "string"},
+        "updated_at": {"type": "string"},
+        "notes": {"type": "string"}
+      }
+    },
+    "sourceRegistryEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "source_type", "title", "canonical_locator", "authority_level", "provenance_status", "registry_version"],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "source_type": {"enum": ["official_notice", "law", "decree", "official_exam", "official_key", "master_document", "pedagogical_control", "repository", "other"]},
+        "title": {"type": "string", "minLength": 1},
+        "canonical_locator": {"type": "string", "minLength": 1},
+        "provider_file_id": {"type": ["string", "null"]},
+        "revision_id": {"type": ["string", "null"]},
+        "content_hash": {"type": ["string", "null"]},
+        "authority_level": {"enum": ["primary_official", "primary_internal", "secondary_verified", "secondary_unverified"]},
+        "provenance_status": {"enum": ["verified", "pending_verification", "rejected"]},
+        "effective_date": {"type": ["string", "null"]},
+        "retrieved_at": {"type": ["string", "null"]},
+        "supersedes_source_id": {"type": ["string", "null"]},
+        "registry_version": {"type": "string", "minLength": 1},
+        "notes": {"type": "string"}
+      }
+    },
+    "learnerEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_id", "event_type", "occurred_at", "recorded_at", "channel", "schema_version"],
+      "properties": {
+        "event_id": {"type": "string", "minLength": 1},
+        "event_type": {"type": "string", "minLength": 1},
+        "occurred_at": {"type": "string"},
+        "recorded_at": {"type": "string"},
+        "device_id": {"type": ["string", "null"]},
+        "channel": {"enum": ["sessoes", "cards", "pc", "simulado", "import"]},
+        "session_id": {"type": ["string", "null"]},
+        "coverage_id": {"type": ["string", "null"], "pattern": "^COV-[A-Z0-9]+-[0-9]{4,}$"},
+        "concept_id": {"type": ["string", "null"]},
+        "question_id": {"type": ["string", "null"]},
+        "attempt_no": {"type": ["integer", "null"], "minimum": 1},
+        "correct": {"type": ["boolean", "null"]},
+        "confidence": {"enum": ["low", "medium", "high", null]},
+        "support_used": {"type": ["boolean", "null"]},
+        "justification": {"type": ["string", "null"]},
+        "notes": {"type": ["string", "null"]},
+        "payload": {"type": "object"},
+        "source_event_id": {"type": ["string", "null"]},
+        "schema_version": {"type": "string", "minLength": 1},
+        "ingest_status": {"enum": ["accepted", "quarantined", "rejected"]}
+      }
+    }
+  }
+}
