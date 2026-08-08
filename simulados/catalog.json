@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-08T01:45:00-04:00",
+  "updatedAt": "2026-08-08T02:28:00-04:00",
   "targetReadyBuffer": 2,
   "examModel": {
     "totalQuestions": 70,
@@ -16,7 +16,7 @@
     "specificWeight": 2.5
   },
   "simulados": [
-    {"id":"SIM-001","title":"Simulado 01 — Perfil 4","status":"preparing_initial","questions":70,"level":"FGV realista","file":""},
+    {"id":"SIM-001","title":"Simulado 01 — Perfil 4","status":"ready","questions":70,"level":"FGV realista","file":"SIM-001.json","contentVersion":"2026.08.08-sim-001-v1"},
     {"id":"SIM-002","title":"Simulado 02 — Perfil 4","status":"preparing_initial","questions":70,"level":"FGV realista","file":""},
     {"id":"SIM-003","title":"Simulado 03 — Perfil 4","status":"locked","questions":70,"level":"FGV realista","file":""},
     {"id":"SIM-004","title":"Simulado 04 — Perfil 4","status":"locked","questions":70,"level":"FGV realista","file":""},
