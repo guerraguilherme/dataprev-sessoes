@@ -7,12 +7,17 @@ const DISCIPLINE_ORDER=['Matemática','Estatística','Ciência de Dados/ML','Pyt
 
 const ROADMAP={
   'Matemática':[
-    ['MAT-ALG-002','Produto escalar, produto vetorial, transposta e identidade','Álgebra linear'],
-    ['MAT-FUNC-001','Funções: domínio, imagem, raízes e leitura de gráficos','Funções'],
+    ['MAT-FUNC-001','Funções: relação, domínio, contradomínio, imagem, raízes e gráficos','Funções'],
     ['MAT-CALC-001','Limites e continuidade','Cálculo'],
-    ['MAT-CALC-002','Derivadas e aplicações','Cálculo'],
+    ['MAT-CALC-002','Derivadas','Cálculo'],
+    ['MAT-CALC-003','Máximos e mínimos','Cálculo'],
+    ['MAT-CALC-004','Derivadas parciais','Cálculo'],
+    ['MAT-CALC-005','Integrais','Cálculo'],
+    ['MAT-ALG-001','Notação de vetores e matrizes','Álgebra linear'],
     ['MAT-ALG-003','Operações com vetores e matrizes','Álgebra linear'],
-    ['MAT-ALG-004','Matriz inversa e transformações lineares','Álgebra linear'],
+    ['MAT-ALG-002','Produto escalar, produto vetorial, identidade e transposta','Álgebra linear'],
+    ['MAT-ALG-004A','Matriz inversa','Álgebra linear'],
+    ['MAT-ALG-004B','Transformações lineares','Álgebra linear'],
     ['MAT-ALG-005','Normas L1 e L2','Álgebra linear'],
     ['MAT-ALG-006','Autovalores e autovetores','Álgebra linear']
   ],
@@ -21,32 +26,44 @@ const ROADMAP={
     ['EST-PROB-002','Probabilidade condicional e independência','Probabilidade'],
     ['EST-PROB-003','Probabilidade total e Bayes','Probabilidade'],
     ['EST-VA-001','Variáveis aleatórias','Probabilidade'],
-    ['EST-VA-002','Esperança, variância e covariância','Probabilidade'],
-    ['EST-DIST-001','Distribuições discretas e contínuas','Distribuições'],
+    ['EST-VA-002A','Esperança','Probabilidade'],
+    ['EST-VA-002B','Variância e desvio-padrão','Probabilidade'],
+    ['EST-VA-002C','Covariância','Probabilidade'],
+    ['EST-DESC-001','Estatísticas descritivas','Estatística aplicada'],
+    ['EST-DIST-001A','Distribuições discretas','Distribuições'],
+    ['EST-DIST-001B','Distribuições contínuas','Distribuições'],
     ['EST-DIST-002','Distribuições multidimensionais e matriz de covariância','Distribuições'],
     ['EST-INF-001','Amostragem e Teorema Central do Limite','Inferência'],
-    ['EST-INF-002','Teste de hipótese e intervalo de confiança','Inferência'],
+    ['EST-INF-002A','Testes de hipótese','Inferência'],
+    ['EST-INF-002B','Intervalos de confiança','Inferência'],
     ['EST-INF-003','Máxima verossimilhança','Inferência'],
     ['EST-INF-004','Inferência bayesiana','Inferência'],
-    ['EST-DESC-001','Correlação de Pearson, boxplot e outliers','Estatística aplicada']
+    ['EST-DESC-002','Correlação de Pearson','Estatística aplicada'],
+    ['EST-DESC-003','Boxplot e avaliação de outliers','Estatística aplicada']
   ],
   'Ciência de Dados/ML':[
-    ['ML-BASE-001','Fundamentos de Ciência de Dados e aprendizado','Fundamentos'],
-    ['ML-MET-001','Métricas de classificação e regressão','Modelagem'],
-    ['ML-VAL-001','Regularização, seleção, validação cruzada e viés-variância','Modelagem'],
+    ['ML-BASE-001','Fundamentos, treino/validação/teste e overfitting/underfitting','Fundamentos'],
+    ['ML-MET-001','Métricas de classificação','Modelagem'],
+    ['ML-MET-002','Métricas de regressão','Modelagem'],
+    ['ML-VAL-001','Validação cruzada e seleção de modelos','Modelagem'],
+    ['ML-VAL-002','Viés-variância e regularização','Modelagem'],
     ['ML-REG-001','Regressão linear','Supervisionado'],
     ['ML-REG-002','Regressão logística','Supervisionado'],
     ['ML-TREE-001','Árvores de decisão e random forests','Supervisionado'],
     ['ML-SVM-001','SVM','Supervisionado'],
     ['ML-KNN-001','K-NN','Supervisionado'],
     ['ML-PCA-001','PCA','Não supervisionado'],
-    ['ML-CLUST-001','K-Means e mistura de Gaussianas','Não supervisionado'],
+    ['ML-CLUST-001','K-Means','Não supervisionado'],
+    ['ML-CLUST-002','Mistura de Gaussianas','Não supervisionado'],
     ['ML-ASSOC-001','Regras de associação','Não supervisionado'],
-    ['ML-NN-001','Redes neurais: arquitetura e ativações','Redes neurais'],
-    ['ML-NN-002','Gradiente, SGD e backpropagation','Redes neurais'],
-    ['ML-NN-003','Regularização L1/L2 em redes e modelos','Redes neurais'],
-    ['ML-CV-001','CNN, visão computacional e detecção de objetos','Visão computacional'],
-    ['ML-NLP-001','Processamento de Linguagem Natural','PLN'],
+    ['ML-NN-001','Redes neurais: arquitetura e funções de ativação','Redes neurais'],
+    ['ML-NN-002','Gradiente e SGD','Redes neurais'],
+    ['ML-NN-003','Backpropagation','Redes neurais'],
+    ['ML-NN-004','Regularização L1/L2 em redes e modelos','Redes neurais'],
+    ['ML-CV-001','CNN','Visão computacional'],
+    ['ML-CV-002','Visão computacional, classificação e detecção de objetos','Visão computacional'],
+    ['ML-NLP-001','Processamento de Linguagem Natural: fundamentos','PLN'],
+    ['ML-NLP-002','Processamento de Linguagem Natural: aplicações','PLN'],
     ['ML-ETL-001','ETL','Engenharia de dados'],
     ['ML-DATA-001','Manipulação, tratamento e visualização de dados','Preparação de dados'],
     ['ML-REC-001','Sistemas de recomendação','Aplicações'],
@@ -56,35 +73,50 @@ const ROADMAP={
   'Python e Ferramentas':[
     ['PY-BASE-001','Python: variáveis, tipos, operadores, listas e índices','Python'],
     ['PY-COND-001','Fluxo condicional: if, elif, else e lógica booleana','Python'],
-    ['PY-COND-R01','Revisão adaptativa: índices, intervalos e expressões booleanas','Revisão extra'],
+    ['PY-COND-R01','Revisão adaptativa: índices, intervalos e expressões booleanas','Revisão extraordinária'],
     ['PY-COLL-001','Strings, tuplas, dicionários, conjuntos e compreensão de listas','Python'],
-    ['PY-FUNC-001','Repetição e funções','Python'],
-    ['NP-001','NumPy','NumPy'],
-    ['PD-001','Pandas','Pandas'],
-    ['R-001','R: fundamentos e leitura de código','R'],
+    ['PY-LOOP-001','Laços for e while','Python'],
+    ['PY-FUNC-001','Funções','Python'],
+    ['NP-001','Jupyter e NumPy: fundamentos','NumPy'],
+    ['NP-002','NumPy: operações e vetorização','NumPy'],
+    ['PD-001','Pandas: Series, DataFrame e seleção','Pandas'],
+    ['PD-002','Pandas: limpeza, valores ausentes e tipos','Pandas'],
+    ['PD-003','Pandas: groupby, merge e join','Pandas'],
+    ['VIS-001','Matplotlib e Seaborn','Visualização'],
+    ['STREAMLIT-001','Streamlit','Visualização e apps'],
+    ['SCIPY-001','SciPy','Computação científica'],
     ['TF-001','TensorFlow, Keras e PyTorch','Frameworks'],
-    ['HADOOP-001','Hadoop e ecossistema','Big Data'],
-    ['SPARK-001','Spark e processamento distribuído','Big Data']
+    ['R-001','R: fundamentos e leitura de código','R'],
+    ['R-002','R: manipulação de dados e bibliotecas','R'],
+    ['HADOOP-001','Hadoop, HDFS e MapReduce','Big Data'],
+    ['SPARK-001','Spark: arquitetura e RDD','Big Data'],
+    ['SPARK-002','Spark DataFrames e Spark SQL','Big Data']
   ],
   'Banco de Dados':[
-    ['BD-REL-001','Modelo relacional, chaves e integridade','Modelo relacional'],
-    ['BD-SQL-001','SQL: SELECT, filtros, agregações e ordenação','SQL'],
-    ['BD-JOIN-001','JOINs e anti-join','SQL'],
-    ['BD-DDL-001','DDL, DML e DQL','SQL'],
+    ['BD-MOD-001','Modelagem conceitual','Modelagem de dados'],
+    ['BD-MOD-002','Modelagem lógica e física','Modelagem de dados'],
+    ['BD-REL-001','Modelo relacional e chaves','Modelo relacional'],
     ['BD-NORM-001','1FN e fundamentos de normalização','Normalização'],
     ['BD-NORM-002','2FN, 3FN e dependências parcial e transitiva','Normalização'],
     ['BD-INT-001','Integridade referencial e ações de FK','Integridade'],
-    ['BD-DIM-001','Modelagem dimensional: fatos, dimensões e granularidade','Modelagem dimensional'],
     ['BD-META-001','Metadados, catálogo e governança','Metadados'],
+    ['BD-DIM-001','Modelagem dimensional: fatos, dimensões e granularidade','Modelagem dimensional'],
+    ['BD-SQL-001','SQL: SELECT, filtros e ordenação','SQL'],
+    ['BD-JOIN-001','JOINs e anti-join','SQL'],
+    ['BD-SQL-002','Agregações, GROUP BY e HAVING','SQL'],
+    ['BD-SQL-003','Subconsultas','SQL'],
+    ['BD-DDL-001','DDL, DML e DQL','SQL'],
+    ['BD-SGBD-001','SGBD: arquitetura, componentes e funções','SGBD'],
+    ['BD-ACID-001','Transações e propriedades ACID','SGBD'],
     ['BD-NOSQL-001','NoSQL: modelos e critérios de uso','NoSQL'],
-    ['BD-DL-001','Data lakes e organização de dados','Data lakes'],
-    ['BD-SGBD-001','SGBD, transações e propriedades ACID','SGBD']
+    ['BD-MEM-001','Banco de dados em memória','Banco em memória'],
+    ['BD-DL-001','Data lakes e soluções de Big Data','Data lakes']
   ],
   'Português':[
     ['PT-INT-001','Compreensão e interpretação de textos','Interpretação'],
     ['PT-GEN-001','Tipos e gêneros textuais','Texto'],
     ['PT-ORT-001','Ortografia oficial','Gramática'],
-    ['PT-COE-001','Coesão, referenciação, substituição e conectores','Coesão'],
+    ['PT-COE-001','Coesão, referenciação, substituição, repetição, sequenciação e conectores','Coesão'],
     ['PT-VERB-001','Tempos e modos verbais','Gramática'],
     ['PT-CLAS-001','Classes de palavras','Gramática'],
     ['PT-SINT-001','Coordenação e subordinação','Sintaxe'],
@@ -92,7 +124,7 @@ const ROADMAP={
     ['PT-CONC-001','Concordância verbal e nominal','Sintaxe'],
     ['PT-REG-001','Regência e crase','Sintaxe'],
     ['PT-COL-001','Colocação pronominal','Sintaxe'],
-    ['PT-SEM-001','Significação, substituição, reorganização e reescrita','Semântica']
+    ['PT-SEM-001','Significação, substituição, reorganização e reescrita com gênero e formalidade','Semântica']
   ],
   'Inglês':[
     ['EN-TEXT-001','Compreensão textual e gramática contextual','Reading'],
@@ -105,23 +137,35 @@ const ROADMAP={
     ['RL-EQ-001','Equivalências lógicas e negações','Lógica proposicional'],
     ['RL-DIAG-001','Diagramas lógicos','Diagramas'],
     ['RL-FO-001','Lógica de primeira ordem e quantificadores','Lógica de primeira ordem'],
-    ['RL-PROB-001','Problemas aritméticos, geométricos e matriciais','Problemas']
+    ['RL-PROB-001','Problemas aritméticos','Problemas'],
+    ['RL-PROB-002','Problemas geométricos e matriciais','Problemas']
   ],
   'Atualidades e IA':[
-    ['AT-NEWS-001','Atualidades nacionais e internacionais relevantes ao edital','Atualidades'],
+    ['AT-NEWS-001','Atualidades — ciclo semanal W01','Atualidades'],
+    ['AT-NEWS-W02','Atualidades — ciclo semanal W02','Atualidades'],
+    ['AT-NEWS-W03','Atualidades — ciclo semanal W03','Atualidades'],
+    ['AT-NEWS-W04','Atualidades — ciclo semanal W04','Atualidades'],
+    ['AT-NEWS-W05','Atualidades — ciclo semanal W05','Atualidades'],
+    ['AT-NEWS-W06','Atualidades — ciclo semanal W06','Atualidades'],
+    ['AT-NEWS-W07','Atualidades — ciclo semanal W07','Atualidades'],
     ['IA-CONC-001','Conceitos de IA e aprendizado de máquina','IA'],
     ['IA-GEN-001','Modelos generativos e modelos de linguagem','IA generativa'],
-    ['IA-GOV-001','Ética, governança e privacidade em IA','Governança']
+    ['IA-GOV-001','Ética, governança e privacidade em IA','Governança'],
+    ['AT-NEWS-R1','Atualidades — revisão final R1','Atualidades · revisão'],
+    ['AT-NEWS-R2','Atualidades — revisão final R2','Atualidades · revisão'],
+    ['AT-NEWS-R3','Atualidades — revisão final R3','Atualidades · revisão']
   ],
   'Legislação':[
     ['LEG-LAI-001','LAI: fundamentos, transparência, pedido, prazo e acesso parcial','LAI'],
     ['LEG-LAI-002','LAI: restrições, recursos, responsabilidades e sanções','LAI'],
-    ['LEG-D7724-001','Decreto 7.724/2012','LAI'],
+    ['LEG-D7724-001','Decreto 7.724: acesso, transparência e pedidos','LAI'],
+    ['LEG-D7724-002','Decreto 7.724: recursos, competências e prazos','LAI'],
     ['LEG-D7845-001','Decreto 7.845/2012','Segurança da informação'],
     ['LEG-DEL-001','Lei 12.737/2012, art. 2º — delitos informáticos','Delitos informáticos'],
     ['LEG-MCI-001','Marco Civil: direitos, guarda e fornecimento de registros','Marco Civil'],
     ['LEG-LGPD-001','LGPD: conceitos, princípios, bases legais e tratamento','LGPD'],
-    ['LEG-LGPD-002','LGPD: agentes, direitos, segurança e responsabilização','LGPD']
+    ['LEG-LGPD-002','LGPD: agentes, direitos e tratamento pelo poder público','LGPD'],
+    ['LEG-LGPD-003','LGPD: segurança, fiscalização, sanções e ANPD','LGPD']
   ]
 };
 
@@ -187,7 +231,7 @@ function renderHome(){
     return `<section class="discipline-block ${open?'open':''}" data-discipline="${esc(d)}"><button class="discipline-toggle" data-toggle-discipline="${esc(d)}"><div class="discipline-main"><div class="discipline-name">${esc(d)}</div><div class="discipline-summary">${done} concluída${done===1?'':'s'} · ${available} disponível${available===1?'':'eis'}${pending?` · ${pending} em preparação`:''} · ${blocked} bloqueada${blocked===1?'':'s'}</div><div class="mini-progress"><span style="width:${rows.length?100*done/rows.length:0}%"></span></div></div><div class="discipline-right"><span class="pill">${done}/${rows.length}</span><span class="discipline-chevron">⌄</span></div></button><div class="discipline-body"><div class="discipline-scroll">${rows.length?rows.map(renderPlannerSession).join(''):'<div class="road-empty">Nenhuma sessão planejada.</div>'}</div></div></section>`;
   }).join('');
   const used=manualUsed();
-  $('catalogCard').innerHTML=`<div class="catalog-shell"><div class="catalog-head"><div><div class="kicker">Trilha por disciplina</div><h1>Sessões</h1><p class="small">Cada disciplina mantém sua própria sequência. A próxima pode ficar pronta enquanto você estuda, e sessões futuras podem ser antecipadas manualmente.</p></div><span class="pill manual-counter">Antecipações: ${used}/${MANUAL_LIMIT}</span></div><div class="discipline-list">${blocks}</div><div class="small">Mapa atual: ${meta.done}/${meta.total} sessões concluídas. A quantidade pode crescer com sessões extras e ajustes pedagógicos.</div></div>`;
+  $('catalogCard').innerHTML=`<div class="catalog-shell"><div class="catalog-head"><div><div class="kicker">Trilha por disciplina</div><h1>Sessões</h1><p class="small">Cada disciplina mantém sua própria sequência. A próxima pode ficar pronta enquanto você estuda, e sessões futuras podem ser antecipadas manualmente.</p></div><span class="pill manual-counter">Antecipações: ${used}/${MANUAL_LIMIT}</span></div><div class="discipline-list">${blocks}</div><div class="small">Mapa pedagógico auditado: ${meta.done}/${meta.total} sessões planejadas concluídas. A quantidade continua variável e pode crescer com sessões extras e ajustes pedagógicos.</div></div>`;
   document.querySelectorAll('[data-toggle-discipline]').forEach(btn=>btn.onclick=()=>toggleDiscipline(btn.dataset.toggleDiscipline));
   document.querySelectorAll('[data-open-session]').forEach(btn=>btn.onclick=()=>openSession(btn.dataset.openSession));
   document.querySelectorAll('[data-prepare-session]').forEach(btn=>btn.onclick=()=>confirmPrepare(btn.dataset.prepareSession));
