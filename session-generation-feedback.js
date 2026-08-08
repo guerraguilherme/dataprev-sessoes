@@ -1,7 +1,8 @@
 'use strict';
 
-// Solicitação manual: o Web App aceita POST, mas o doPost espera JSON no corpo.
-// Enviamos JSON como text/plain para evitar preflight CORS no Safari e permitir JSON.parse no Apps Script.
+// Solicitação manual de preparação.
+// Caminho principal: request_session_generation. Se o Apps Script ainda não expuser
+// essa ação no doPost, usamos o canal já estável push_session_state como relay durável.
 (function(){
   function feedback(message,type='bad'){
     const el=document.getElementById('prepareFeedback');
@@ -13,7 +14,11 @@
     q.push({sessionId:id,status,requestedAt:new Date().toISOString(),triggerType:'manual_prepare',...extra});
     savePlannerQueue(q);
   }
-  async function postGeneration(cfg,payload){
+  function requestIdFor(id){
+    const stamp=new Date().toISOString().replace(/[-:.TZ]/g,'').slice(0,14);
+    return `SESS-${id}-${stamp}`;
+  }
+  async function postJson(cfg,payload){
     const response=await fetch(cfg.endpoint,{
       method:'POST',
       headers:{'Content-Type':'text/plain;charset=utf-8'},
@@ -23,12 +28,56 @@
     });
     const text=await response.text();
     let data=null;
-    try{data=JSON.parse(text)}catch{
-      throw new Error(`Resposta inválida do serviço: ${String(text||'').slice(0,120)}`);
-    }
+    try{data=JSON.parse(text)}catch{throw new Error(`Resposta inválida do serviço: ${String(text||'').slice(0,120)}`)}
     if(!response.ok)throw new Error(`HTTP ${response.status}`);
     if(data?.ok===false)throw new Error(data.error||'Falha no serviço.');
     return data;
+  }
+  async function relayGenerationRequest(cfg,id,title){
+    if(typeof sha256!=='function'||typeof jsonp!=='function')throw new Error('Canal de sincronização indisponível neste carregamento.');
+    const requestId=requestIdFor(id);
+    const relaySessionId=`__GENREQ__${id}`;
+    const requestState={
+      kind:'session_generation_request',
+      request_id:requestId,
+      status:'pending',
+      source:'dataprev_sessoes_pwa',
+      device_id:cfg.deviceId,
+      trigger_type:'manual_prepare',
+      session_id:id,
+      title,
+      requested_sessions:1,
+      content_version_at_request:catalog?.contentVersion||'',
+      created_at:new Date().toISOString()
+    };
+    const stateJson=JSON.stringify(requestState),checksum=await sha256(stateJson);
+    void fetch(cfg.endpoint,{
+      method:'POST',mode:'no-cors',cache:'no-store',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify({
+        action:'push_session_state',token:cfg.token,device_id:cfg.deviceId,
+        app_version:typeof APP_VERSION!=='undefined'?APP_VERSION:'',
+        content_version:catalog?.contentVersion||'',session_id:relaySessionId,
+        checksum,state_json:stateJson
+      })
+    }).catch(()=>{});
+    let confirmed=null;
+    for(let attempt=0;attempt<5&&!confirmed;attempt++){
+      await new Promise(r=>setTimeout(r,attempt===0?900:1400));
+      try{
+        const meta=await jsonp(cfg.endpoint,{action:'session_state_meta',token:cfg.token,device_id:cfg.deviceId,session_id:relaySessionId},9000);
+        if(meta?.found&&meta.checksum===checksum)confirmed=meta;
+      }catch{}
+    }
+    if(!confirmed)throw new Error('Não foi possível confirmar o pedido na base compartilhada.');
+    return {ok:true,request_id:requestId,relay:true};
+  }
+  async function submitGenerationRequest(cfg,payload){
+    try{return await postJson(cfg,payload)}catch(error){
+      const msg=String(error?.message||error||'');
+      if(/Ação POST inválida|acao post invalida|action.*invalid/i.test(msg))return relayGenerationRequest(cfg,payload.session_id,payload.title);
+      throw error;
+    }
   }
 
   if(typeof confirmPrepare==='function'){
@@ -48,28 +97,23 @@
     const btn=document.getElementById('confirmPrepareBtn');if(btn){btn.disabled=true;btn.textContent='Solicitando…'}
     const payload={action:'request_session_generation',token:cfg.token,device_id:cfg.deviceId,session_id:id,title,trigger_type:'manual_prepare',requested_sessions:1,content_version:catalog.contentVersion};
     try{
-      const response=await postGeneration(cfg,payload);
+      const response=await submitGenerationRequest(cfg,payload);
       if(response?.request_id){
-        queueLocal(id,'pendente_geracao',{requestId:response.request_id});
-        closePlannerModal();setStatus(`Pedido confirmado na fila (${response.request_id}). A preparação será materializada pelo publicador.`,'ok');renderHome();return;
+        queueLocal(id,'pendente_geracao',{requestId:response.request_id,confirmation:response.relay?'relay_confirmed':'native_confirmed'});
+        closePlannerModal();setStatus(`Pedido confirmado (${response.request_id}). A sessão entrou na preparação.`,'ok');renderHome();return;
       }
-      queueLocal(id,'pendente_geracao',{requestId:'',confirmation:'post_accepted'});
-      closePlannerModal();setStatus('Pedido aceito pelo serviço. Aguardando a fila compartilhada/publicação confirmar a sessão.','ok');renderHome();
+      throw new Error('O serviço respondeu sem confirmar um identificador de pedido.');
     }catch(error){
       const msg=String(error?.message||error||'Falha desconhecida');
-      if(/fetch|network|load failed|failed to fetch/i.test(msg)){
-        queueLocal(id,'pendente_geracao',{requestId:'',confirmation:'transport_uncertain',error:msg});
-        closePlannerModal();setStatus('O POST foi disparado, mas o navegador não conseguiu ler a confirmação. O app vai aguardar a fila compartilhada antes de permitir novo envio.','ok');renderHome();return;
-      }
       queueLocal(id,'erro_geracao',{requestId:'',error:msg});
-      feedback('O pedido não foi aceito: '+msg+'. Você pode tentar novamente.');if(btn){btn.disabled=false;btn.textContent='Tentar novamente'}
+      feedback('O pedido não foi confirmado: '+msg+' Você pode tentar novamente.');if(btn){btn.disabled=false;btn.textContent='Tentar novamente'}
     }
   };
 })();
 
 // Hotfix seguro de qualidade, sem MutationObserver recursivo.
 (function(){
-  const UI_VERSION='0.7.10';
+  const UI_VERSION='0.7.11';
   const style=document.createElement('style');
   style.textContent=`
     .dp-toast{top:calc(8px + env(safe-area-inset-top))!important;bottom:auto!important;max-width:min(88vw,440px)!important;border-radius:13px!important;padding:8px 11px!important;font-size:.72rem!important;line-height:1.28!important;font-weight:700!important;opacity:.96!important}
