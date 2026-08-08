@@ -1,12 +1,26 @@
 'use strict';
 
-// Confirmação visível e honesta das solicitações de preparação.
-// Uma sessão só entra como pendente quando o serviço devolve um request_id.
+// Solicitação manual: o serviço rejeita request_session_generation por GET.
+// A chamada passa a usar POST simples (form-urlencoded) e mantém feedback honesto.
 (function(){
   function feedback(message,type='bad'){
     const el=document.getElementById('prepareFeedback');
     if(el){el.textContent=message;el.className='status '+type;el.classList.remove('hidden')}
     if(typeof setStatus==='function')setStatus(message,type);
+  }
+  function queueLocal(id,status,extra={}){
+    const q=plannerQueue().filter(x=>x.sessionId!==id);
+    q.push({sessionId:id,status,requestedAt:new Date().toISOString(),triggerType:'manual_prepare',...extra});
+    savePlannerQueue(q);
+  }
+  async function postGeneration(cfg,payload){
+    const body=new URLSearchParams(payload);
+    const response=await fetch(cfg.endpoint,{method:'POST',body,redirect:'follow',cache:'no-store'});
+    const text=await response.text();
+    let data=null;try{data=JSON.parse(text)}catch{}
+    if(!response.ok)throw new Error(`HTTP ${response.status}`);
+    if(data?.ok===false)throw new Error(data.error||'Falha no serviço.');
+    return data||{ok:true,unparsed:true};
   }
 
   if(typeof confirmPrepare==='function'){
@@ -14,106 +28,56 @@
       const row=Object.values(ROADMAP).flat().find(x=>x[0]===id),used=manualUsed();
       if(used>=MANUAL_LIMIT)return alert('Você já tem duas sessões antecipadas aguardando início. Inicie uma delas para liberar uma vaga.');
       const title=row?.[1]||id;
-      const modal=showPlannerModal(`<h2>Preparar esta sessão agora?</h2><p><b>${esc(title)}</b></p><p class="small">O material será preparado por completo considerando a trilha, seu histórico, revisões pertinentes, desempenho, segurança, erros, notas e pré-requisitos. Essa antecipação ocupa 1 das 2 vagas manuais.</p><p class="small">A sessão seguinte <b>não</b> será gerada em cascata agora. O buffer automático volta a funcionar quando você iniciar esta sessão.</p><div id="prepareFeedback" class="status hidden"></div><div class="modal-actions"><button id="cancelPrepare">Cancelar</button><button id="confirmPrepareBtn" class="primary">Confirmar preparação</button></div>`);
+      const modal=showPlannerModal(`<h2>Preparar esta sessão agora?</h2><p><b>${esc(title)}</b></p><p class="small">O material será preparado por completo considerando a trilha, seu histórico, revisões pertinentes, desempenho, segurança, erros, notas e pré-requisitos. A explicação detalhada deve acrescentar intuição, mecanismo, exemplo guiado, contraste com erro comum e checklist específico da disciplina.</p><p class="small">Essa antecipação ocupa 1 das 2 vagas manuais. A sessão seguinte <b>não</b> será gerada em cascata agora.</p><div id="prepareFeedback" class="status hidden"></div><div class="modal-actions"><button id="cancelPrepare">Cancelar</button><button id="confirmPrepareBtn" class="primary">Confirmar preparação</button></div>`);
       modal.querySelector('#cancelPrepare').onclick=closePlannerModal;
       modal.querySelector('#confirmPrepareBtn').onclick=()=>requestPreparation(id,title);
     };
   }
 
-  if(typeof requestPreparation==='function'){
-    requestPreparation=async function(id,title){
-      const cfg=readConfig();
-      if(!cfg.endpoint||!cfg.token||!cfg.deviceId){feedback('A sincronização não está configurada neste aparelho. O pedido não foi enviado.');return}
-      const btn=document.getElementById('confirmPrepareBtn');
-      if(btn){btn.disabled=true;btn.textContent='Solicitando…'}
-      try{
-        const response=await jsonp(cfg.endpoint,{action:'request_session_generation',token:cfg.token,device_id:cfg.deviceId,session_id:id,title,trigger_type:'manual_prepare',requested_sessions:1,content_version:catalog.contentVersion},20000);
-        if(!response?.request_id)throw new Error('o serviço não confirmou um código de fila');
-        const q=plannerQueue().filter(x=>x.sessionId!==id);
-        q.push({sessionId:id,status:'pendente_geracao',requestedAt:new Date().toISOString(),requestId:response.request_id,triggerType:'manual_prepare'});
-        savePlannerQueue(q);
-        closePlannerModal();
-        setStatus(`Pedido confirmado na fila (${response.request_id}). A sessão ficará pronta após a publicação do conteúdo.`,'ok');
-        if(typeof dpSessionToast==='function')dpSessionToast('Pedido de preparação confirmado na fila.');
-        renderHome();
-      }catch(error){
-        const q=plannerQueue().filter(x=>x.sessionId!==id);
-        q.push({sessionId:id,status:'erro_geracao',requestedAt:new Date().toISOString(),requestId:'',triggerType:'manual_prepare',error:String(error.message||error)});
-        savePlannerQueue(q);
-        feedback('O pedido não entrou na fila: '+(error.message||error)+'. Nada foi consumido das suas duas vagas; você pode tentar novamente.');
-        if(btn){btn.disabled=false;btn.textContent='Tentar novamente'}
+  requestPreparation=async function(id,title){
+    const cfg=readConfig();
+    if(!cfg.endpoint||!cfg.token||!cfg.deviceId){feedback('A sincronização não está configurada neste aparelho. O pedido não foi enviado.');return}
+    const btn=document.getElementById('confirmPrepareBtn');if(btn){btn.disabled=true;btn.textContent='Solicitando…'}
+    const payload={action:'request_session_generation',token:cfg.token,device_id:cfg.deviceId,session_id:id,title,trigger_type:'manual_prepare',requested_sessions:'1',content_version:catalog.contentVersion};
+    try{
+      const response=await postGeneration(cfg,payload);
+      if(response?.request_id){
+        queueLocal(id,'pendente_geracao',{requestId:response.request_id});
+        closePlannerModal();setStatus(`Pedido confirmado na fila (${response.request_id}). A preparação será materializada pelo publicador.`,'ok');renderHome();return;
       }
-    };
-  }
+      // Alguns Web Apps aceitam o POST mas não expõem a resposta por CORS/redirect.
+      queueLocal(id,'pendente_geracao',{requestId:'',confirmation:'post_sent'});
+      closePlannerModal();setStatus('Pedido enviado por POST. Aguardando a fila compartilhada/publicação confirmar a sessão.','ok');renderHome();
+    }catch(error){
+      const msg=String(error?.message||error||'Falha desconhecida');
+      // TypeError em fetch pode ocorrer depois de o navegador já ter enviado o POST ao Apps Script.
+      // Não repetimos automaticamente para evitar duplicidade; registramos estado de confirmação pendente.
+      if(/fetch|network|load failed|failed to fetch/i.test(msg)){
+        queueLocal(id,'pendente_geracao',{requestId:'',confirmation:'transport_uncertain',error:msg});
+        closePlannerModal();setStatus('O POST foi disparado, mas o navegador não conseguiu ler a confirmação. O app vai aguardar a fila compartilhada antes de permitir novo envio.','ok');renderHome();return;
+      }
+      queueLocal(id,'erro_geracao',{requestId:'',error:msg});
+      feedback('O pedido não foi aceito: '+msg+'. Você pode tentar novamente.');if(btn){btn.disabled=false;btn.textContent='Tentar novamente'}
+    }
+  };
 })();
 
-// Hotfix seguro de qualidade. Diferentemente da tentativa 0.7.7, não observa nem
-// reescreve continuamente o DOM: atua apenas nos pontos normais de renderização.
+// Hotfix seguro de qualidade, sem MutationObserver recursivo.
 (function(){
-  const UI_VERSION='0.7.8';
+  const UI_VERSION='0.7.9';
   const style=document.createElement('style');
   style.textContent=`
     .dp-toast{top:calc(8px + env(safe-area-inset-top))!important;bottom:auto!important;max-width:min(88vw,440px)!important;border-radius:13px!important;padding:8px 11px!important;font-size:.72rem!important;line-height:1.28!important;font-weight:700!important;opacity:.96!important}
     #nextConcept:disabled{background:#f7f9fc!important;border-color:var(--line)!important;color:#98a2b3!important;opacity:1!important}
-  `;
-  document.head.appendChild(style);
-
-  function setVersionLabel(){
-    document.title=`DATAPREV Sessões — PWA ${UI_VERSION}`;
-    const summary=document.getElementById('contentSummary');
-    if(summary){
-      const text=summary.textContent||'';
-      summary.textContent=/PWA\s+[\d.]+/.test(text)?text.replace(/PWA\s+[\d.]+/,`PWA ${UI_VERSION}`):`${text} · PWA ${UI_VERSION}`;
-    }
-  }
-
-  function patchOrthoData(){
-    if(typeof catalog==='undefined'||!catalog?.sessions)return false;
-    const s=catalog.sessions.find(x=>x.id==='PT-ORT-001');
-    const c=s?.concepts?.find(x=>x.id==='PT-ORT-C01');
-    if(!c)return false;
-    const leak=(c.visuals?.[0]?.left?.items||[]).includes('privilégio');
-    if(!leak)return false;
-    c.visuals=[{
-      type:'comparison',title:'Familiaridade não é regra',
-      left:{title:'Formas corretas',items:['análise','pesquisa','benefício']},
-      right:{title:'Armadilhas comuns',items:['analize','pesquiza','benefísio']}
-    }];
-    if(c.supportDetails)c.supportDetails.example="Em 'pesquisa', a grafia é com s. A forma 'pesquiza' parece plausível pelo som, mas não pertence ao padrão oficial.";
-    return true;
-  }
-
-  function gateNextConcept(){
-    const btn=document.getElementById('nextConcept');
-    if(!btn||typeof state==='undefined'||typeof session==='undefined'||state?.phase!=='concepts')return;
-    const c=session?.concepts?.[state.conceptIndex];
-    const allowed=!c||typeof conceptDone!=='function'||conceptDone(c);
-    btn.disabled=!allowed;
-    btn.setAttribute('aria-disabled',String(!allowed));
-    btn.title=allowed?'':'Conclua a fixação imediata antes de avançar.';
-  }
-
-  if(typeof renderHome==='function'){
-    const base=renderHome;
-    renderHome=function(){patchOrthoData();base();setVersionLabel()};
-  }
-  if(typeof renderConcept==='function'){
-    const base=renderConcept;
-    renderConcept=function(){patchOrthoData();base();gateNextConcept();setVersionLabel()};
-  }
-  if(typeof renderFinal==='function'){
-    const base=renderFinal;
-    renderFinal=function(){patchOrthoData();base();setVersionLabel()};
-  }
-  if(typeof renderComplete==='function'){
-    const base=renderComplete;
-    renderComplete=function(){patchOrthoData();base();setVersionLabel()};
-  }
-
-  document.addEventListener('click',e=>{
-    if(e.target.closest?.('#nextConcept')&&e.target.closest('#nextConcept')?.disabled){
-      e.preventDefault();e.stopImmediatePropagation();
-    }
-  },true);
+    .sv-flow{scroll-padding-left:2px}.session-visual{max-width:100%}
+  `;document.head.appendChild(style);
+  function setVersionLabel(){document.title=`DATAPREV Sessões — PWA ${UI_VERSION}`;const summary=document.getElementById('contentSummary');if(summary){const text=summary.textContent||'';summary.textContent=/PWA\s+[\d.]+/.test(text)?text.replace(/PWA\s+[\d.]+/,`PWA ${UI_VERSION}`):`${text} · PWA ${UI_VERSION}`}}
+  function patchOrthoData(){if(typeof catalog==='undefined'||!catalog?.sessions)return false;const s=catalog.sessions.find(x=>x.id==='PT-ORT-001');const c=s?.concepts?.find(x=>x.id==='PT-ORT-C01');if(!c)return false;const leak=(c.visuals?.[0]?.left?.items||[]).includes('privilégio');if(!leak)return false;c.visuals=[{type:'comparison',title:'Familiaridade não é regra',left:{title:'Formas corretas',items:['análise','pesquisa','benefício']},right:{title:'Armadilhas comuns',items:['analize','pesquiza','benefísio']}}];if(c.supportDetails){c.supportDetails.example="Em 'pesquisa', a grafia é com s. A forma 'pesquiza' parece plausível pelo som, mas não pertence ao padrão oficial.";c.supportDetails.contrast="O erro nasce quando você decide só pelo som. O som de /z/ entre vogais não garante a letra z: 'pesquisa' conserva s pela grafia lexical.";c.supportDetails.why="Ortografia é convenção escrita: pronúncia ajuda, mas não determina sozinha a sequência de letras. Família lexical e padrão oficial têm prioridade."}return true}
+  function gateNextConcept(){const btn=document.getElementById('nextConcept');if(!btn||typeof state==='undefined'||typeof session==='undefined'||state?.phase!=='concepts')return;const c=session?.concepts?.[state.conceptIndex];const allowed=!c||typeof conceptDone!=='function'||conceptDone(c);btn.disabled=!allowed;btn.setAttribute('aria-disabled',String(!allowed));btn.title=allowed?'':'Conclua a fixação imediata antes de avançar.'}
+  if(typeof renderHome==='function'){const base=renderHome;renderHome=function(){patchOrthoData();base();setVersionLabel()}}
+  if(typeof renderConcept==='function'){const base=renderConcept;renderConcept=function(){patchOrthoData();base();gateNextConcept();setVersionLabel();document.querySelectorAll('.sv-flow').forEach(x=>{try{x.scrollLeft=0}catch{}})}}
+  if(typeof renderFinal==='function'){const base=renderFinal;renderFinal=function(){patchOrthoData();base();setVersionLabel()}}
+  if(typeof renderComplete==='function'){const base=renderComplete;renderComplete=function(){patchOrthoData();base();setVersionLabel()}}
+  document.addEventListener('click',e=>{if(e.target.closest?.('#nextConcept')&&e.target.closest('#nextConcept')?.disabled){e.preventDefault();e.stopImmediatePropagation()}},true);
   setTimeout(()=>{patchOrthoData();gateNextConcept();setVersionLabel()},350);
 })();
