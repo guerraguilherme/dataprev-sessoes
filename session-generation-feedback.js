@@ -46,3 +46,74 @@
     };
   }
 })();
+
+// Hotfix seguro de qualidade. Diferentemente da tentativa 0.7.7, não observa nem
+// reescreve continuamente o DOM: atua apenas nos pontos normais de renderização.
+(function(){
+  const UI_VERSION='0.7.8';
+  const style=document.createElement('style');
+  style.textContent=`
+    .dp-toast{top:calc(8px + env(safe-area-inset-top))!important;bottom:auto!important;max-width:min(88vw,440px)!important;border-radius:13px!important;padding:8px 11px!important;font-size:.72rem!important;line-height:1.28!important;font-weight:700!important;opacity:.96!important}
+    #nextConcept:disabled{background:#f7f9fc!important;border-color:var(--line)!important;color:#98a2b3!important;opacity:1!important}
+  `;
+  document.head.appendChild(style);
+
+  function setVersionLabel(){
+    document.title=`DATAPREV Sessões — PWA ${UI_VERSION}`;
+    const summary=document.getElementById('contentSummary');
+    if(summary){
+      const text=summary.textContent||'';
+      summary.textContent=/PWA\s+[\d.]+/.test(text)?text.replace(/PWA\s+[\d.]+/,`PWA ${UI_VERSION}`):`${text} · PWA ${UI_VERSION}`;
+    }
+  }
+
+  function patchOrthoData(){
+    if(typeof catalog==='undefined'||!catalog?.sessions)return false;
+    const s=catalog.sessions.find(x=>x.id==='PT-ORT-001');
+    const c=s?.concepts?.find(x=>x.id==='PT-ORT-C01');
+    if(!c)return false;
+    const leak=(c.visuals?.[0]?.left?.items||[]).includes('privilégio');
+    if(!leak)return false;
+    c.visuals=[{
+      type:'comparison',title:'Familiaridade não é regra',
+      left:{title:'Formas corretas',items:['análise','pesquisa','benefício']},
+      right:{title:'Armadilhas comuns',items:['analize','pesquiza','benefísio']}
+    }];
+    if(c.supportDetails)c.supportDetails.example="Em 'pesquisa', a grafia é com s. A forma 'pesquiza' parece plausível pelo som, mas não pertence ao padrão oficial.";
+    return true;
+  }
+
+  function gateNextConcept(){
+    const btn=document.getElementById('nextConcept');
+    if(!btn||typeof state==='undefined'||typeof session==='undefined'||state?.phase!=='concepts')return;
+    const c=session?.concepts?.[state.conceptIndex];
+    const allowed=!c||typeof conceptDone!=='function'||conceptDone(c);
+    btn.disabled=!allowed;
+    btn.setAttribute('aria-disabled',String(!allowed));
+    btn.title=allowed?'':'Conclua a fixação imediata antes de avançar.';
+  }
+
+  if(typeof renderHome==='function'){
+    const base=renderHome;
+    renderHome=function(){patchOrthoData();base();setVersionLabel()};
+  }
+  if(typeof renderConcept==='function'){
+    const base=renderConcept;
+    renderConcept=function(){patchOrthoData();base();gateNextConcept();setVersionLabel()};
+  }
+  if(typeof renderFinal==='function'){
+    const base=renderFinal;
+    renderFinal=function(){patchOrthoData();base();setVersionLabel()};
+  }
+  if(typeof renderComplete==='function'){
+    const base=renderComplete;
+    renderComplete=function(){patchOrthoData();base();setVersionLabel()};
+  }
+
+  document.addEventListener('click',e=>{
+    if(e.target.closest?.('#nextConcept')&&e.target.closest('#nextConcept')?.disabled){
+      e.preventDefault();e.stopImmediatePropagation();
+    }
+  },true);
+  setTimeout(()=>{patchOrthoData();gateNextConcept();setVersionLabel()},350);
+})();
