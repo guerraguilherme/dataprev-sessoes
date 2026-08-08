@@ -2,6 +2,7 @@
 
 // UX complementar dos simulados: navegador compacto + revisão em duas camadas.
 (function(){
+  let qNavKeepOpen=false;
   const style=document.createElement('style');
   style.textContent=`
   .sim-qnav{margin:10px 0 12px;border:1px solid var(--line);border-radius:13px;background:#f8fafc;overflow:hidden}
@@ -49,15 +50,23 @@
     if(!simCurrent||!simState)return'';
     const answered=Object.values(simState.answers||{}).filter(r=>r?.confirmed).length;
     const buttons=simCurrent.questions.map((q,i)=>{const r=simState.answers?.[q.id]||{};const cls=i===simState.currentIndex?'current':r.confirmed?'done':'pending';return `<button type="button" class="${cls}" data-sim-jump="${i}" aria-label="Ir para questão ${i+1}">${i+1}</button>`}).join('');
-    return `<details class="sim-qnav"><summary><span>Questões · ${simState.currentIndex+1}/70</span><span class="small">${answered} respondidas</span></summary><div class="sim-qnav-grid">${buttons}</div></details>`;
+    return `<details class="sim-qnav"${qNavKeepOpen?' open':''}><summary><span>Questões · ${simState.currentIndex+1}/70</span><span class="small">${answered} respondidas</span></summary><div class="sim-qnav-grid">${buttons}</div></details>`;
   }
   function enhance(){
     const panel=document.getElementById('simuladoPanel');if(!panel||panel.classList.contains('hidden')||!simCurrent||!simState||simState.completedAt)return;
     if(!panel.querySelector('.sim-qnav')){const head=panel.querySelector('.sim-head');if(head)head.insertAdjacentHTML('afterend',navHtml())}
+    const nav=panel.querySelector('.sim-qnav');if(nav){nav.addEventListener('toggle',()=>{qNavKeepOpen=nav.open})}
     const data=supportData();const old=panel.querySelector('.sim-support');if(old&&data){old.outerHTML=compactSupportHtml(data.q,data.rec,data.s)}
-    panel.querySelectorAll('[data-sim-jump]').forEach(btn=>btn.onclick=()=>{const i=Number(btn.dataset.simJump);if(!Number.isInteger(i))return;simUpdateClock();simState.currentIndex=i;simSaveState();simRender();requestAnimationFrame(()=>document.querySelector('.sim-qnav')?.scrollIntoView({block:'start',behavior:'auto'}))});
+    panel.querySelectorAll('[data-sim-jump]').forEach(btn=>btn.onclick=()=>{const i=Number(btn.dataset.simJump);if(!Number.isInteger(i))return;qNavKeepOpen=true;simUpdateClock();simState.currentIndex=i;simSaveState();simRender()});
     panel.querySelector('[data-sim-detail]')?.addEventListener('click',openDetail);
   }
+
+  // Qualquer interação de resposta/navegação sequencial fecha o navegador.
+  document.addEventListener('click',event=>{
+    const el=event.target.closest?.('#simNext,#simPrev,#simConfirm,[data-sim-choice],[data-sim-confidence],#simSupportBtn,#simExit,[data-reset-simulado]');
+    if(el)qNavKeepOpen=false;
+  },true);
+
   const base=simRender;
   simRender=function(){base();enhance()};
   enhance();
