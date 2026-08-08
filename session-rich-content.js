@@ -1,0 +1,53 @@
+'use strict';
+
+// Recursos pedagógicos estruturados para Sessões: fluxos, tabelas, diagramas,
+// gráficos esquemáticos, fórmulas, linhas do tempo e referência de questões reais.
+(function(){
+  const style=document.createElement('style');
+  style.textContent=`
+  .session-visuals{display:grid;gap:9px;margin:10px 0}.session-visual{border:1px solid var(--line);border-radius:13px;background:#f8fafc;padding:11px;overflow:hidden}.session-visual h3{margin:0 0 8px;font-size:.9rem}.session-visual .caption{font-size:.74rem;color:var(--muted);margin-top:8px;line-height:1.4}
+  .sv-flow{display:flex;align-items:stretch;gap:6px;overflow-x:auto;padding-bottom:3px}.sv-step{flex:1;min-width:116px;padding:9px;border:1px solid #cbd8fb;background:#fff;border-radius:10px;font-size:.78rem;text-align:center;font-weight:700}.sv-arrow{display:flex;align-items:center;color:var(--accent);font-weight:900}
+  .sv-table{width:100%;border-collapse:collapse;font-size:.78rem}.sv-table th,.sv-table td{border:1px solid var(--line);padding:7px;text-align:left}.sv-table th{background:#eef3fb}
+  .sv-diagram{display:flex;flex-wrap:wrap;gap:7px}.sv-node{border:1px solid #bfd0ff;background:#fff;border-radius:10px;padding:8px 10px;font-size:.78rem;font-weight:700}.sv-formula{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.95rem;font-weight:800;background:#fff;border:1px solid #cbd8fb;border-radius:10px;padding:11px;text-align:center;overflow-x:auto}
+  .sv-graph{width:100%;height:190px;background:#fff;border:1px solid var(--line);border-radius:10px}.sv-ref{border-left:4px solid var(--accent);padding-left:10px;line-height:1.45}.source-ref,.real-q-ref{margin:9px 0;padding:9px 10px;border-radius:11px;font-size:.75rem;line-height:1.45}.source-ref{background:#f5f7fb;border:1px solid var(--line);color:var(--muted)}.real-q-ref{background:#f3f6ff;border:1px solid #bfd0ff;color:#173f91}.real-q-ref b{display:block;margin-bottom:3px}
+  @media(max-width:580px){.sv-flow{scroll-snap-type:x proximity}.sv-step{scroll-snap-align:start;min-width:135px}.sv-graph{height:165px}}
+  `;document.head.appendChild(style);
+
+  const e=v=>typeof esc==='function'?esc(v):String(v??'');
+  function graphSvg(v){
+    const series=v.series||[{name:'',points:v.points||[]}];
+    let all=[];series.forEach(s=>all.push(...(s.points||[])));
+    if(!all.length)return'';
+    const nums=all.filter(p=>typeof p[0]==='number'&&typeof p[1]==='number');
+    if(!nums.length){
+      const labels=all.map(p=>p[0]), ys=all.map(p=>Number(p[1]));const minY=Math.min(...ys),maxY=Math.max(...ys),span=maxY-minY||1;
+      const pts=ys.map((y,i)=>`${35+i*(250/Math.max(1,ys.length-1))},${145-(y-minY)/span*110}`).join(' ');
+      return `<svg class="sv-graph" viewBox="0 0 320 180" role="img" aria-label="${e(v.title||'gráfico')}"><line x1="30" y1="150" x2="300" y2="150" stroke="#9aa7ba"/><line x1="30" y1="20" x2="30" y2="150" stroke="#9aa7ba"/><polyline points="${pts}" fill="none" stroke="currentColor" stroke-width="3" color="#155eef"/>${labels.map((x,i)=>`<text x="${35+i*(250/Math.max(1,labels.length-1))}" y="168" text-anchor="middle" font-size="10" fill="#68758d">${e(x)}</text>`).join('')}</svg>`;
+    }
+    const xs=nums.map(p=>p[0]),ys=nums.map(p=>p[1]);const minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys),sx=maxX-minX||1,sy=maxY-minY||1;
+    const x=z=>35+(z-minX)/sx*250,y=z=>145-(z-minY)/sy*110;
+    return `<svg class="sv-graph" viewBox="0 0 320 180" role="img" aria-label="${e(v.title||'gráfico')}"><line x1="30" y1="145" x2="300" y2="145" stroke="#9aa7ba"/><line x1="35" y1="15" x2="35" y2="155" stroke="#9aa7ba"/>${series.map(s=>`<polyline points="${(s.points||[]).map(p=>`${x(p[0])},${y(p[1])}`).join(' ')}" fill="none" stroke="#155eef" stroke-width="2.6"/>`).join('')}${nums.map(p=>`<circle cx="${x(p[0])}" cy="${y(p[1])}" r="3.5" fill="#155eef"/>`).join('')}</svg>`;
+  }
+  function visual(v){
+    const title=v.title?`<h3>${e(v.title)}</h3>`:'';let body='';
+    if(v.type==='flow')body=`<div class="sv-flow">${(v.steps||[]).map((s,i)=>`${i?'<div class="sv-arrow">→</div>':''}<div class="sv-step">${e(s)}</div>`).join('')}</div>`;
+    else if(v.type==='table')body=`<table class="sv-table"><thead><tr>${(v.headers||[]).map(h=>`<th>${e(h)}</th>`).join('')}</tr></thead><tbody>${(v.rows||[]).map(r=>`<tr>${r.map(c=>`<td>${e(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+    else if(['diagram','set'].includes(v.type))body=`<div class="sv-diagram">${(v.nodes||v.universe||[]).map(n=>{const txt=Array.isArray(n)?n.join(' · '):n;const hi=(v.highlight||[]).includes(n);return `<span class="sv-node"${hi?' style="border-color:#78c99f;background:#e9f8f0"':''}>${e(txt)}</span>`}).join('')}</div>`;
+    else if(v.type==='comparison')body=`<div class="sv-flow"><div class="sv-step"><b>${e(v.left?.title||'')}</b><br>${(v.left?.items||[]).map(e).join('<br>')}</div><div class="sv-step"><b>${e(v.right?.title||'')}</b><br>${(v.right?.items||[]).map(e).join('<br>')}</div></div>`;
+    else if(v.type==='formula')body=`<div class="sv-formula">${e(v.formula||'')}</div>`;
+    else if(v.type==='timeline')body=`<div class="sv-flow">${(v.points||[]).map((p,i)=>`${i?'<div class="sv-arrow">→</div>':''}<div class="sv-step"><b>${e(p[0])}</b><br>${e(p[1])}</div>`).join('')}</div>`;
+    else if(v.type==='reference')body=`<div class="sv-ref">${e(v.text||'')}</div>`;
+    else if(v.type==='graph'||v.type==='chart')body=graphSvg(v);
+    else if(v.type==='image'&&v.src)body=`<figure style="margin:0"><img src="${e(v.src)}" alt="${e(v.alt||'')}" style="display:block;max-width:100%;margin:auto;border-radius:10px"><figcaption class="caption">${e(v.caption||'')}</figcaption></figure>`;
+    if(!body)return'';return `<div class="session-visual">${title}${body}${v.caption&&v.type!=='image'?`<div class="caption">${e(v.caption)}</div>`:''}</div>`;
+  }
+  function visualBlock(concept){return concept?.visuals?.length?`<div class="session-visuals">${concept.visuals.map(visual).join('')}</div>`:''}
+  if(typeof renderConcept==='function'){
+    const base=renderConcept;
+    renderConcept=function(){base();const c=session?.concepts?.[state?.conceptIndex];if(!c)return;const html=visualBlock(c);if(html){const adaptive=document.querySelector('#studyBody .adaptive');if(adaptive)adaptive.insertAdjacentHTML('beforebegin',html)}if(c.source_reference||c.sourceReference){document.querySelector('#studyBody')?.insertAdjacentHTML('beforeend',`<div class="source-ref"><b>Fonte:</b> ${e(c.source_reference||c.sourceReference)}</div>`)} };
+  }
+  if(typeof renderFinal==='function'){
+    const base=renderFinal;
+    renderFinal=function(){base();const q=session?.finalQuestions?.[state?.finalIndex];if(!q)return;const ex=document.querySelector('#studyBody .exercise');if(ex&&q.stimuli?.length)ex.insertAdjacentHTML('afterbegin',`<div class="session-visuals">${q.stimuli.map(visual).join('')}</div>`);if(ex&&q.real_question_reference)ex.insertAdjacentHTML('afterend',`<div class="real-q-ref"><b>Questão real relacionada</b>${e(q.real_question_reference)}</div>`);if(q.source_reference){document.querySelector('#studyBody')?.insertAdjacentHTML('beforeend',`<div class="source-ref"><b>Fonte da referência:</b> ${e(q.source_reference)}</div>`)}}
+  }
+})();
