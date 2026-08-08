@@ -37,9 +37,7 @@
     }catch(err){delete marks[nextId];writeObj(AUTO_KEY,marks);console.warn('Buffer automático não solicitado:',err)}
   }
 
-  if(typeof manualUsed==='function'){
-    manualUsed=function(){return plannerQueue().filter(x=>['pendente_geracao','pronta'].includes(x.status)&&x.triggerType!=='auto_buffer').length}
-  }
+  if(typeof manualUsed==='function')manualUsed=function(){return plannerQueue().filter(x=>['pendente_geracao','pronta'].includes(x.status)&&x.triggerType!=='auto_buffer').length};
 
   if(typeof requestPreparation==='function'){
     const baseRequest=requestPreparation;
@@ -59,7 +57,15 @@
         const done=readObj(SYNCED_KEY);const key=`${state.sessionId}|${state.completedAt}`;
         if(!done[key]){
           done[key]='pending';writeObj(SYNCED_KEY,done);
-          setTimeout(async()=>{try{toast('Sessão concluída. Enviando relatório e checkpoint…');await syncNow();done[key]='sent';writeObj(SYNCED_KEY,done);toast('Relatório e checkpoint final sincronizados.')}catch(err){delete done[key];writeObj(SYNCED_KEY,done)}},250);
+          setTimeout(async()=>{
+            try{
+              toast('Sessão concluída. Enviando relatório e checkpoint…');
+              await syncNow();
+              const ok=document.getElementById('syncBadge')?.classList.contains('ok');
+              if(ok){done[key]='sent';writeObj(SYNCED_KEY,done);toast('Relatório e checkpoint final sincronizados.')}
+              else{delete done[key];writeObj(SYNCED_KEY,done);toast('Progresso salvo localmente; sincronização final ainda não confirmou.')}
+            }catch(err){delete done[key];writeObj(SYNCED_KEY,done);toast('Progresso salvo localmente; sincronização final será tentada novamente.')}
+          },250);
         }
         setTimeout(()=>ensureNextBuffered(state.sessionId),450);
       }
@@ -74,8 +80,7 @@
     const back=document.createElement('button');back.type='button';back.textContent='‹';back.setAttribute('aria-label','Página anterior');
     const next=document.createElement('button');next.type='button';next.textContent='›';next.setAttribute('aria-label','Próxima página');
     nav.append(back,next);document.getElementById('studyTitle')?.insertAdjacentElement('afterend',nav);
-    back.disabled=state.phase==='concepts'&&state.conceptIndex===0;
-    next.disabled=state.phase==='complete';
+    back.disabled=state.phase==='concepts'&&state.conceptIndex===0;next.disabled=state.phase==='complete';
     back.onclick=()=>{
       if(state.phase==='concepts'){document.getElementById('prevConcept')?.click();return}
       if(state.phase==='final'){
@@ -87,9 +92,7 @@
     };
     next.onclick=()=>{
       if(state.phase==='concepts'){document.getElementById('nextConcept')?.click();return}
-      if(state.phase==='final'){
-        const btn=document.getElementById('nextFinal');if(btn)btn.click();else toast('Corrija a resposta atual antes de avançar.');
-      }
+      if(state.phase==='final'){const btn=document.getElementById('nextFinal');if(btn)btn.click();else toast('Corrija a resposta atual antes de avançar.')}
     };
   }
   const observer=new MutationObserver(()=>requestAnimationFrame(injectNav));observer.observe(document.body,{childList:true,subtree:true});
