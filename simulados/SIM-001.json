@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 2,
+  "id": "SIM-001",
+  "title": "Simulado 01 — Perfil 4 — FGV realista",
+  "contentVersion": "2026.08.08-sim-001-v1",
+  "totalQuestions": 70,
+  "parts": [
+    "SIM-001-p01.json",
+    "SIM-001-p02.json",
+    "SIM-001-p03.json",
+    "SIM-001-p04.json",
+    "SIM-001-p05.json",
+    "SIM-001-p06.json",
+    "SIM-001-p07.json",
+    "SIM-001-p08.json",
+    "SIM-001-p09.json",
+    "SIM-001-p10.json",
+    "SIM-001-p11.json",
+    "SIM-001-p12.json",
+    "SIM-001-p13.json",
+    "SIM-001-p14a.json",
+    "SIM-001-p14b.json"
+  ],
+  "examModel": {
+    "general": 40,
+    "specific": 30,
+    "generalDistribution": {
+      "Língua Portuguesa": 12,
+      "Língua Inglesa": 12,
+      "Raciocínio Lógico": 5,
+      "Atualidades e IA": 6,
+      "Legislação": 5
+    },
+    "specificDistribution": {
+      "Matemática": 5,
+      "Estatística": 6,
+      "Ciência de Dados / ML": 10,
+      "Python e Ferramentas": 5,
+      "Banco de Dados": 4
+    },
+    "specificWeight": 2.5,
+    "answerBalance": {"A":14,"B":14,"C":14,"D":14,"E":14}
+  },
+  "quality": {
+    "status": "validated_structure",
+    "fiveAlternatives": true,
+    "perOptionExplanations": true,
+    "supportBeforeAndAfterAnswer": true,
+    "stimuliEnabled": true,
+    "coveragePolicy": "all_edital_eligible_accumulated_coverage_tracked",
+    "sourcePolicy": "edital_primary_fgv_reference_official_current_sources_for_current_affairs"
+  }
+}
