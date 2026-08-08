@@ -1,0 +1,50 @@
+{
+  "foundation_version": 2,
+  "materialized_at": "2026-08-08",
+  "coverage_registry": {
+    "spreadsheet_id": "1r-wCBcGykOLtcZ8IDWjbt2xlxF7_lSFz-FfkIydgKxc",
+    "sheet": "Coverage_Registry_v2",
+    "coverage_count": 105,
+    "identity_strategy": "B+|COV-{DOMINIO}-{SERIAL_ESTAVEL}",
+    "identity_mutability": "immutable",
+    "lifecycle_state": "mapped_proposed",
+    "readback_range": "A1:R106",
+    "readback_verified": true,
+    "discipline_counts": {
+      "PT": 12,
+      "EN": 1,
+      "RL": 7,
+      "AT": 4,
+      "LEG": 9,
+      "MAT": 12,
+      "EST": 13,
+      "ML": 21,
+      "PY": 12,
+      "BD": 14
+    }
+  },
+  "source_registry": {
+    "sheet": "Source_Registry_v2",
+    "source_count": 3,
+    "sources": [
+      "SRC-EDITAL-P4-2026",
+      "SRC-PLANO-MESTRE-2.11",
+      "SRC-DOC-MESTRE-SESSOES"
+    ]
+  },
+  "mastery": {
+    "status": "deferred_uncalibrated",
+    "raw_evidence_only": true
+  },
+  "safety": {
+    "learner_history_changed": false,
+    "session_progress_changed": false,
+    "content_generated": false,
+    "publication_config_changed": false
+  },
+  "notes": [
+    "Materialization of a registry identity does not imply taught, practiced, reviewed, assessed or mastered.",
+    "The 105 semantic mappings remain mapped_proposed until formal validation against the current official edital.",
+    "Google Sheets coerced program_ref 7.2.6 to a date-like value on initial paste; it was corrected explicitly as text and read back as 7.2.6."
+  ]
+}
