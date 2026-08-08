@@ -97,3 +97,83 @@ simOpen=async function(id){
     simRender();window.scrollTo({top:0,behavior:'smooth'});
   }catch(error){setStatus('Não foi possível abrir o simulado: '+error.message,'bad')}
 };
+
+(function(){
+  let confirmScrollY=null;
+
+  document.addEventListener('click',event=>{
+    const btn=event.target.closest?.('#simConfirm');
+    if(!btn)return;
+    confirmScrollY=window.scrollY;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      if(confirmScrollY===null)return;
+      window.scrollTo({top:confirmScrollY,behavior:'auto'});
+      confirmScrollY=null;
+    }));
+  },true);
+
+  function resetCurrentSimulado(){
+    if(!window.confirm('Reiniciar este simulado? Todas as respostas, marcações de apoio, segurança e tempo deste simulado serão apagados neste aparelho.'))return;
+    if(typeof simState==='undefined'||typeof simCurrent==='undefined'||!simCurrent)return;
+    const id=simState?.simuladoId||simCurrent.id;
+    if(!id)return;
+    try{
+      const map=simReadStates();
+      delete map[id];
+      simWriteStates(map);
+      simState=simGetState(id);
+      simState.startedAt=new Date().toISOString();
+      simState.completedAt='';
+      simState.currentIndex=0;
+      simState.answers={};
+      simState.activeMs=0;
+      simState.timerRunning=true;
+      simState.lastTick=Date.now();
+      simState.generationTriggered=true;
+      simSaveState();
+      simRender();
+      requestAnimationFrame(()=>document.getElementById('simuladoPanel')?.scrollIntoView({block:'start',behavior:'auto'}));
+    }catch(error){
+      console.error('Falha ao reiniciar simulado:',error);
+      alert('Não foi possível reiniciar o simulado neste aparelho.');
+    }
+  }
+
+  function ensureResetButton(){
+    const panel=document.getElementById('simuladoPanel');
+    if(!panel||panel.classList.contains('hidden')||panel.querySelector('[data-reset-simulado]'))return;
+    const head=panel.querySelector('.sim-head');
+    const resultHome=panel.querySelector('#simResultHome');
+    const button=document.createElement('button');
+    button.type='button';
+    button.className='danger';
+    button.dataset.resetSimulado='1';
+    button.textContent='Resetar simulado';
+    button.addEventListener('click',resetCurrentSimulado);
+    if(head){
+      const existing=head.querySelector('#simExit');
+      if(existing){
+        let actions=head.querySelector('.sim-head-actions');
+        if(!actions){
+          actions=document.createElement('div');
+          actions.className='sim-head-actions';
+          existing.parentNode.insertBefore(actions,existing);
+          actions.appendChild(existing);
+        }
+        actions.appendChild(button);
+      }else head.appendChild(button);
+    }else if(resultHome){
+      resultHome.parentElement?.appendChild(button);
+    }
+  }
+
+  const style=document.createElement('style');
+  style.textContent='.sim-head-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.sim-head-actions button{min-width:0}@media(max-width:580px){.sim-head{display:block}.sim-head-actions{display:grid;grid-template-columns:1fr;margin-top:10px}.sim-head-actions button{width:100%}}';
+  document.head.appendChild(style);
+
+  const panel=document.getElementById('simuladoPanel');
+  if(panel){
+    new MutationObserver(()=>ensureResetButton()).observe(panel,{childList:true,subtree:true});
+    ensureResetButton();
+  }
+})();
