@@ -4,10 +4,10 @@
 // Regra: toda questão interativa precisa ter ID estável antes de ligar estado e eventos.
 (function(){
   function current(){
-    const c=window.session?.concepts?.[window.state?.conceptIndex];
+    const c=session?.concepts?.[state?.conceptIndex];
     const q=c?.realQuestion;
     if(!c||!q)return null;
-    if(!q.id)q.id=`REAL-${window.session?.id||'SESSION'}-${c.id||'CONCEPT'}`;
+    if(!q.id)q.id=`REAL-${session?.id||'SESSION'}-${c.id||'CONCEPT'}`;
     return {c,q};
   }
   function ensureRec(c,q){
