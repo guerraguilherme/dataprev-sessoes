@@ -14,6 +14,23 @@
     q.push({sessionId:id,status,requestedAt:new Date().toISOString(),triggerType:'manual_prepare',...extra});
     savePlannerQueue(q);
   }
+  function clearLocalRequest(id){
+    if(typeof plannerQueue!=='function'||typeof savePlannerQueue!=='function')return false;
+    const before=plannerQueue(),after=before.filter(x=>x.sessionId!==id);
+    if(after.length===before.length)return false;
+    savePlannerQueue(after);return true;
+  }
+  function isPrepared(id){
+    try{return typeof catalogById==='function'&&catalogById().has(id)}catch{return false}
+  }
+  function reconcilePreparedRequests(){
+    if(typeof plannerQueue!=='function'||typeof savePlannerQueue!=='function'||typeof catalogById!=='function')return false;
+    const ready=catalogById(),before=plannerQueue();
+    const after=before.filter(x=>!ready.has(x.sessionId));
+    if(after.length===before.length)return false;
+    savePlannerQueue(after);
+    return true;
+  }
   function requestIdFor(id){
     const stamp=new Date().toISOString().replace(/[-:.TZ]/g,'').slice(0,14);
     return `SESS-${id}-${stamp}`;
@@ -82,6 +99,12 @@
 
   if(typeof confirmPrepare==='function'){
     confirmPrepare=function(id){
+      if(isPrepared(id)){
+        clearLocalRequest(id);
+        if(typeof setStatus==='function')setStatus('Esta sessão já está preparada e foi liberada.','ok');
+        if(typeof renderHome==='function')renderHome();
+        return;
+      }
       const row=Object.values(ROADMAP).flat().find(x=>x[0]===id),used=manualUsed();
       if(used>=MANUAL_LIMIT)return alert('Você já tem duas sessões antecipadas aguardando início. Inicie uma delas para liberar uma vaga.');
       const title=row?.[1]||id;
@@ -92,6 +115,13 @@
   }
 
   requestPreparation=async function(id,title){
+    // Se o conteúdo já chegou ao catálogo enquanto o modal estava aberto, não crie fila fantasma.
+    if(isPrepared(id)){
+      clearLocalRequest(id);closePlannerModal();
+      if(typeof setStatus==='function')setStatus('Sessão já preparada. Liberada para início.','ok');
+      if(typeof renderHome==='function')renderHome();
+      return;
+    }
     const cfg=readConfig();
     if(!cfg.endpoint||!cfg.token||!cfg.deviceId){feedback('A sincronização não está configurada neste aparelho. O pedido não foi enviado.');return}
     const btn=document.getElementById('confirmPrepareBtn');if(btn){btn.disabled=true;btn.textContent='Solicitando…'}
@@ -109,11 +139,25 @@
       feedback('O pedido não foi confirmado: '+msg+' Você pode tentar novamente.');if(btn){btn.disabled=false;btn.textContent='Tentar novamente'}
     }
   };
+
+  // Corrige filas locais antigas: se o arquivo preparado já está no catálogo,
+  // qualquer estado pendente/erro/pronta na fila manual deixa de ser fonte de verdade.
+  const baseRenderHome=typeof renderHome==='function'?renderHome:null;
+  if(baseRenderHome){
+    renderHome=function(){reconcilePreparedRequests();return baseRenderHome()};
+  }
+  let tries=0;
+  const reconcileTimer=setInterval(()=>{
+    tries++;
+    const changed=reconcilePreparedRequests();
+    if(changed&&typeof renderHome==='function'&&(!state||state.phase==='home'))renderHome();
+    if(tries>=20)clearInterval(reconcileTimer);
+  },500);
 })();
 
 // Hotfix seguro de qualidade, sem MutationObserver recursivo.
 (function(){
-  const UI_VERSION='0.7.11';
+  const UI_VERSION='0.7.12';
   const style=document.createElement('style');
   style.textContent=`
     .dp-toast{top:calc(8px + env(safe-area-inset-top))!important;bottom:auto!important;max-width:min(88vw,440px)!important;border-radius:13px!important;padding:8px 11px!important;font-size:.72rem!important;line-height:1.28!important;font-weight:700!important;opacity:.96!important}
