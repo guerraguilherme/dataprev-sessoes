@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-08",
+  "status": "composer_contract_materialized",
+  "artifacts": [
+    "composer-contract-v2.json",
+    "schemas/composer-decision-v2.schema.json",
+    "validate-composer-decision.mjs"
+  ],
+  "validation": {
+    "local_runtime": "node",
+    "sample_manual_prepare": "passed",
+    "result": {"ok": true, "errors": []}
+  },
+  "boundaries": [
+    "Composer produces a decision/plan, not published session content.",
+    "Manual preparation never cascades.",
+    "Prerequisites are advisory_only.",
+    "Learner history and prior session states are immutable from Composer.",
+    "Definitive mastery inference is forbidden in v2.",
+    "ready_for_staging is not publication; staging and QA are still required."
+  ]
+}
