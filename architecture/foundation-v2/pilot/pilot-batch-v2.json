@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 2,
+  "status": "composer_plans_selected",
+  "publicationPolicy": "forbidden_in_pilot_until_explicit_release",
+  "invariants": [
+    "No pilot session is inserted into operational Trilha as ready or completed by this artifact.",
+    "No prior session progress is mutated.",
+    "No mastery is inferred.",
+    "Cross-channel evidence calibrates depth only.",
+    "Each pilot must pass Composer, pedagogical QA, staging checksum/readback and manual review before any publication decision."
+  ],
+  "pilots": [
+    {
+      "pilot_id": "PILOT-EST-01",
+      "decision": {
+        "schema_version": 2,
+        "decision_id": "DEC-PILOT-EST-01",
+        "request_id": "PILOT-EST-01",
+        "trigger_type": "manual_prepare",
+        "target_session_id": "EST-VA-001",
+        "discipline_id": "EST",
+        "primary_coverage_ids": ["COV-EST-0003"],
+        "secondary_coverage_ids": [],
+        "review_coverage_ids": ["COV-EST-0001","COV-EST-0002"],
+        "prerequisite_advisories": [{"coverage_id":"COV-EST-0001","enforcement":"advisory_only"}],
+        "evidence_summary": {"basis":"project_history_plus_control_sheet","signals":["probability practice strong","conditional/Bayes reading has prior-orientation fragility","EST-PROB-001 remains ready and is not treated as completed"]},
+        "source_ids": ["SRC-EDITAL-P4-2026","SRC-PLANO-MESTRE-2.11","SRC-DOC-MESTRE-SESSOES"],
+        "composition_directives": {"advance_share":"70-80%","review_share":"20-30%","support_depth":"high_on_mapping_random_variable_to_outcomes","difficulty_policy":"introductory_to_intermediate","cross_channel_policy":"context_only"},
+        "quality_gate_requirements": ["supportDetails_additional","concept_specific_examples","discipline_specific_checklists","informative_visuals_when_useful","validated_answer_keys","plausible_distractors","provenance_verified","prerequisites_checked","unique_ids","mobile_json_valid"],
+        "cascade_allowed": false,
+        "state_mutations_allowed": [],
+        "decision_status": "ready_for_staging"
+      }
+    },
+    {
+      "pilot_id": "PILOT-PY-01",
+      "decision": {
+        "schema_version": 2,
+        "decision_id": "DEC-PILOT-PY-01",
+        "request_id": "PILOT-PY-01",
+        "trigger_type": "manual_prepare",
+        "target_session_id": "PY-COLL-001",
+        "discipline_id": "PY",
+        "primary_coverage_ids": ["COV-PY-0003"],
+        "secondary_coverage_ids": [],
+        "review_coverage_ids": ["COV-PY-0001","COV-PY-0002"],
+        "prerequisite_advisories": [{"coverage_id":"COV-PY-0001","enforcement":"advisory_only"}],
+        "evidence_summary": {"basis":"Sessoes_Resultado_plus_project_history","signals":["PY-COND-001 final 7/10","PY-COND-R01 6/6 after targeted review","collections remain a weak base before NumPy/Pandas"]},
+        "source_ids": ["SRC-EDITAL-P4-2026","SRC-PLANO-MESTRE-2.11","SRC-DOC-MESTRE-SESSOES"],
+        "composition_directives": {"advance_share":"75%","review_share":"25%","support_depth":"high_on_structure_differences_and_code_reading","difficulty_policy":"introductory","cross_channel_policy":"context_only"},
+        "quality_gate_requirements": ["supportDetails_additional","concept_specific_examples","discipline_specific_checklists","informative_visuals_when_useful","validated_answer_keys","plausible_distractors","provenance_verified","prerequisites_checked","unique_ids","mobile_json_valid"],
+        "cascade_allowed": false,
+        "state_mutations_allowed": [],
+        "decision_status": "ready_for_staging"
+      }
+    },
+    {
+      "pilot_id": "PILOT-BD-01",
+      "decision": {
+        "schema_version": 2,
+        "decision_id": "DEC-PILOT-BD-01",
+        "request_id": "PILOT-BD-01",
+        "trigger_type": "manual_prepare",
+        "target_session_id": "BD-INT-001",
+        "discipline_id": "BD",
+        "primary_coverage_ids": ["COV-BD-0004"],
+        "secondary_coverage_ids": ["COV-BD-0002"],
+        "review_coverage_ids": ["COV-BD-0003"],
+        "prerequisite_advisories": [{"coverage_id":"COV-BD-0002","enforcement":"advisory_only"}],
+        "evidence_summary": {"basis":"Sessoes_Resultado_plus_project_history","signals":["BD-NORM-002 final 8/8 with strong current domain","external history has uncertainty around PK vs UNIQUE, FK repetition/NULL and CHECK vs NOT NULL"]},
+        "source_ids": ["SRC-EDITAL-P4-2026","SRC-PLANO-MESTRE-2.11","SRC-DOC-MESTRE-SESSOES"],
+        "composition_directives": {"advance_share":"80%","review_share":"20%","support_depth":"high_on_constraint_semantics_and_small_DDL_examples","difficulty_policy":"introductory_to_intermediate","cross_channel_policy":"context_only"},
+        "quality_gate_requirements": ["supportDetails_additional","concept_specific_examples","discipline_specific_checklists","informative_visuals_when_useful","validated_answer_keys","plausible_distractors","provenance_verified","prerequisites_checked","unique_ids","mobile_json_valid"],
+        "cascade_allowed": false,
+        "state_mutations_allowed": [],
+        "decision_status": "ready_for_staging"
+      }
+    },
+    {
+      "pilot_id": "PILOT-LEG-01",
+      "decision": {
+        "schema_version": 2,
+        "decision_id": "DEC-PILOT-LEG-01",
+        "request_id": "PILOT-LEG-01",
+        "trigger_type": "manual_prepare",
+        "target_session_id": "LEG-D7845-001",
+        "discipline_id": "LEG",
+        "primary_coverage_ids": ["COV-LEG-0004"],
+        "secondary_coverage_ids": [],
+        "review_coverage_ids": ["COV-LEG-0001","COV-LEG-0002","COV-LEG-0003"],
+        "prerequisite_advisories": [{"coverage_id":"COV-LEG-0001","enforcement":"advisory_only"},{"coverage_id":"COV-LEG-0002","enforcement":"advisory_only"}],
+        "evidence_summary": {"basis":"Trilha_plus_project_history","signals":["LEG-LAI-001 completed 5/5 finals","LEG-LAI-002 completed 7/8 with CGU appeal-flow fragility","LEG-D7724-001 remains ready and is not presumed completed"]},
+        "source_ids": ["SRC-EDITAL-P4-2026","SRC-PLANO-MESTRE-2.11","SRC-DOC-MESTRE-SESSOES","SRC-LEG-CONSOLIDADO-2026"],
+        "composition_directives": {"advance_share":"85%","review_share":"15%","support_depth":"high_on_subject_competence_and_classified_information_handling","difficulty_policy":"introductory_to_intermediate","cross_channel_policy":"context_only","legal_release_requirement":"verify_current_official_text_before_final_QA"},
+        "quality_gate_requirements": ["supportDetails_additional","concept_specific_examples","discipline_specific_checklists","informative_visuals_when_useful","validated_answer_keys","plausible_distractors","provenance_verified","prerequisites_checked","unique_ids","mobile_json_valid"],
+        "cascade_allowed": false,
+        "state_mutations_allowed": [],
+        "decision_status": "ready_for_staging"
+      }
+    }
+  ]
+}
