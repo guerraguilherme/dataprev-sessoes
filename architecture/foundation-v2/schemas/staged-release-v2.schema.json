@@ -14,10 +14,24 @@
     "secondary_coverage_ids": {"type":"array","uniqueItems":true},
     "review_coverage_ids": {"type":"array","uniqueItems":true},
     "source_ids": {"type":"array","minItems":1,"uniqueItems":true},
-    "session_payload": {"type":"object"},
+    "session_payload": {
+      "type":"object",
+      "required":["declared_counts","concepts","fixations","final_questions"],
+      "properties": {
+        "declared_counts": {
+          "type":"object",
+          "required":["concepts","fixations","final_questions"],
+          "properties": {
+            "concepts":{"type":"integer","minimum":0},
+            "fixations":{"type":"integer","minimum":0},
+            "final_questions":{"type":"integer","minimum":0}
+          }
+        }
+      }
+    },
     "qa": {
       "type":"object",
-      "required":["schema_valid","ids_unique","coverage_validated","provenance_valid","pedagogical_depth_pass","question_integrity_pass","mobile_qa_pass","no_history_mutation","no_mastery_mutation"]
+      "required":["schema_valid","ids_unique","coverage_validated","provenance_valid","pedagogical_depth_pass","informative_visual_pass","question_integrity_pass","question_count_pass","mobile_qa_pass","no_history_mutation","no_mastery_mutation"]
     },
     "release_state": {"enum":["validated_session","staged_release","published_release","rejected","rolled_back"]},
     "previous_publication_snapshot": {"type":"object"},
