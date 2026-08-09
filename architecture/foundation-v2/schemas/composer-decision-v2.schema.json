@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dataprev-sessoes.local/schemas/composer-decision-v2.schema.json",
+  "title": "DATAPREV Sessões Composer Decision v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version","decision_id","request_id","trigger_type","target_session_id","discipline_id","primary_coverage_ids","secondary_coverage_ids","review_coverage_ids","prerequisite_advisories","evidence_summary","source_ids","composition_directives","quality_gate_requirements","cascade_allowed","state_mutations_allowed","decision_status"],
+  "properties": {
+    "schema_version": {"const": 2},
+    "decision_id": {"type":"string","minLength":1},
+    "request_id": {"type":"string","minLength":1},
+    "trigger_type": {"enum":["manual_prepare","auto_buffer"]},
+    "target_session_id": {"type":"string","minLength":1},
+    "discipline_id": {"type":"string","minLength":1},
+    "primary_coverage_ids": {"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","pattern":"^COV-[A-Z]+-[0-9]{4}$"}},
+    "secondary_coverage_ids": {"type":"array","uniqueItems":true,"items":{"type":"string","pattern":"^COV-[A-Z]+-[0-9]{4}$"}},
+    "review_coverage_ids": {"type":"array","uniqueItems":true,"items":{"type":"string","pattern":"^COV-[A-Z]+-[0-9]{4}$"}},
+    "prerequisite_advisories": {"type":"array","items":{"type":"object","required":["from_coverage_id","to_coverage_id","dependency_type","enforcement"],"properties":{"from_coverage_id":{"type":"string"},"to_coverage_id":{"type":"string"},"dependency_type":{"type":"string"},"enforcement":{"const":"advisory_only"}},"additionalProperties":true}},
+    "evidence_summary": {"type":"object"},
+    "source_ids": {"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string","minLength":1}},
+    "composition_directives": {"type":"object","required":["advance_share","review_share","support_depth","difficulty_policy","cross_channel_policy"],"additionalProperties":true},
+    "quality_gate_requirements": {"type":"array","minItems":10,"uniqueItems":true,"items":{"type":"string","minLength":1}},
+    "cascade_allowed": {"type":"boolean"},
+    "state_mutations_allowed": {"type":"array","maxItems":0},
+    "decision_status": {"enum":["ready_for_staging","no_op","blocked_fail_closed"]},
+    "block_reasons": {"type":"array","items":{"type":"string"}}
+  },
+  "allOf": [
+    {"if":{"properties":{"trigger_type":{"const":"manual_prepare"}}},"then":{"properties":{"cascade_allowed":{"const":false}}}}
+  ]
+}
