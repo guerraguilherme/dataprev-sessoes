@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 2,
+  "executedAt": "2026-08-08",
+  "status": "passed_after_validator_hardening",
+  "testSuite": "architecture/foundation-v2/tests/foundation-e2e.synthetic.test.mjs",
+  "localExecution": {
+    "primaryCases": {"total":24,"passed":24,"failed":0},
+    "additionalCases": {"total":6,"passed":6,"failed":0}
+  },
+  "initialFindings": [
+    "Staging validator did not verify coverage IDs against the canonical registry context.",
+    "Staging validator did not verify source IDs/provenance against the source registry context.",
+    "SupportDetails could pass with enough words while still lacking concept-specific structural depth.",
+    "QA object did not require the complete named assertion set.",
+    "Declared concept/fixation/final-question counts were not enforced."
+  ],
+  "fixesApplied": [
+    "Registry-aware coverage and source checks added to validate-staged-release.mjs.",
+    "Validated-coverage and invalid-source-provenance checks added.",
+    "SupportDetails now requires a minimum semantic structure including example, discipline-specific checklist and microcheck/transfer.",
+    "Full QA assertion set is mandatory, including informative visual applicability, question count, history and mastery invariants.",
+    "declared_counts is mandatory and checked against actual arrays.",
+    "Published readback requires publication_pointer and checksum/session/version match.",
+    "Rollback verification failure emits ROLLBACK_FAILED.",
+    "History and mastery mutation directives are explicitly rejected."
+  ],
+  "coveredRiskClasses": [
+    "manual target mismatch","manual cascade","auto-buffer next-session rule","unknown coverage","unknown source","invalid provenance",
+    "shallow supportDetails","missing example/checklist","placeholder example","generic checklist","invalid answer key","empty distractor",
+    "insufficient explanation","unverified real attribution","unlabelled adaptation","authorial labelling","question-count mismatch",
+    "informative visual applicability","mobile answer leak","horizontal scroll blocker","stage readback mismatch","publish readback mismatch",
+    "incomplete previous publication","history mutation","mastery mutation","rollback failure"
+  ],
+  "invariants": [
+    "No pedagogical session was generated or published during testing.",
+    "No learner history or progress state was modified.",
+    "Sessoes_Publicacoes/Config was not repointed.",
+    "Mastery remains deferred and uncalibrated."
+  ]
+}
