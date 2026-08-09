@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 2,
+  "status": "foundation_only",
+  "purpose": "Produce a deterministic composition plan for one DATAPREV Sessões session before pedagogical content generation.",
+  "inputs": {
+    "request_context": ["request_id", "trigger_type", "device_id", "discipline_id", "requested_session_id", "generation_mode", "created_at"],
+    "coverage_registry": "Validated canonical coverage identities only.",
+    "session_coverage_map": "Existing primary/secondary/review relations; never infer mastery from them.",
+    "prerequisite_map": "Advisory graph only; it may affect sequencing and support depth but never blocks manual access.",
+    "coverage_gap_view": "Presence snapshot: no_session|ready|in_progress|historical_execution.",
+    "learner_event_store": "Raw evidence including correctness, attempts, confidence, support use, justification, notes and recency.",
+    "source_registry": "Only registered and provenance-valid sources may support normative or real-question claims.",
+    "roadmap": "Current ordered session plan used for automatic buffer selection only."
+  },
+  "selectionRules": {
+    "manual_prepare": [
+      "Select exactly the requested_session_id.",
+      "Out-of-order preparation/start is allowed.",
+      "Do not mutate earlier session progress.",
+      "Do not create a following session in cascade."
+    ],
+    "auto_buffer": [
+      "Only act for a discipline with a session currently in progress.",
+      "Select the immediately following ROADMAP session.",
+      "If that session is already ready, do nothing.",
+      "Never prepare more than one session ahead."
+    ],
+    "adaptive_composition": [
+      "Use raw learner evidence to adjust depth, review targets, examples, difficulty and support.",
+      "External-channel evidence is context only and never marks Sessões coverage complete.",
+      "Do not compute definitive mastery in v2."
+    ]
+  },
+  "output": {
+    "type": "composer_decision_v2",
+    "required": [
+      "decision_id", "request_id", "trigger_type", "target_session_id", "discipline_id",
+      "primary_coverage_ids", "secondary_coverage_ids", "review_coverage_ids",
+      "prerequisite_advisories", "evidence_summary", "source_ids", "composition_directives",
+      "quality_gate_requirements", "cascade_allowed", "state_mutations_allowed", "decision_status"
+    ]
+  },
+  "invariants": [
+    "Manual requests target exactly one requested session.",
+    "Prerequisites are advisory_only and cannot be navigation blockers.",
+    "No output may mark prior sessions complete or alter learner history.",
+    "No output may assign mastered or a mastery score.",
+    "No source may be cited as official/real unless provenance is verified.",
+    "Every referenced coverage_id must exist and be mapped_validated or later.",
+    "Publication is outside the Composer and requires staging + QA gate."
+  ],
+  "failClosedCodes": [
+    "INVALID_INPUT_SCHEMA", "UNKNOWN_COVERAGE_ID", "UNVALIDATED_COVERAGE",
+    "UNKNOWN_SOURCE_ID", "INVALID_SOURCE_PROVENANCE", "MANUAL_TARGET_MISMATCH",
+    "AUTO_BUFFER_NOT_IMMEDIATE_NEXT", "AUTO_BUFFER_ALREADY_READY", "CASCADE_FORBIDDEN",
+    "FORBIDDEN_HISTORY_MUTATION", "FORBIDDEN_MASTERY_INFERENCE", "DUPLICATE_ID",
+    "MISSING_QUALITY_REQUIREMENT"
+  ]
+}
