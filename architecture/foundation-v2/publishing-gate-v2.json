@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 2,
+  "gate": "publishing_gate_v2",
+  "mode": "fail_closed",
+  "acceptedInputState": "validated_session",
+  "transitions": {
+    "validated_session_to_staged_release": [
+      "all structural/pedagogical/provenance/mobile QA checks pass",
+      "payload checksum computed",
+      "previous known-good publication snapshot verified",
+      "staging write succeeds",
+      "staging readback matches session_id, content_version and checksum"
+    ],
+    "staged_release_to_published_release": [
+      "staging readback remains valid",
+      "remote target is complete before publication pointer changes",
+      "publication write succeeds atomically",
+      "published readback matches session_id, content_version and checksum"
+    ],
+    "failure_to_rollback": [
+      "do not mark release successful",
+      "restore previous verified publication pointer/snapshot",
+      "read back rollback target",
+      "if rollback readback fails, emit ROLLBACK_FAILED and require explicit operational intervention"
+    ]
+  },
+  "hardBlocks": [
+    "schema failure",
+    "duplicate IDs",
+    "unknown/unvalidated coverage reference",
+    "invalid source provenance",
+    "shallow or paraphrase-only supportDetails",
+    "placeholder examples",
+    "generic discipline-inappropriate checklist",
+    "invalid question key or explanation",
+    "unverified real-question attribution",
+    "mobile answer leakage",
+    "mobile horizontal-scroll blocker",
+    "staging readback mismatch",
+    "incomplete remote version",
+    "publish readback mismatch"
+  ],
+  "forbiddenMutations": [
+    "learner history",
+    "previous session completion/progress",
+    "definitive mastery",
+    "silent roadmap rewrites",
+    "silent Sessoes_Publicacoes/Config switch before verified complete release"
+  ],
+  "successRecord": ["release_id","session_id","content_version","payload_checksum","published_at","publication_pointer","previous_publication_snapshot"],
+  "rollbackRecord": ["release_id","failed_step","failure_code","restored_content_version","restored_checksum","rollback_readback_ok"]
+}
