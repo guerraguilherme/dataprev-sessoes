@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 2,
+  "title": "DATAPREV Sessoes staged_release_v2",
+  "type": "object",
+  "required": ["release_id","decision_id","session_id","discipline_id","content_version","payload_checksum","primary_coverage_ids","source_ids","session_payload","qa","release_state","previous_publication_snapshot"],
+  "properties": {
+    "release_id": {"type":"string"},
+    "decision_id": {"type":"string"},
+    "session_id": {"type":"string"},
+    "discipline_id": {"type":"string"},
+    "content_version": {"type":"string"},
+    "payload_checksum": {"type":"string"},
+    "primary_coverage_ids": {"type":"array","minItems":1,"uniqueItems":true},
+    "secondary_coverage_ids": {"type":"array","uniqueItems":true},
+    "review_coverage_ids": {"type":"array","uniqueItems":true},
+    "source_ids": {"type":"array","minItems":1,"uniqueItems":true},
+    "session_payload": {"type":"object"},
+    "qa": {
+      "type":"object",
+      "required":["schema_valid","ids_unique","coverage_validated","provenance_valid","pedagogical_depth_pass","question_integrity_pass","mobile_qa_pass","no_history_mutation","no_mastery_mutation"]
+    },
+    "release_state": {"enum":["validated_session","staged_release","published_release","rejected","rolled_back"]},
+    "previous_publication_snapshot": {"type":"object"},
+    "staging_readback": {"type":["object","null"]},
+    "publish_readback": {"type":["object","null"]},
+    "rollback": {"type":["object","null"]}
+  }
+}
