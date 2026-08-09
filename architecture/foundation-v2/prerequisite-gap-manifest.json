@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-08",
+  "controlSpreadsheetId": "1r-wCBcGykOLtcZ8IDWjbt2xlxF7_lSFz-FfkIydgKxc",
+  "artifacts": {
+    "Prerequisite_Map_v2": {
+      "edgeCount": 77,
+      "validationState": "proposed",
+      "enforcement": "advisory_only",
+      "acyclicCheck": "passed",
+      "notes": "Prerequisites guide Composer, sequencing and buffering only. They never block manual navigation or out-of-order starts."
+    },
+    "Coverage_Gap_View_v2": {
+      "coverageCount": 105,
+      "summary": {
+        "no_session": 82,
+        "ready": 11,
+        "in_progress": 4,
+        "historical_execution": 8
+      },
+      "notes": "Snapshot derived from Coverage_Registry_v2 and Session_Coverage_Map_v2. Presence state is not mastery and does not change learner history."
+    }
+  },
+  "invariants": [
+    "No session content was generated.",
+    "No learner progress or historical session state was altered.",
+    "No prerequisite is enforced as a navigation blocker.",
+    "Coverage presence does not imply taught, practiced, assessed or mastered."
+  ]
+}
