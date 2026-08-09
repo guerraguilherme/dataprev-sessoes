@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-08",
+  "status": "foundation_only",
+  "artifacts": [
+    "staging-publishing-contract-v2.json",
+    "schemas/staged-release-v2.schema.json",
+    "validate-staged-release.mjs",
+    "publishing-gate-v2.json"
+  ],
+  "syntheticValidation": {
+    "runtime": "node",
+    "fixture": "single EST staged_release with one concept, one fixation and one final question",
+    "result": {"ok": true, "errors": []}
+  },
+  "releaseFlow": ["composer_decision_v2","draft_session","validated_session","staged_release","published_release"],
+  "rollback": "mandatory on failed publish/readback; previous verified publication snapshot is the anchor",
+  "invariants": [
+    "No pedagogical content was generated for production.",
+    "No learner history or progress was altered.",
+    "No mastery formula was introduced.",
+    "No Sessoes_Publicacoes/Config pointer was changed.",
+    "No backend request_session_generation fix is claimed.",
+    "Staging and publication are fail-closed and require checksum readback."
+  ]
+}
