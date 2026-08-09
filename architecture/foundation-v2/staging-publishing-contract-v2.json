@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 2,
+  "status": "foundation_only",
+  "purpose": "Control the transition composer_decision -> draft_session -> validated_session -> staged_release -> published_release with fail-closed QA, readback and rollback.",
+  "states": ["draft_session","validated_session","staged_release","published_release","rejected","rolled_back"],
+  "inputs": {
+    "composer_decision": "A valid composer_decision_v2 with decision_status=ready_for_staging.",
+    "session_payload": "Exactly one target session payload.",
+    "registries": ["Coverage_Registry_v2","Source_Registry_v2","Session_Coverage_Map_v2","Prerequisite_Map_v2"],
+    "current_publication_snapshot": "Current known-good remote publication/version used as rollback anchor."
+  },
+  "qualityContract": {
+    "concepts": [
+      "Every concept has a concise main layer and a supportDetails layer that adds information rather than paraphrasing.",
+      "supportDetails should include, when applicable: core, intuition, mechanism/why, identify, guided example, contrast/commonError, trap, useful connection, discipline-specific checklist and microcheck/transfer.",
+      "Examples must be concept-specific; placeholders are forbidden.",
+      "Checklists must be discipline/type specific; generic reused checklists are forbidden."
+    ],
+    "visuals": "Use an informative visual/code/table/flow/diagram when the concept materially benefits from one; decorative visuals do not satisfy this requirement.",
+    "questions": [
+      "Every fixation/final question has a validated correct alternative and plausible distractors.",
+      "Every question explains why the correct option is correct; final questions explain relevant distractor errors when useful.",
+      "Real/FGV attribution requires verified provenance; adapted items must be explicitly labelled; authorial items must be labelled authorial/FGV-style."
+    ],
+    "structure": [
+      "Unique IDs across concepts and questions.",
+      "Coverage IDs exist and are validated.",
+      "Source IDs exist and provenance is valid.",
+      "Question counts and JSON structure match the declared session contract.",
+      "Mobile QA passes without answer leakage or horizontal-scroll blockers."
+    ]
+  },
+  "gateSequence": [
+    "SCHEMA_GATE",
+    "IDENTITY_GATE",
+    "COVERAGE_GATE",
+    "PROVENANCE_GATE",
+    "PEDAGOGICAL_DEPTH_GATE",
+    "QUESTION_INTEGRITY_GATE",
+    "MOBILE_QA_GATE",
+    "STAGE_WRITE_GATE",
+    "STAGE_READBACK_GATE",
+    "PUBLISH_WRITE_GATE",
+    "PUBLISH_READBACK_GATE"
+  ],
+  "publicationRules": [
+    "Publication is atomic for the single session/release package.",
+    "Never point Sessoes_Publicacoes/Config to an incomplete remote version.",
+    "A staged release must be read back and checksum-matched before publish is allowed.",
+    "A published release must be read back and checksum-matched before success is recorded.",
+    "Any failed publish/readback triggers rollback to the previously verified publication snapshot.",
+    "Rollback failure is a hard operational error requiring explicit notification.",
+    "No gate may mutate learner history, prior session progress or mastery."
+  ],
+  "requiredReadback": {
+    "staging": ["session_id","content_version","payload_checksum","coverage_ids","source_ids"],
+    "published": ["session_id","content_version","payload_checksum","publication_pointer"]
+  },
+  "failClosedCodes": [
+    "INVALID_STAGE_SCHEMA","COMPOSER_DECISION_NOT_READY","TARGET_SESSION_MISMATCH","DUPLICATE_ID",
+    "UNKNOWN_COVERAGE_ID","UNVALIDATED_COVERAGE","UNKNOWN_SOURCE_ID","INVALID_SOURCE_PROVENANCE",
+    "SHALLOW_SUPPORT_DETAILS","SUPPORT_DETAILS_PARAPHRASE_ONLY","PLACEHOLDER_EXAMPLE","GENERIC_CHECKLIST",
+    "MISSING_INFORMATIVE_VISUAL","INVALID_CORRECT_ANSWER","IMPLAUSIBLE_OR_EMPTY_DISTRACTOR","MISSING_QUESTION_EXPLANATION",
+    "UNVERIFIED_REAL_QUESTION_ATTRIBUTION","UNLABELLED_EDITORIAL_ADAPTATION","QUESTION_COUNT_MISMATCH",
+    "MOBILE_ANSWER_LEAK","MOBILE_HORIZONTAL_SCROLL_BLOCKER","STAGE_READBACK_MISMATCH","PUBLISH_READBACK_MISMATCH",
+    "INCOMPLETE_REMOTE_VERSION","ROLLBACK_FAILED","FORBIDDEN_HISTORY_MUTATION","FORBIDDEN_MASTERY_MUTATION"
+  ]
+}
