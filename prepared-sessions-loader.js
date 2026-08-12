@@ -1,18 +1,63 @@
 'use strict';
 
 // Buffer pedagógico local: contém apenas sessões cujo material já foi efetivamente preparado.
+// O filename gerado pode ser legado, mas o session_id exposto ao runtime deve ser o canônico do ROADMAP.
 (function(){
-  const FILES=['MAT-FUNC-001.json','MAT-ALG-004A.json','EST-PROB-001.json','ML-BASE-001.json','PY-BASE-001.json','PY-COLL-001.json','BD-MOD-001.json','PT-INT-001.json','PT-GEN-001.json','PT-ORT-001.json','PT-COE-001.json','EN-TEXT-001.json','RL-PROP-001.json','RL-TV-001.json','AT-NEWS-001.json','AT-NEWS-W02.json','LEG-LAI-001.json','LEG-LAI-002.json','LEG-D7724-001.json'];
+  const SOURCES=[
+    {file:'MAT-FUNC-001.json'},
+    {file:'MAT-LIM-001.json',canonicalId:'MAT-CALC-001'},
+    {file:'MAT-ALG-004A.json'},
+    {file:'EST-PROB-001.json'},
+    {file:'ML-BASE-001.json'},
+    {file:'PY-BASE-001.json'},
+    {file:'PY-COLL-001.json'},
+    {file:'PY-NP-001.json',canonicalId:'NP-001'},
+    {file:'BD-MOD-001.json'},
+    {file:'PT-INT-001.json'},
+    {file:'PT-GEN-001.json'},
+    {file:'PT-ORT-001.json'},
+    {file:'PT-COE-001.json'},
+    {file:'EN-TEXT-001.json'},
+    {file:'RL-PROP-001.json'},
+    {file:'RL-TV-001.json'},
+    {file:'AT-NEWS-001.json'},
+    {file:'AT-NEWS-W02.json'},
+    {file:'LEG-LAI-001.json'},
+    {file:'LEG-LAI-002.json'},
+    {file:'LEG-D7724-001.json'}
+  ];
   const ready=new Map();
+
+  function canonicalize(session,source){
+    if(!session?.id)throw new Error(`${source.file}: sessão sem id`);
+    if(!source.canonicalId)return session;
+    return {...session,id:source.canonicalId,legacyGeneratedSessionId:session.id,sourceFile:source.file};
+  }
+
+  function assertRoadmapIdentity(session,source){
+    if(typeof ROADMAP==='undefined')return;
+    const roadmapIds=new Set(Object.values(ROADMAP).flat().map(x=>x[0]));
+    if(!roadmapIds.has(session.id))throw new Error(`${source.file}: id ${session.id} não existe no ROADMAP canônico`);
+  }
+
   function mergeInto(cat){
     if(!cat?.sessions)return cat;
     const map=new Map(cat.sessions.map(s=>[s.id,s]));
     ready.forEach((s,id)=>map.set(id,s));
-    return {...cat,sessions:[...map.values()],contentVersion:'2026.08.08-sessoes-12'};
+    return {...cat,sessions:[...map.values()],contentVersion:'2026.08.12-sessoes-15'};
   }
+
   const baseApply=typeof applyCatalog==='function'?applyCatalog:null;
   if(baseApply){applyCatalog=function(nextCatalog,opts={}){return baseApply(mergeInto(nextCatalog),opts)}}
-  Promise.all(FILES.map(async file=>{const r=await fetch(`./${file}?v=20260808-10`,{cache:'no-store'});if(!r.ok)throw new Error(`${file}: HTTP ${r.status}`);return r.json()})).then(items=>{
+
+  Promise.all(SOURCES.map(async source=>{
+    const r=await fetch(`./${source.file}?v=20260812-15`,{cache:'no-store'});
+    if(!r.ok)throw new Error(`${source.file}: HTTP ${r.status}`);
+    const raw=await r.json();
+    const session=canonicalize(raw,source);
+    assertRoadmapIdentity(session,source);
+    return session;
+  })).then(items=>{
     items.forEach(s=>ready.set(s.id,s));
     if(typeof catalog!=='undefined'&&catalog?.sessions){catalog=mergeInto(catalog);if(typeof render==='function')render()}
   }).catch(err=>console.warn('Buffer de sessões preparadas não carregado:',err));
