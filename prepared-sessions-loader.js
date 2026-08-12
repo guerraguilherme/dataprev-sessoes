@@ -27,10 +27,12 @@
     {file:'LEG-D7724-001.json'}
   ];
   const ready=new Map();
+  const legacyIds=new Set();
 
   function canonicalize(session,source){
     if(!session?.id)throw new Error(`${source.file}: sessão sem id`);
     if(!source.canonicalId)return session;
+    legacyIds.add(session.id);
     return {...session,id:source.canonicalId,legacyGeneratedSessionId:session.id,sourceFile:source.file};
   }
 
@@ -43,6 +45,7 @@
   function mergeInto(cat){
     if(!cat?.sessions)return cat;
     const map=new Map(cat.sessions.map(s=>[s.id,s]));
+    legacyIds.forEach(id=>map.delete(id));
     ready.forEach((s,id)=>map.set(id,s));
     return {...cat,sessions:[...map.values()],contentVersion:'2026.08.12-sessoes-15'};
   }
