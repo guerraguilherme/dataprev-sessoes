@@ -1,1 +1,0 @@
-Temporary staging artifact directory for EST-PROB-002 Fase 2.5.4 mobile QA. runtime.zip is unpacked by the isolated GitHub Actions workflow and then removed.
