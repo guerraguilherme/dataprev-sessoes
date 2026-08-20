@@ -4,6 +4,7 @@
 // Estratégia: tenta ação nativa; se ela não existir, usa push_session_state como relay.
 // Quando o POST do relay retorna sucesso explícito, isso já vale como confirmação do pedido.
 (function(){
+  if(typeof DP_GATED_DELIVERY_ONLY!=='undefined'&&DP_GATED_DELIVERY_ONLY)return;
   const UI_ERR_PREFIX='O pedido não foi confirmado: ';
 
   function feedback(message,type='bad'){

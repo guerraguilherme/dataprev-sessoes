@@ -99,6 +99,7 @@
 
   if(typeof confirmPrepare==='function'){
     confirmPrepare=function(id){
+      if(typeof DP_GATED_DELIVERY_ONLY!=='undefined'&&DP_GATED_DELIVERY_ONLY){if(typeof setStatus==='function')setStatus('Esta sessão será liberada somente após os gates da Content Factory.','');return}
       if(isPrepared(id)){
         clearLocalRequest(id);
         if(typeof setStatus==='function')setStatus('Esta sessão já está preparada e foi liberada.','ok');
@@ -115,6 +116,7 @@
   }
 
   requestPreparation=async function(id,title){
+    if(typeof DP_GATED_DELIVERY_ONLY!=='undefined'&&DP_GATED_DELIVERY_ONLY){if(typeof setStatus==='function')setStatus('Geração pelo aplicativo desativada: aguarde a liberação do material validado.','');return}
     // Se o conteúdo já chegou ao catálogo enquanto o modal estava aberto, não crie fila fantasma.
     if(isPrepared(id)){
       clearLocalRequest(id);closePlannerModal();
@@ -157,7 +159,7 @@
 
 // Hotfix seguro de qualidade, sem MutationObserver recursivo.
 (function(){
-  const UI_VERSION='0.7.12';
+  const UI_VERSION='0.7.13';
   const style=document.createElement('style');
   style.textContent=`
     .dp-toast{top:calc(8px + env(safe-area-inset-top))!important;bottom:auto!important;max-width:min(88vw,440px)!important;border-radius:13px!important;padding:8px 11px!important;font-size:.72rem!important;line-height:1.28!important;font-weight:700!important;opacity:.96!important}

@@ -92,13 +92,29 @@ check('PWA_INSTALL_CONTRACT',()=>{
   assert.equal(manifest.scope,'./');
   assert.equal(manifest.display,'standalone');
   assert.match(index,/<link rel="icon" href="\.\/icons\/icon-192\.png" type="image\/png">/);
-  assert.match(sw,/CACHE_NAME='dataprev-sessoes-standalone-v26'/);
+  assert.match(sw,/CACHE_NAME='dataprev-sessoes-standalone-v27'/);
   assert.equal(core.filter(x=>x==='./EST-VA-001.json').length,1);
   assert.match(sw,/cache\.match\(request,\{ignoreSearch:true\}\)/);
   for(const asset of core){
     const relative=asset==='./'?'index.html':asset.replace(/^\.\//,'');
     assert.ok(fs.existsSync(path.join(root,relative)),`CORE ausente: ${asset}`);
   }
+});
+
+check('GATED_DELIVERY_ONLY',()=>{
+  const lifecycle=read('session-lifecycle.js');
+  const feedback=read('session-generation-feedback.js');
+  const homeNav=read('session-home-nav.js');
+  assert.match(planner,/const DP_GATED_DELIVERY_ONLY=true/);
+  assert.match(planner,/if\(DP_GATED_DELIVERY_ONLY\)return'bloqueada'/);
+  assert.match(planner,/Aguardando liberação/);
+  assert.match(lifecycle,/if\(gatedDeliveryOnly\)return/);
+  assert.match(feedback,/DP_GATED_DELIVERY_ONLY/);
+  assert.match(feedback,/const UI_VERSION='0\.7\.13'/);
+  assert.doesNotMatch(homeNav,/session-generation-relay-hotfix\.js/);
+  assert.equal(bridge.invariants.no_mobile_content_generation,true);
+  assert.equal(bridge.invariants.automatic_next_session_generation,false);
+  assert.equal(bridge.invariants.manual_mobile_generation_request,false);
 });
 
 check('INDEX_ASSETS_RESOLVE',()=>{
@@ -173,7 +189,7 @@ async function exerciseOfflineCache(){
       skipWaiting(){},
       addEventListener(type,handler){listeners[type]=handler}
     },
-    caches:{open:async()=>cache,keys:async()=>['dataprev-sessoes-standalone-v25','dataprev-sessoes-standalone-v26'],delete:async()=>true},
+    caches:{open:async()=>cache,keys:async()=>['dataprev-sessoes-standalone-v26','dataprev-sessoes-standalone-v27'],delete:async()=>true},
     fetch:async()=>{throw new Error('offline')},
     URL,Response,Request,Promise,Error
   };

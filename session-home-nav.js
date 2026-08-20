@@ -56,13 +56,5 @@
   const topHome=document.getElementById('homeBtn');
   if(topHome){topHome.textContent='Trilha';topHome.onclick=goTrail;}
 
-  // Carrega o hotfix do relay de preparação sem depender de alterar o HTML-base.
-  // Cache-bust explícito para iPhone/PWA receber a correção imediatamente após reload online.
-  if(!document.querySelector('script[data-dp-generation-relay-hotfix]')){
-    const hotfix=document.createElement('script');
-    hotfix.src='./session-generation-relay-hotfix.js?v=083';
-    hotfix.async=false;
-    hotfix.dataset.dpGenerationRelayHotfix='1';
-    document.head.appendChild(hotfix);
-  }
+  // A entrega mobile é allowlist-only; nenhuma preparação de conteúdo é iniciada pelo shell.
 })();

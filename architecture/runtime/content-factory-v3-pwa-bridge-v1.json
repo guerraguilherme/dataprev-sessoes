@@ -20,6 +20,9 @@
   },
   "invariants": {
     "no_mobile_content_generation": true,
+    "gated_delivery_only": true,
+    "automatic_next_session_generation": false,
+    "manual_mobile_generation_request": false,
     "no_implicit_publication_from_mapping": true,
     "no_implicit_mapping_from_roadmap": true,
     "no_learner_state_migration": true,

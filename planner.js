@@ -3,6 +3,7 @@
 const PLANNER_QUEUE_KEY='dataprev_sessoes_manual_prepare_v1';
 const PLANNER_OPEN_KEY='dataprev_sessoes_open_discipline_v1';
 const MANUAL_LIMIT=2;
+const DP_GATED_DELIVERY_ONLY=true;
 const DISCIPLINE_ORDER=['Matemática','Estatística','Ciência de Dados/ML','Python e Ferramentas','Banco de Dados','Português','Inglês','Raciocínio Lógico','Atualidades e IA','Legislação'];
 
 const ROADMAP={
@@ -192,6 +193,7 @@ function sessionLocalStatus(id){
   if(s?.completedAt||s?.phase==='complete')return'concluida';
   if(s?.startedAt&&!s?.completedAt)return'em_curso';
   if(item)return'pronta';
+  if(DP_GATED_DELIVERY_ONLY)return'bloqueada';
   if(q)return q.status||'pendente_geracao';
   return'bloqueada';
 }
@@ -215,6 +217,7 @@ function renderPlannerSession(row){
   if(st==='concluida')actions=`<button class="ghost grow" data-open-session="${esc(row.id)}">Ver resultado</button>`;
   else if(st==='em_curso')actions=`<button class="primary grow" data-open-session="${esc(row.id)}">Retomar sessão</button>`;
   else if(st==='pronta')actions=`<button class="primary grow" data-open-session="${esc(row.id)}">Iniciar sessão</button>`;
+  else if(DP_GATED_DELIVERY_ONLY)actions='<button class="grow" disabled>Aguardando liberação</button>';
   else if(st==='pendente_geracao')actions=`<button class="grow" disabled>Preparação solicitada</button>`;
   else if(st==='erro_geracao')actions=`<button class="ghost grow" data-prepare-session="${esc(row.id)}">Tentar novamente</button>`;
   else actions=`<button class="ghost grow" data-prepare-session="${esc(row.id)}" ${used>=MANUAL_LIMIT?'disabled':''}>Solicitar preparação</button>`;
@@ -253,6 +256,7 @@ function showPlannerModal(html){
 }
 function closePlannerModal(){document.getElementById('plannerModal')?.remove()}
 function confirmPrepare(id){
+  if(DP_GATED_DELIVERY_ONLY){setStatus('Esta sessão será liberada somente após os gates da Content Factory.','');return}
   const row=Object.values(ROADMAP).flat().find(x=>x[0]===id),used=manualUsed();
   if(used>=MANUAL_LIMIT)return alert('Você já tem duas sessões antecipadas aguardando início. Inicie uma delas para liberar uma vaga.');
   const title=row?.[1]||id;
@@ -261,6 +265,7 @@ function confirmPrepare(id){
   modal.querySelector('#confirmPrepareBtn').onclick=()=>requestPreparation(id,title);
 }
 async function requestPreparation(id,title){
+  if(DP_GATED_DELIVERY_ONLY){setStatus('Geração pelo aplicativo desativada: aguarde a liberação do material validado.','');return}
   const cfg=readConfig();
   if(!cfg.endpoint||!cfg.token||!cfg.deviceId){closePlannerModal();setStatus('Configure a sincronização antes de solicitar uma sessão.','bad');return}
   const btn=document.getElementById('confirmPrepareBtn');if(btn){btn.disabled=true;btn.textContent='Solicitando…'}

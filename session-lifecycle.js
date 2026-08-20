@@ -1,6 +1,7 @@
 'use strict';
 
 (function(){
+  const gatedDeliveryOnly=typeof DP_GATED_DELIVERY_ONLY!=='undefined'&&DP_GATED_DELIVERY_ONLY;
   const AUTO_KEY='dataprev_sessoes_auto_buffer_v1';
   const SYNCED_KEY='dataprev_sessoes_completed_sync_v1';
   const style=document.createElement('style');
@@ -30,6 +31,7 @@
     if(typeof renderHome==='function'&&state?.phase==='home')renderHome();
   }
   async function ensureNextBuffered(currentId){
+    if(gatedDeliveryOnly)return;
     const nextId=nextRoadmapId(currentId);if(!nextId)return;
     if(typeof catalogById==='function'&&catalogById().has(nextId))return;
     if(typeof plannerQueue==='function'&&plannerQueue().some(x=>x.sessionId===nextId&&x.status==='pendente_geracao'))return;
