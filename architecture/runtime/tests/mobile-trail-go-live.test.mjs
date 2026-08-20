@@ -92,7 +92,7 @@ check('PWA_INSTALL_CONTRACT',()=>{
   assert.equal(manifest.scope,'./');
   assert.equal(manifest.display,'standalone');
   assert.match(index,/<link rel="icon" href="\.\/icons\/icon-192\.png" type="image\/png">/);
-  assert.match(sw,/CACHE_NAME='dataprev-sessoes-standalone-v27'/);
+  assert.match(sw,/CACHE_NAME='dataprev-sessoes-standalone-v28'/);
   assert.equal(core.filter(x=>x==='./EST-VA-001.json').length,1);
   assert.match(sw,/cache\.match\(request,\{ignoreSearch:true\}\)/);
   for(const asset of core){
@@ -108,6 +108,10 @@ check('GATED_DELIVERY_ONLY',()=>{
   assert.match(planner,/const DP_GATED_DELIVERY_ONLY=true/);
   assert.match(planner,/if\(DP_GATED_DELIVERY_ONLY\)return'bloqueada'/);
   assert.match(planner,/Aguardando liberação/);
+  assert.match(planner,/Entrega validada/);
+  assert.match(planner,/liberação pelos gates da Content Factory/);
+  assert.doesNotMatch(index,/antecipadas manualmente/);
+  assert.match(read('sync-v2.js'),/aguardando liberação/);
   assert.match(lifecycle,/if\(gatedDeliveryOnly\)return/);
   assert.match(feedback,/DP_GATED_DELIVERY_ONLY/);
   assert.match(feedback,/const UI_VERSION='0\.7\.13'/);
@@ -189,7 +193,7 @@ async function exerciseOfflineCache(){
       skipWaiting(){},
       addEventListener(type,handler){listeners[type]=handler}
     },
-    caches:{open:async()=>cache,keys:async()=>['dataprev-sessoes-standalone-v26','dataprev-sessoes-standalone-v27'],delete:async()=>true},
+    caches:{open:async()=>cache,keys:async()=>['dataprev-sessoes-standalone-v27','dataprev-sessoes-standalone-v28'],delete:async()=>true},
     fetch:async()=>{throw new Error('offline')},
     URL,Response,Request,Promise,Error
   };
@@ -200,7 +204,9 @@ async function exerciseOfflineCache(){
   assert.equal(cacheData.size,core.length);
   for(const requestUrl of [
     `${origin}app.js?v=0713`,
+    `${origin}planner.js?v=0713-2`,
     `${origin}prepared-sessions-loader.js?v=0713`,
+    `${origin}sync-v2.js?v=0713-2`,
     `${origin}EST-VA-001.json?v=20260820-16`
   ]){
     const response=await context.__sw.networkFirst(new Request(requestUrl));

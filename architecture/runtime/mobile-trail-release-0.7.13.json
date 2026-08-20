@@ -2,7 +2,7 @@
   "release_id": "DATAPREV-SESSOES-MOBILE-TRAIL-0.7.13",
   "runtime_version": "0.7.13",
   "content_version": "2026.08.20-sessoes-16",
-  "cache_version": "dataprev-sessoes-standalone-v27",
+  "cache_version": "dataprev-sessoes-standalone-v28",
   "environment": "github_pages_production",
   "canonical_url": "https://guerraguilherme.github.io/dataprev-sessoes/",
   "bridge_contract": "content-factory-v3-pwa-bridge-v1.json",
@@ -22,5 +22,5 @@
     "migration_performed": false,
     "official_state_write_performed": false
   },
-  "source_commit": "034bc6caf73f963628602682a7b0081fc39e5054"
+  "source_commit": "TO_BE_RECORDED_AFTER_LEARNER_COPY_COMMIT"
 }

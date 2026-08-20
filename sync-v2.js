@@ -63,7 +63,7 @@ function dpSetHomeDashboard(){
   const rows=Object.values(ROADMAP).flat(),statuses=rows.map(r=>sessionLocalStatus(r[0]));
   const done=statuses.filter(s=>s==='concluida').length,ready=statuses.filter(s=>s==='pronta').length,course=statuses.filter(s=>s==='em_curso').length,pending=statuses.filter(s=>s==='pendente_geracao').length;
   const labels=document.querySelectorAll('.stats .stat span');
-  if(labels.length>=4){labels[0].textContent='sessões concluídas';labels[1].textContent='prontas';labels[2].textContent='em curso';labels[3].textContent='aguardando geração'}
+  if(labels.length>=4){labels[0].textContent='sessões concluídas';labels[1].textContent='prontas';labels[2].textContent='em curso';labels[3].textContent=typeof DP_GATED_DELIVERY_ONLY!=='undefined'&&DP_GATED_DELIVERY_ONLY?'aguardando liberação':'aguardando geração'}
   $('conceptStat').textContent=`${done}/${rows.length}`;$('immediateStat').textContent=ready;$('finalStat').textContent=course;$('timeStat').textContent=pending;
   $('progressBar').style.width=`${rows.length?100*done/rows.length:0}%`;$('progressText').textContent=`Visão geral da trilha · ${done} concluídas de ${rows.length} planejadas no mapa atual`;$('phaseBadge').textContent='Início';
 }
