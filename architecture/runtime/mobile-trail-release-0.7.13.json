@@ -22,5 +22,5 @@
     "migration_performed": false,
     "official_state_write_performed": false
   },
-  "source_commit": "TO_BE_RECORDED_AFTER_LEARNER_COPY_COMMIT"
+  "source_commit": "f60c27b243e75935370f9ffc0b90903206e523ac"
 }
