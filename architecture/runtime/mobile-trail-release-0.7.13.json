@@ -1,0 +1,26 @@
+{
+  "release_id": "DATAPREV-SESSOES-MOBILE-TRAIL-0.7.13",
+  "runtime_version": "0.7.13",
+  "content_version": "2026.08.20-sessoes-16",
+  "cache_version": "dataprev-sessoes-standalone-v26",
+  "environment": "github_pages_production",
+  "canonical_url": "https://guerraguilherme.github.io/dataprev-sessoes/",
+  "bridge_contract": "content-factory-v3-pwa-bridge-v1.json",
+  "next_ready_session": {
+    "session_id": "EST-VA-001",
+    "title": "Variáveis aleatórias",
+    "source_file": "EST-VA-001.json"
+  },
+  "golden_sample": {
+    "session_id": "EST-PROB-002",
+    "mapping_status": "mapped_validated",
+    "published": false,
+    "delivery_changed": false
+  },
+  "learner_state": {
+    "schema_or_key_changed": false,
+    "migration_performed": false,
+    "official_state_write_performed": false
+  },
+  "source_commit": "TO_BE_RECORDED_AFTER_RUNTIME_COMMIT"
+}

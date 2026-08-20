@@ -8,6 +8,7 @@
     {file:'MAT-LIM-001.json',canonicalId:'MAT-CALC-001'},
     {file:'MAT-ALG-004A.json'},
     {file:'EST-PROB-001.json'},
+    {file:'EST-VA-001.json'},
     {file:'ML-BASE-001.json'},
     {file:'PY-BASE-001.json'},
     {file:'PY-COLL-001.json'},
@@ -47,14 +48,14 @@
     const map=new Map(cat.sessions.map(s=>[s.id,s]));
     legacyIds.forEach(id=>map.delete(id));
     ready.forEach((s,id)=>map.set(id,s));
-    return {...cat,sessions:[...map.values()],contentVersion:'2026.08.12-sessoes-15'};
+    return {...cat,sessions:[...map.values()],contentVersion:'2026.08.20-sessoes-16'};
   }
 
   const baseApply=typeof applyCatalog==='function'?applyCatalog:null;
   if(baseApply){applyCatalog=function(nextCatalog,opts={}){return baseApply(mergeInto(nextCatalog),opts)}}
 
   Promise.all(SOURCES.map(async source=>{
-    const r=await fetch(`./${source.file}?v=20260812-15`,{cache:'no-store'});
+    const r=await fetch(`./${source.file}?v=20260820-16`,{cache:'no-store'});
     if(!r.ok)throw new Error(`${source.file}: HTTP ${r.status}`);
     const raw=await r.json();
     const session=canonicalize(raw,source);

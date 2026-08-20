@@ -1,6 +1,6 @@
 'use strict';
-const APP_VERSION='0.5.3';
-const CONTENT_VERSION='2026.08.06-sessoes-02';
+const APP_VERSION='0.7.13';
+const CONTENT_VERSION='2026.08.20-sessoes-16';
 const STATE_MAP_KEY='dataprev_sessoes_states_v2';
 const LEGACY_STATE_KEY='dataprev_sessoes_state_v1';
 const SESSIONS_CFG_KEY='dataprev_sessoes_sync_config_v1';

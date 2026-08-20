@@ -1,0 +1,49 @@
+{
+  "contract_id": "CFV3-PWA-BRIDGE-001",
+  "schema_version": "1.0.0",
+  "status": "active",
+  "effective_at": "2026-08-20",
+  "flow": [
+    "content_factory_v3",
+    "gated_material",
+    "prepared_session_adapter",
+    "dataprev_sessoes_shell",
+    "mobile_trail"
+  ],
+  "responsibilities": {
+    "roadmap_planner": "Declara a sequência canônica e seus session_ids; não implica publicação, conclusão ou estado do aluno.",
+    "curriculum_mapping_v3": "Declara relações curriculares e seus estados; mapped_validated não implica entrega ao aluno.",
+    "gated_material": "Contém material identificado que passou pelos gates aplicáveis e recebeu liberação explícita para a camada de entrega.",
+    "prepared_session_adapter": "Resolve somente a allowlist de arquivos preparados em prepared-sessions-loader.js e os apresenta sem gerar conteúdo ad hoc.",
+    "pwa_shell": "Renderiza, salva checkpoint local e sincroniza apenas pelos contratos existentes do DATAPREV Sessões.",
+    "learner_delivery": "Exibe Pronta somente quando o session_id do ROADMAP resolve para uma sessão presente no catálogo liberado."
+  },
+  "invariants": {
+    "no_mobile_content_generation": true,
+    "no_implicit_publication_from_mapping": true,
+    "no_implicit_mapping_from_roadmap": true,
+    "no_learner_state_migration": true,
+    "state_map_key": "dataprev_sessoes_states_v2",
+    "legacy_state_key": "dataprev_sessoes_state_v1",
+    "sync_queue_key": "dataprev_sessoes_sync_queue_v2"
+  },
+  "release_allowlist_authority": "prepared-sessions-loader.js:SOURCES",
+  "offline_authority": "service-worker.js:CORE",
+  "phase_2_7_decisions": {
+    "EST-PROB-002": {
+      "roadmap_present": true,
+      "curriculum_mapping": "mapped_validated",
+      "learner_delivery": "unchanged_not_published",
+      "loader_entry_added": false,
+      "trail_row_added": false
+    },
+    "EST-VA-001": {
+      "roadmap_present": true,
+      "source_file": "EST-VA-001.json",
+      "release_evidence": "architecture/foundation-v2/pilot/staged/EST-VA-001.staged.json",
+      "learner_delivery": "ready",
+      "loader_entry_added": true,
+      "offline_cache_entry_added": true
+    }
+  }
+}
