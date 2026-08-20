@@ -22,5 +22,5 @@
     "migration_performed": false,
     "official_state_write_performed": false
   },
-  "source_commit": "TO_BE_RECORDED_AFTER_RUNTIME_HARDENING_COMMIT"
+  "source_commit": "034bc6caf73f963628602682a7b0081fc39e5054"
 }
