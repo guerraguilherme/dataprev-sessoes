@@ -72,5 +72,5 @@
     "session-generation-feedback.js": "7ad949c9b8ac928769161136701da4908d0f430f929dd7e348264eada503d227",
     "architecture/runtime/content-factory-v3-pwa-bridge-v1.json": "157523079d7ae73cb60b2856e30faaa49b4d74f5247db4a81a9676628aa33489"
   },
-  "source_commit": null
+  "source_commit": "bb217b219dc78ac288aa9ca9d481097d3c9b3d73"
 }
