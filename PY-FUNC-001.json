@@ -1,0 +1,1598 @@
+{
+  "id": "PY-FUNC-001",
+  "discipline": "Python",
+  "topic": "Funções",
+  "itemEdital": "Linguagens de Programação e Softwares em Ciências de Dados — Python: condicionais, repetição e funções",
+  "title": "Funções: definição, parâmetros, retorno e escopo",
+  "objective": "Construir uma base segura para definir, chamar e rastrear funções em Python, distinguindo parâmetros de argumentos, return de print, variáveis locais de nomes externos e valores padrão de argumentos.",
+  "estimatedMinutes": 55,
+  "priority": "alta",
+  "status": "published",
+  "level": "fundamental progressivo",
+  "prerequisites": [
+    "PY-COLL-001",
+    "PY-LOOP-001",
+    "variáveis e tipos",
+    "if/elif/else",
+    "for e while",
+    "listas e strings",
+    "indentação e ordem de execução"
+  ],
+  "adaptiveContext": {
+    "recentEvidence": [
+      "O aluno declarou base fraca em Python; a sessão explicita cada mudança de estado e evita saltos entre definição e execução.",
+      "PY-COND-R01 consolidou condicionais em revisão recente, mas isso não autoriza inferir domínio de funções, escopo ou retorno.",
+      "PY-COLL-001 foi observado em execução no aplicativo; nenhuma conclusão ou mastery dessa sessão é presumida aqui."
+    ],
+    "strategy": "Usar código curto, rastreamento linha a linha e contrastes operacionais. O apoio acrescenta diagramas, tabelas e microperguntas locais sem emitir Learner Evidence nem alterar mastery."
+  },
+  "visuals": [
+    {
+      "kind": "flow",
+      "content": "definição com def → chamada com argumentos → criação do escopo local → execução do corpo → return entrega um valor ao ponto da chamada"
+    },
+    {
+      "kind": "comparison_table",
+      "content": "parâmetro: nome na definição; argumento: valor na chamada; print: exibe; return: devolve; variável local: existe no escopo da função durante a chamada"
+    }
+  ],
+  "concepts": [
+    {
+      "id": "PY-FUNC-C01",
+      "title": "1. Definir e chamar uma função",
+      "what": "def cria uma função e associa seu nome a um bloco de código; o corpo é executado quando a função é chamada.",
+      "explanation": "A definição começa com def, traz nome e parênteses e possui corpo indentado. Escrever a definição deixa a função disponível; usar nome(...) realiza uma chamada e executa o corpo.",
+      "code": "def triplo(numero):\n    return numero * 3\n\nvalor = triplo(5)\n# valor recebe 15",
+      "connection": "Retoma a ordem de execução: Python precisa alcançar a definição antes de uma chamada feita naquele fluxo.",
+      "trap": "Ler o corpo logo após def como se ele já tivesse sido executado. Definir torna a função disponível; a execução do corpo depende de uma chamada.",
+      "visuals": [
+        {
+          "type": "flow",
+          "title": "Do código definido ao valor devolvido",
+          "steps": [
+            "def triplo(numero)",
+            "triplo(5)",
+            "numero recebe 5",
+            "calcula 5 × 3",
+            "return entrega 15"
+          ],
+          "caption": "A definição prepara o caminho; a chamada percorre o caminho com um valor concreto."
+        }
+      ],
+      "supportVisuals": [
+        {
+          "type": "comparison",
+          "title": "Antes e depois da chamada",
+          "left": {
+            "title": "Somente definição",
+            "items": [
+              "o nome da função existe",
+              "o corpo ainda não processou uma entrada",
+              "nenhum resultado concreto foi produzido"
+            ]
+          },
+          "right": {
+            "title": "Após uma chamada",
+            "items": [
+              "o argumento entra no parâmetro",
+              "o corpo é executado",
+              "o retorno volta ao ponto da chamada"
+            ]
+          },
+          "caption": "Esta comparação muda a representação: separa disponibilidade da função de execução da função."
+        }
+      ],
+      "supportDetails": {
+        "core": "Há dois momentos distintos: definir a função e chamá-la.",
+        "intuition": "Pense em def como escrever uma receita e na chamada como preparar essa receita com ingredientes concretos.",
+        "why": "A separação permite reutilizar o mesmo procedimento com entradas diferentes sem copiar o corpo do código.",
+        "identify": "Procure def nome(...): para a definição e nome(...) fora do cabeçalho para a chamada.",
+        "example": "def dobro(n): return n*2 apenas define. Quando resultado=dobro(7) é executado, n recebe 7 e resultado recebe 14.",
+        "contrast": "Ler def dobro(n) não equivale a executar dobro(7): no primeiro caso há uma definição; no segundo há uma chamada.",
+        "commonError": "Atribuir um resultado à função antes de localizar a linha em que ela é efetivamente chamada.",
+        "trap": "Ler o corpo logo após def como se ele já tivesse sido executado. Definir torna a função disponível; a execução do corpo depende de uma chamada.",
+        "connection": "Retoma a ordem de execução: Python precisa alcançar a definição antes de uma chamada feita naquele fluxo.",
+        "steps": [
+          "localize a definição",
+          "localize a chamada",
+          "leve os argumentos para os parâmetros",
+          "execute o corpo indentado",
+          "volte ao ponto da chamada com o retorno"
+        ],
+        "checklist": [
+          "A função já foi definida neste fluxo?",
+          "Onde ocorre a chamada?",
+          "Quais valores entram?",
+          "Que valor retorna?"
+        ],
+        "microcheck": "Se há apenas def quadrado(n): return n*n e nenhuma chamada, o corpo não calcula um quadrado concreto."
+      },
+      "supportPractice": [
+        {
+          "id": "PY-FUNC-SUP-C01-R01",
+          "kind": "recognition",
+          "prompt": "Qual linha dispara a execução do corpo de metade com uma entrada concreta?",
+          "code": "def metade(valor):\n    return valor / 2\n\nresultado = metade(8)",
+          "options": [
+            "def metade(valor):",
+            "return valor / 2",
+            "resultado = metade(8)"
+          ],
+          "optionIds": [
+            "linha_define_funcao",
+            "linha_corpo_sem_chamada_isolada",
+            "linha_chama_metade_com_oito"
+          ],
+          "correctOptionId": "linha_chama_metade_com_oito",
+          "answer": 2,
+          "feedbackByOption": {
+            "linha_define_funcao": "Essa linha cria e nomeia a função, mas ainda não executa o corpo com uma entrada concreta.",
+            "linha_corpo_sem_chamada_isolada": "Essa instrução pertence ao corpo e será alcançada durante uma chamada; ela não é disparada sozinha pela leitura da definição.",
+            "linha_chama_metade_com_oito": "Correto. Os parênteses com o argumento 8 iniciam a execução do corpo."
+          },
+          "optionRationales": {
+            "linha_define_funcao": "Confunde definição com execução.",
+            "linha_corpo_sem_chamada_isolada": "Reconhece o cálculo, mas ignora que ele depende da chamada.",
+            "linha_chama_metade_com_oito": "Identifica corretamente o ponto de chamada."
+          },
+          "activityRole": "support",
+          "formalAssessment": false,
+          "writesLearnerEvidence": false,
+          "masteryEffect": "none",
+          "firstAttemptPolicy": "immutable_after_correction",
+          "disclosurePolicy": "feedback_and_correct_answer_after_valid_attempt"
+        },
+        {
+          "id": "PY-FUNC-SUP-C01-M01",
+          "kind": "memorization",
+          "prompt": "Qual par resume corretamente os dois momentos?",
+          "options": [
+            "def executa; nome(...) apenas descreve",
+            "def define; nome(...) chama",
+            "def chama; return define"
+          ],
+          "optionIds": [
+            "inverte_definicao_e_chamada",
+            "define_entao_chama",
+            "confunde_chamada_com_retorno"
+          ],
+          "correctOptionId": "define_entao_chama",
+          "answer": 1,
+          "feedbackByOption": {
+            "inverte_definicao_e_chamada": "Os papéis foram invertidos: def cria a função, e nome(...) faz a chamada.",
+            "define_entao_chama": "Isso: primeiro a função é definida; depois pode ser chamada.",
+            "confunde_chamada_com_retorno": "return devolve um valor durante a execução; ele não define a função."
+          },
+          "optionRationales": {
+            "inverte_definicao_e_chamada": "Troca os dois eventos centrais.",
+            "define_entao_chama": "Mantém a ordem conceitual correta.",
+            "confunde_chamada_com_retorno": "Atribui a return a função sintática de def."
+          },
+          "activityRole": "support",
+          "formalAssessment": false,
+          "writesLearnerEvidence": false,
+          "masteryEffect": "none",
+          "firstAttemptPolicy": "immutable_after_correction",
+          "disclosurePolicy": "feedback_and_correct_answer_after_valid_attempt"
+        }
+      ],
+      "immediate": [
+        {
+          "id": "PY-FUNC-I01",
+          "prompt": "Considere o código:\n\ndef quadrado(n):\n    return n * n\n\nresultado = quadrado(4)\n\nQual valor fica armazenado em resultado?",
+          "options": [
+            "4",
+            "8",
+            "16",
+            "Nenhum, pois def não pode ser chamado"
+          ],
+          "optionIds": [
+            "mantem_argumento_quatro",
+            "soma_quatro_com_quatro",
+            "multiplica_quatro_por_quatro",
+            "nega_validade_da_chamada"
+          ],
+          "correctOptionId": "multiplica_quatro_por_quatro",
+          "answer": 2,
+          "explanation": "A chamada quadrado(4) faz n receber 4, executa n*n e devolve 16 para resultado.",
+          "feedbackByOption": {
+            "mantem_argumento_quatro": "Você preservou a entrada, mas não executou o corpo n*n. Substitua n por 4 dentro do return.",
+            "soma_quatro_com_quatro": "O corpo usa multiplicação, não soma. Leia o operador antes de calcular.",
+            "multiplica_quatro_por_quatro": "Correto: n recebe 4 e n*n produz 16.",
+            "nega_validade_da_chamada": "A função foi definida antes da chamada; portanto quadrado(4) é válido."
+          },
+          "optionRationales": {
+            "mantem_argumento_quatro": "Ignora o processamento do corpo.",
+            "soma_quatro_com_quatro": "Troca multiplicação por soma.",
+            "multiplica_quatro_por_quatro": "Rastreia chamada, parâmetro e retorno.",
+            "nega_validade_da_chamada": "Supõe incorretamente que definir impede chamar."
+          },
+          "origin": {
+            "type": "authorial_fgv_style",
+            "label": "Autoral — fixação"
+          }
+        }
+      ]
+    },
+    {
+      "id": "PY-FUNC-C02",
+      "title": "2. Parâmetros e argumentos",
+      "what": "Parâmetros são os nomes declarados na definição; argumentos são os valores fornecidos em cada chamada.",
+      "explanation": "Na chamada posicional, a ordem decide qual argumento ocupa cada parâmetro. Na chamada por palavra-chave, nome=valor explicita o destino e permite mudar a ordem entre palavras-chave.",
+      "code": "def area(base, altura):\n    return base * altura\n\na = area(3, 6)\nb = area(altura=6, base=3)\n# a e b recebem 18",
+      "connection": "Parâmetros funcionam como variáveis locais que recebem valores quando a chamada começa.",
+      "trap": "Trocar a ordem de argumentos posicionais ou fornecer duas vezes um valor para o mesmo parâmetro.",
+      "visuals": [
+        {
+          "type": "table",
+          "title": "Mapeamento da chamada para a definição",
+          "headers": [
+            "Na definição",
+            "Na chamada area(3, 6)",
+            "Valor recebido"
+          ],
+          "rows": [
+            [
+              "base",
+              "1º argumento",
+              "3"
+            ],
+            [
+              "altura",
+              "2º argumento",
+              "6"
+            ]
+          ],
+          "caption": "Parâmetro é o lugar nomeado; argumento é o valor entregue àquele lugar."
+        }
+      ],
+      "supportVisuals": [
+        {
+          "type": "diagram",
+          "title": "Encaixe por posição e por nome",
+          "nodes": [
+            "posicional: 3 → base",
+            "posicional: 6 → altura",
+            "palavra-chave: altura=6 → altura",
+            "palavra-chave: base=3 → base"
+          ],
+          "caption": "A representação por setas torna explícito como cada valor encontra seu parâmetro."
+        }
+      ],
+      "supportDetails": {
+        "core": "A assinatura declara parâmetros; a chamada fornece argumentos.",
+        "intuition": "Parâmetros são caixas rotuladas na função. Argumentos são os conteúdos colocados nessas caixas em uma chamada.",
+        "why": "O mapeamento correto permite que o mesmo corpo opere sobre valores diferentes.",
+        "identify": "Olhe primeiro os nomes entre parênteses após def e depois os valores entre parênteses na chamada.",
+        "example": "Em def diferenca(a,b): return a-b, a e b são parâmetros. Em diferenca(10,3), 10 e 3 são argumentos e o resultado é 7.",
+        "contrast": "diferenca(10,3) produz 7, enquanto diferenca(3,10) produz -7: na forma posicional, a ordem importa.",
+        "commonError": "Chamar diferenca(10, a=3): o parâmetro a receberia valor pela posição e novamente por nome, gerando TypeError.",
+        "trap": "Trocar a ordem de argumentos posicionais ou fornecer duas vezes um valor para o mesmo parâmetro.",
+        "connection": "Parâmetros funcionam como variáveis locais que recebem valores quando a chamada começa.",
+        "steps": [
+          "liste os parâmetros na ordem da definição",
+          "identifique argumentos posicionais",
+          "associe argumentos nomeados ao parâmetro indicado",
+          "verifique se falta ou sobra valor",
+          "execute o corpo"
+        ],
+        "checklist": [
+          "Quantos parâmetros obrigatórios existem?",
+          "A chamada usa posição ou palavra-chave?",
+          "Algum parâmetro recebeu valor duas vezes?",
+          "A ordem muda o resultado?"
+        ],
+        "microcheck": "Em def dividir(numerador,denominador), dividir(10,2) associa 10 ao numerador e 2 ao denominador."
+      },
+      "supportPractice": [
+        {
+          "id": "PY-FUNC-SUP-C02-R01",
+          "kind": "recognition",
+          "prompt": "No código def desconto(preco, taxa): ..., quais são os parâmetros?",
+          "options": [
+            "preco e taxa",
+            "def e return",
+            "100 e 0.1"
+          ],
+          "optionIds": [
+            "nomes_preco_e_taxa",
+            "palavras_def_e_return",
+            "valores_cem_e_decimal"
+          ],
+          "correctOptionId": "nomes_preco_e_taxa",
+          "answer": 0,
+          "feedbackByOption": {
+            "nomes_preco_e_taxa": "Correto. São os nomes declarados entre parênteses na definição.",
+            "palavras_def_e_return": "def e return são palavras da linguagem, não parâmetros dessa função.",
+            "valores_cem_e_decimal": "Esses poderiam ser argumentos em uma chamada, mas não são os nomes declarados na definição."
+          },
+          "optionRationales": {
+            "nomes_preco_e_taxa": "Reconhece os parâmetros formais.",
+            "palavras_def_e_return": "Confunde palavras-chave com nomes de entrada.",
+            "valores_cem_e_decimal": "Confunde valores de chamada com parâmetros."
+          },
+          "activityRole": "support",
+          "formalAssessment": false,
+          "writesLearnerEvidence": false,
+          "masteryEffect": "none",
+          "firstAttemptPolicy": "immutable_after_correction",
+          "disclosurePolicy": "feedback_and_correct_answer_after_valid_attempt"
+        },
+        {
+          "id": "PY-FUNC-SUP-C02-REA01",
+          "kind": "reasoning",
+          "prompt": "Para def subtrair(a,b): return a-b, por que subtrair(9,4) e subtrair(4,9) dão resultados diferentes?",
+          "options": [
+            "Porque return muda de significado",
+            "Porque argumentos posicionais ocupam a e b em ordens diferentes",
+            "Porque parâmetros só aceitam valores crescentes"
+          ],
+          "optionIds": [
+            "atribui_mudanca_ao_return",
+            "reconhece_ordem_posicional",
+            "inventa_restricao_crescente"
+          ],
+          "correctOptionId": "reconhece_ordem_posicional",
+          "answer": 1,
+          "feedbackByOption": {
+            "atribui_mudanca_ao_return": "return continua devolvendo a-b; o que mudou foi qual valor entrou em a e em b.",
+            "reconhece_ordem_posicional": "Exato. Na primeira chamada a=9,b=4; na segunda a=4,b=9.",
+            "inventa_restricao_crescente": "Parâmetros não exigem ordem crescente; eles recebem os argumentos conforme a chamada."
+          },
+          "optionRationales": {
+            "atribui_mudanca_ao_return": "Localiza a diferença no comando errado.",
+            "reconhece_ordem_posicional": "Mapeia corretamente posição e parâmetro.",
+            "inventa_restricao_crescente": "Cria uma regra inexistente."
+          },
+          "activityRole": "support",
+          "formalAssessment": false,
+          "writesLearnerEvidence": false,
+          "masteryEffect": "none",
+          "firstAttemptPolicy": "immutable_after_correction",
+          "disclosurePolicy": "feedback_and_correct_answer_after_valid_attempt"
+        }
+      ],
+      "immediate": [
+        {
+          "id": "PY-FUNC-I02",
+          "prompt": "Considere:\n\ndef rotulo(nome, setor):\n    return nome + '-' + setor\n\ntexto = rotulo(setor='TI', nome='Lia')\n\nQual valor fica em texto?",
+          "options": [
+            "'TI-Lia'",
+            "'Lia-TI'",
+            "'setor-nome'",
+            "Ocorre erro porque palavras-chave não podem mudar de ordem"
+          ],
+          "optionIds": [
+            "segue_ordem_visual_da_chamada",
+            "segue_nomes_dos_parametros",
+            "usa_rotulos_em_vez_de_valores",
+            "nega_reordenacao_por_palavra_chave"
+          ],
+          "correctOptionId": "segue_nomes_dos_parametros",
+          "answer": 1,
+          "explanation": "Argumentos por palavra-chave são associados pelo nome: nome recebe 'Lia' e setor recebe 'TI'; o return forma 'Lia-TI'.",
+          "feedbackByOption": {
+            "segue_ordem_visual_da_chamada": "Você leu a ordem escrita na chamada, mas palavras-chave fazem o encaixe pelo nome. nome recebe 'Lia'.",
+            "segue_nomes_dos_parametros": "Correto: nome='Lia' e setor='TI', independentemente da ordem entre essas palavras-chave.",
+            "usa_rotulos_em_vez_de_valores": "nome e setor indicam onde colocar os valores; o retorno usa 'Lia' e 'TI'.",
+            "nega_reordenacao_por_palavra_chave": "Entre argumentos nomeados válidos, a ordem pode mudar porque cada valor identifica seu parâmetro."
+          },
+          "optionRationales": {
+            "segue_ordem_visual_da_chamada": "Trata argumentos nomeados como posicionais.",
+            "segue_nomes_dos_parametros": "Resolve corretamente o mapeamento nominal.",
+            "usa_rotulos_em_vez_de_valores": "Confunde nomes de parâmetros com conteúdo.",
+            "nega_reordenacao_por_palavra_chave": "Aplica uma restrição inexistente."
+          },
+          "origin": {
+            "type": "authorial_fgv_style",
+            "label": "Autoral — fixação"
+          }
+        }
+      ]
+    },
+    {
+      "id": "PY-FUNC-C03",
+      "title": "3. return, print e None",
+      "what": "return devolve um valor à chamada; print apenas exibe algo na saída.",
+      "explanation": "Uma função sem return explícito termina devolvendo None. Por isso, ver um número impresso não significa que uma variável recebeu aquele número.",
+      "code": "def mostrar_total(a, b):\n    total = a + b\n    print(total)\n\nretorno = mostrar_total(2, 3)\n# a tela mostra 5, mas retorno recebe None",
+      "connection": "Retoma atribuição: o lado direito precisa produzir um valor para que esse valor seja armazenado no nome à esquerda.",
+      "trap": "Confundir o texto exibido por print com o valor devolvido pela função.",
+      "visuals": [
+        {
+          "type": "comparison",
+          "title": "Dois destinos diferentes",
+          "left": {
+            "title": "print(valor)",
+            "items": [
+              "envia texto para a saída",
+              "não entrega esse valor à atribuição",
+              "a função ainda pode retornar None"
+            ]
+          },
+          "right": {
+            "title": "return valor",
+            "items": [
+              "encerra a chamada atual",
+              "entrega o valor ao ponto da chamada",
+              "permite guardar ou reutilizar o resultado"
+            ]
+          },
+          "caption": "Exibir e devolver são ações diferentes."
+        }
+      ],
+      "supportVisuals": [
+        {
+          "type": "flow",
+          "title": "Para onde o valor vai?",
+          "steps": [
+            "função calcula 12",
+            "print → saída visível",
+            "return → variável da chamada",
+            "sem return → None"
+          ],
+          "caption": "A seta de destino evita tratar saída visual como retorno."
+        }
+      ],
+      "supportDetails": {
+        "core": "print mostra; return devolve.",
+        "intuition": "print é falar o resultado em voz alta. return é entregar o resultado a quem chamou.",
+        "why": "Programas precisam reutilizar resultados; return transforma o cálculo interno em valor disponível fora da chamada.",
+        "identify": "Procure se a função contém return e observe se a chamada está à direita de uma atribuição.",
+        "example": "def soma(a,b): return a+b permite total=soma(2,5), com total=7. Se o corpo apenas fizer print(a+b), a tela mostra 7, mas total recebe None.",
+        "contrast": "Saída no console é efeito visível; valor de retorno é dado entregue à expressão que chamou.",
+        "commonError": "Marcar como valor da variável aquilo que apareceu no console.",
+        "trap": "Confundir o texto exibido por print com o valor devolvido pela função.",
+        "connection": "Retoma atribuição: o lado direito precisa produzir um valor para que esse valor seja armazenado no nome à esquerda.",
+        "steps": [
+          "localize a chamada",
+          "marque o que print exibe",
+          "procure um return alcançado",
+          "se não houver retorno explícito, registre None",
+          "separe console de variável"
+        ],
+        "checklist": [
+          "Há print?",
+          "Há return?",
+          "Qual linha encerra a chamada?",
+          "O que aparece na tela e o que fica armazenado?"
+        ],
+        "microcheck": "def avisar(): print('ok') exibe ok; x=avisar() deixa x com None."
+      },
+      "supportPractice": [
+        {
+          "id": "PY-FUNC-SUP-C03-R01",
+          "kind": "recognition",
+          "prompt": "Qual instrução permite que resultado = calcular(5) armazene o número produzido dentro da função?",
+          "options": [
+            "print(numero)",
+            "return numero",
+            "def numero"
+          ],
+          "optionIds": [
+            "usa_print",
+            "usa_return",
+            "usa_def_como_retorno"
+          ],
+          "correctOptionId": "usa_return",
+          "answer": 1,
+          "feedbackByOption": {
+            "usa_print": "print exibe numero, mas não o entrega como valor da chamada.",
+            "usa_return": "Correto. return devolve numero para o ponto em que calcular(5) foi chamado.",
+            "usa_def_como_retorno": "def inicia uma definição; não devolve o resultado calculado."
+          },
+          "optionRationales": {
+            "usa_print": "Confunde efeito visual com retorno.",
+            "usa_return": "Identifica o mecanismo de devolução.",
+            "usa_def_como_retorno": "Confunde definição com instrução do corpo."
+          },
+          "activityRole": "support",
+          "formalAssessment": false,
+          "writesLearnerEvidence": false,
+          "masteryEffect": "none",
+          "firstAttemptPolicy": "immutable_after_correction",
+          "disclosurePolicy": "feedback_and_correct_answer_after_valid_attempt"
+        },
+        {
+          "id": "PY-FUNC-SUP-C03-REA01",
+          "kind": "reasoning",
+          "prompt": "Uma função termina sem executar nenhum return. Qual valor sua chamada devolve?",
+          "options": [
+            "0",
+            "Uma string vazia",
+            "None"
+          ],
+          "optionIds": [
+            "supoe_zero",
+            "supoe_string_vazia",
+            "retorno_implicito_none"
+          ],
+          "correctOptionId": "retorno_implicito_none",
+          "answer": 2,
+          "feedbackByOption": {
+            "supoe_zero": "Python não inventa zero para uma função sem return.",
+            "supoe_string_vazia": "O retorno implícito não depende de a função trabalhar com texto.",
+            "retorno_implicito_none": "Isso. Chegar ao fim sem return explícito devolve None."
+          },
+          "optionRationales": {
+            "supoe_zero": "Substitui ausência de retorno por um número neutro inexistente.",
+            "supoe_string_vazia": "Substitui ausência de retorno por texto vazio.",
+            "retorno_implicito_none": "Aplica a semântica correta de término da função."
+          },
+          "activityRole": "support",
+          "formalAssessment": false,
+          "writesLearnerEvidence": false,
+          "masteryEffect": "none",
+          "firstAttemptPolicy": "immutable_after_correction",
+          "disclosurePolicy": "feedback_and_correct_answer_after_valid_attempt"
+        }
+      ],
+      "immediate": [
+        {
+          "id": "PY-FUNC-I03",
+          "prompt": "Considere:\n\ndef dobrar(n):\n    print(n * 2)\n\nvalor = dobrar(6)\n\nO que ocorre?",
+          "options": [
+            "A tela mostra 12 e valor recebe 12",
+            "A tela mostra 6 e valor recebe 12",
+            "Nada é exibido e valor recebe None",
+            "A tela mostra 12 e valor recebe None"
+          ],
+          "optionIds": [
+            "imprime_doze_retorna_doze",
+            "imprime_seis_retorna_doze",
+            "nao_imprime_retorna_none",
+            "imprime_doze_retorna_none"
+          ],
+          "correctOptionId": "imprime_doze_retorna_none",
+          "answer": 3,
+          "explanation": "print exibe 12. Como a função não executa return, a chamada devolve None, que é armazenado em valor.",
+          "feedbackByOption": {
+            "imprime_doze_retorna_doze": "Você calculou corretamente o que aparece na tela, mas tratou print como return. Sem return, valor recebe None.",
+            "imprime_seis_retorna_doze": "O corpo imprime n*2, portanto mostra 12; além disso, não há return de 12.",
+            "nao_imprime_retorna_none": "O retorno None está correto, mas print é executado e mostra 12.",
+            "imprime_doze_retorna_none": "Correto: 12 vai para a saída; None vai para a atribuição."
+          },
+          "optionRationales": {
+            "imprime_doze_retorna_doze": "Confunde exibição com devolução.",
+            "imprime_seis_retorna_doze": "Ignora a multiplicação e inventa retorno.",
+            "nao_imprime_retorna_none": "Acerta o retorno, mas ignora o efeito de print.",
+            "imprime_doze_retorna_none": "Separa corretamente console e retorno."
+          },
+          "origin": {
+            "type": "authorial_fgv_style",
+            "label": "Autoral — fixação"
+          }
+        }
+      ]
+    },
+    {
+      "id": "PY-FUNC-C04",
+      "title": "4. Escopo local",
+      "what": "Parâmetros e nomes atribuídos dentro da função pertencem ao escopo local daquela chamada.",
+      "explanation": "O corpo pode usar esses nomes enquanto a função executa. Depois, tentar consultar diretamente uma variável que só foi criada ali produz NameError no escopo externo.",
+      "code": "def preco_final(preco):\n    desconto = preco * 0.10\n    return preco - desconto\n\nresultado = preco_final(200)\n# resultado recebe 180.0\n# desconto não existe fora da função",
+      "connection": "Retoma variáveis e atribuição, agora separadas em uma área local criada para cada chamada.",
+      "trap": "Achar que toda variável criada no corpo continua disponível globalmente após a função terminar.",
+      "visuals": [
+        {
+          "type": "diagram",
+          "title": "Dois espaços de nomes",
+          "nodes": [
+            "fora: resultado",
+            "chamada preco_final(200)",
+            "local: preco=200",
+            "local: desconto=20.0",
+            "return 180.0 volta para fora"
+          ],
+          "caption": "O valor atravessa a fronteira pelo argumento e pelo return; o nome local desconto não atravessa."
+        }
+      ],
+      "supportVisuals": [
+        {
+          "type": "table",
+          "title": "Onde cada nome pode ser consultado",
+          "headers": [
+            "Nome",
+            "Criado onde",
+            "Visível no corpo",
+            "Visível diretamente fora"
+          ],
+          "rows": [
+            [
+              "preco",
+              "parâmetro local",
+              "sim",
+              "não"
+            ],
+            [
+              "desconto",
+              "atribuição local",
+              "sim",
+              "não"
+            ],
+            [
+              "resultado",
+              "atribuição externa",
+              "não pelo mesmo nome",
+              "sim"
+            ]
+          ],
+          "caption": "A tabela troca a metáfora de caixas por uma matriz explícita de visibilidade."
+        }
+      ],
+      "supportDetails": {
+        "core": "Cada chamada cria um escopo local para parâmetros e atribuições internas.",
+        "intuition": "É uma bancada temporária: a função trabalha com nomes locais e entrega apenas o valor indicado por return.",
+        "why": "Isolar nomes evita que cálculos internos sobrescrevam acidentalmente variáveis externas com o mesmo nome.",
+        "identify": "Marque os nomes que aparecem como parâmetros ou à esquerda de = dentro do corpo.",
+        "example": "def converter(horas): minutos=horas*60; return minutos. A chamada converter(2) devolve 120, mas minutos não pode ser consultado diretamente fora.",
+        "contrast": "resultado=converter(2) cria resultado fora porque a atribuição está fora; minutos foi criado dentro e permanece local.",
+        "commonError": "Depois da chamada, executar print(minutos) sem que minutos exista no escopo externo.",
+        "trap": "Achar que toda variável criada no corpo continua disponível globalmente após a função terminar.",
+        "connection": "Retoma variáveis e atribuição, agora separadas em uma área local criada para cada chamada.",
+        "steps": [
+          "circule os parâmetros",
+          "marque atribuições dentro do corpo",
+          "marque atribuições fora do corpo",
+          "acompanhe apenas o valor devolvido por return",
+          "verifique de qual escopo cada nome é consultado"
+        ],
+        "checklist": [
+          "O nome nasceu dentro ou fora?",
+          "É parâmetro?",
+          "Foi devolvido como valor?",
+          "A linha que o consulta está em qual escopo?"
+        ],
+        "microcheck": "O fato de return subtotal devolver um valor não torna o nome subtotal visível fora da função."
+      },
+      "supportPractice": [
+        {
+          "id": "PY-FUNC-SUP-C04-R01",
+          "kind": "recognition",
+          "prompt": "Em def converter(km): metros=km*1000; return metros, quais nomes são locais?",
+          "options": [
+            "Apenas converter",
+            "km e metros",
+            "Apenas o número 1000"
+          ],
+          "optionIds": [
+            "somente_nome_funcao",
+            "parametro_km_e_variavel_metros",
+            "somente_literal_mil"
+          ],
+          "correctOptionId": "parametro_km_e_variavel_metros",
+          "answer": 1,
+          "feedbackByOption": {
+            "somente_nome_funcao": "converter é o nome associado à função no escopo de definição; km e metros são os nomes locais da chamada.",
+            "parametro_km_e_variavel_metros": "Correto. km é parâmetro local e metros é criado por atribuição no corpo.",
+            "somente_literal_mil": "1000 é um valor literal, não um nome de variável."
+          },
+          "optionRationales": {
+            "somente_nome_funcao": "Ignora parâmetros e atribuições internas.",
+            "parametro_km_e_variavel_metros": "Reconhece as duas formas de nome local.",
+            "somente_literal_mil": "Confunde literal com identificador."
+          },
+          "activityRole": "support",
+          "formalAssessment": false,
+          "writesLearnerEvidence": false,
+          "masteryEffect": "none",
+          "firstAttemptPolicy": "immutable_after_correction",
+          "disclosurePolicy": "feedback_and_correct_answer_after_valid_attempt"
+        },
+        {
+          "id": "PY-FUNC-SUP-C04-REA01",
+          "kind": "reasoning",
+          "prompt": "Por que total não fica disponível fora de uma função apenas porque foi usado em return total?",
+          "options": [
+            "Porque return devolve o valor, não exporta o nome local",
+            "Porque return sempre apaga o valor",
+            "Porque variáveis locais só podem guardar strings"
+          ],
+          "optionIds": [
+            "devolve_valor_nao_nome",
+            "supoe_que_return_apaga",
+            "restringe_local_a_string"
+          ],
+          "correctOptionId": "devolve_valor_nao_nome",
+          "answer": 0,
+          "feedbackByOption": {
+            "devolve_valor_nao_nome": "Exato. A chamada recebe o valor; o identificador total continua pertencendo ao escopo local.",
+            "supoe_que_return_apaga": "return entrega o valor calculado; ele não o apaga.",
+            "restringe_local_a_string": "Variáveis locais podem referenciar valores de qualquer tipo."
+          },
+          "optionRationales": {
+            "devolve_valor_nao_nome": "Distingue valor retornado de visibilidade do identificador.",
+            "supoe_que_return_apaga": "Interpreta retorno como destruição.",
+            "restringe_local_a_string": "Inventa limitação de tipo."
+          },
+          "activityRole": "support",
+          "formalAssessment": false,
+          "writesLearnerEvidence": false,
+          "masteryEffect": "none",
+          "firstAttemptPolicy": "immutable_after_correction",
+          "disclosurePolicy": "feedback_and_correct_answer_after_valid_attempt"
+        }
+      ],
+      "immediate": [
+        {
+          "id": "PY-FUNC-I04",
+          "prompt": "Considere:\n\ndef somar(a, b):\n    total = a + b\n    return total\n\nresultado = somar(2, 5)\nprint(total)\n\nO que ocorre na última linha?",
+          "options": [
+            "Imprime 7, pois return torna total global",
+            "Imprime 5, o último argumento",
+            "Imprime None",
+            "Ocorre NameError, pois total é local à função"
+          ],
+          "optionIds": [
+            "imprime_sete_por_falsa_globalizacao",
+            "imprime_ultimo_argumento",
+            "imprime_none",
+            "name_error_por_escopo_local"
+          ],
+          "correctOptionId": "name_error_por_escopo_local",
+          "answer": 3,
+          "explanation": "resultado recebe o valor 7, mas o nome total foi criado no escopo local de somar. Fora da função, print(total) não encontra esse nome e gera NameError.",
+          "feedbackByOption": {
+            "imprime_sete_por_falsa_globalizacao": "return devolveu o valor 7 para resultado, mas não tornou o nome local total disponível fora.",
+            "imprime_ultimo_argumento": "O último argumento entrou em b; a última linha tenta consultar total, que não existe fora.",
+            "imprime_none": "None seria um retorno implícito sem return; aqui o problema acontece antes de imprimir, ao procurar o nome total.",
+            "name_error_por_escopo_local": "Correto. total só existe no escopo local da chamada."
+          },
+          "optionRationales": {
+            "imprime_sete_por_falsa_globalizacao": "Confunde retorno do valor com exportação do nome.",
+            "imprime_ultimo_argumento": "Confunde parâmetro com variável local calculada.",
+            "imprime_none": "Aplica a regra de ausência de return no lugar errado.",
+            "name_error_por_escopo_local": "Rastreia corretamente a visibilidade do nome."
+          },
+          "origin": {
+            "type": "authorial_fgv_style",
+            "label": "Autoral — fixação"
+          }
+        }
+      ]
+    },
+    {
+      "id": "PY-FUNC-C05",
+      "title": "5. Argumentos com valor padrão",
+      "what": "Um parâmetro pode ter valor padrão, usado quando a chamada omite o argumento correspondente.",
+      "explanation": "Se a chamada fornece um valor, ele substitui o padrão naquela chamada. Neste nível, use padrões simples e imutáveis, como números, strings, True, False ou None.",
+      "code": "def elevar(base, expoente=2):\n    return base ** expoente\n\na = elevar(4)\nb = elevar(4, 3)\n# a recebe 16; b recebe 64",
+      "connection": "O valor padrão reduz argumentos obrigatórios, mas o parâmetro continua sendo uma variável local da chamada.",
+      "trap": "Usar o padrão mesmo quando a chamada forneceu explicitamente outro argumento.",
+      "visuals": [
+        {
+          "type": "flow",
+          "title": "Decisão do valor de expoente",
+          "steps": [
+            "a chamada informou expoente?",
+            "não → usar 2",
+            "sim → usar o valor informado",
+            "calcular base ** expoente"
+          ],
+          "caption": "O padrão é uma alternativa para omissão, não um valor fixo que vence todo argumento."
+        }
+      ],
+      "supportVisuals": [
+        {
+          "type": "table",
+          "title": "Mesma função, duas chamadas",
+          "headers": [
+            "Chamada",
+            "base",
+            "expoente",
+            "Resultado"
+          ],
+          "rows": [
+            [
+              "elevar(5)",
+              "5",
+              "2 padrão",
+              "25"
+            ],
+            [
+              "elevar(5,3)",
+              "5",
+              "3 informado",
+              "125"
+            ]
+          ],
+          "caption": "A tabela explicita quando o valor padrão entra e quando é substituído."
+        }
+      ],
+      "supportDetails": {
+        "core": "O padrão preenche apenas um argumento omitido.",
+        "intuition": "É uma configuração inicial: ela vale enquanto a chamada não pedir outra.",
+        "why": "Isso permite chamadas curtas para o caso comum sem impedir configurações diferentes.",
+        "identify": "Na definição, procure parametro=valor dentro dos parênteses.",
+        "example": "def saudacao(nome,texto='Olá'): return texto+', '+nome. saudacao('Ana') usa 'Olá'; saudacao('Ana','Oi') usa 'Oi'.",
+        "contrast": "Parâmetro sem padrão é obrigatório; parâmetro com padrão pode ser omitido.",
+        "commonError": "Achar que o valor padrão não pode ser substituído por um argumento explícito.",
+        "trap": "Usar o padrão mesmo quando a chamada forneceu explicitamente outro argumento.",
+        "connection": "O valor padrão reduz argumentos obrigatórios, mas o parâmetro continua sendo uma variável local da chamada.",
+        "steps": [
+          "marque parâmetros sem padrão",
+          "marque parâmetros com padrão",
+          "mapeie argumentos fornecidos",
+          "complete apenas os omitidos com o padrão",
+          "execute o corpo"
+        ],
+        "checklist": [
+          "Qual argumento é obrigatório?",
+          "Qual parâmetro possui padrão?",
+          "A chamada omitiu ou informou esse valor?",
+          "O valor explícito substitui o padrão?"
+        ],
+        "microcheck": "Em def repetir(texto,vezes=2), repetir('a',3) usa vezes=3, não 2."
+      },
+      "supportPractice": [
+        {
+          "id": "PY-FUNC-SUP-C05-R01",
+          "kind": "recognition",
+          "prompt": "Em def desconto(valor, taxa=0.10), qual parâmetro pode ser omitido na chamada?",
+          "options": [
+            "valor",
+            "taxa",
+            "os dois sempre"
+          ],
+          "optionIds": [
+            "parametro_valor_sem_padrao",
+            "parametro_taxa_com_padrao",
+            "ambos_supostamente_opcionais"
+          ],
+          "correctOptionId": "parametro_taxa_com_padrao",
+          "answer": 1,
+          "feedbackByOption": {
+            "parametro_valor_sem_padrao": "valor não possui padrão e continua obrigatório.",
+            "parametro_taxa_com_padrao": "Correto. Se taxa for omitida, a chamada usa 0.10.",
+            "ambos_supostamente_opcionais": "Somente taxa possui valor padrão; valor precisa ser fornecido."
+          },
+          "optionRationales": {
+            "parametro_valor_sem_padrao": "Ignora a ausência de =valor no parâmetro.",
+            "parametro_taxa_com_padrao": "Reconhece corretamente o parâmetro opcional.",
+            "ambos_supostamente_opcionais": "Generaliza o padrão para toda a assinatura."
+          },
+          "activityRole": "support",
+          "formalAssessment": false,
+          "writesLearnerEvidence": false,
+          "masteryEffect": "none",
+          "firstAttemptPolicy": "immutable_after_correction",
+          "disclosurePolicy": "feedback_and_correct_answer_after_valid_attempt"
+        },
+        {
+          "id": "PY-FUNC-SUP-C05-REA01",
+          "kind": "reasoning",
+          "prompt": "Se def etiqueta(nome, prefixo='ID') e a chamada é etiqueta('Ana', prefixo='USR'), qual prefixo é usado?",
+          "options": [
+            "'ID', porque padrão nunca muda",
+            "'USR', porque o argumento explícito substitui o padrão naquela chamada",
+            "Nenhum, porque usar palavra-chave gera erro"
+          ],
+          "optionIds": [
+            "mantem_padrao_id",
+            "usa_argumento_usr",
+            "nega_argumento_por_palavra_chave"
+          ],
+          "correctOptionId": "usa_argumento_usr",
+          "answer": 1,
+          "feedbackByOption": {
+            "mantem_padrao_id": "O padrão só é usado quando o argumento é omitido.",
+            "usa_argumento_usr": "Exato. A chamada forneceu prefixo='USR', que substitui 'ID' nessa execução.",
+            "nega_argumento_por_palavra_chave": "prefixo é um parâmetro válido e pode receber argumento por palavra-chave."
+          },
+          "optionRationales": {
+            "mantem_padrao_id": "Trata o padrão como imutável diante da chamada.",
+            "usa_argumento_usr": "Aplica corretamente a precedência do argumento explícito.",
+            "nega_argumento_por_palavra_chave": "Inventa erro de chamada."
+          },
+          "activityRole": "support",
+          "formalAssessment": false,
+          "writesLearnerEvidence": false,
+          "masteryEffect": "none",
+          "firstAttemptPolicy": "immutable_after_correction",
+          "disclosurePolicy": "feedback_and_correct_answer_after_valid_attempt"
+        }
+      ],
+      "immediate": [
+        {
+          "id": "PY-FUNC-I05",
+          "prompt": "Considere:\n\ndef aplicar(valor, fator=0.5):\n    return valor * fator\n\nresultado = aplicar(80)\n\nQual é o valor de resultado?",
+          "options": [
+            "80",
+            "40.0",
+            "0.5",
+            "Ocorre TypeError porque fator não foi informado"
+          ],
+          "optionIds": [
+            "mantem_valor_oitenta",
+            "aplica_padrao_meio",
+            "retorna_apenas_fator",
+            "supoe_falta_de_argumento_obrigatorio"
+          ],
+          "correctOptionId": "aplica_padrao_meio",
+          "answer": 1,
+          "explanation": "Como fator foi omitido, a chamada usa o padrão 0.5; 80*0.5 resulta em 40.0.",
+          "feedbackByOption": {
+            "mantem_valor_oitenta": "Você identificou o argumento valor, mas não aplicou o corpo valor*fator com fator=0.5.",
+            "aplica_padrao_meio": "Correto. O parâmetro omitido recebe 0.5 e o resultado é 40.0.",
+            "retorna_apenas_fator": "O return devolve o produto valor*fator, não apenas o parâmetro padrão.",
+            "supoe_falta_de_argumento_obrigatorio": "fator não é obrigatório porque possui valor padrão."
+          },
+          "optionRationales": {
+            "mantem_valor_oitenta": "Ignora o cálculo do corpo.",
+            "aplica_padrao_meio": "Mapeia omissão para o padrão e calcula corretamente.",
+            "retorna_apenas_fator": "Ignora o operando valor.",
+            "supoe_falta_de_argumento_obrigatorio": "Não reconhece o papel do padrão."
+          },
+          "origin": {
+            "type": "authorial_fgv_style",
+            "label": "Autoral — fixação"
+          }
+        }
+      ]
+    },
+    {
+      "id": "PY-FUNC-C06",
+      "title": "6. Rastrear funções com laços e condições",
+      "what": "Para prever o resultado de uma função, associe argumentos aos parâmetros e execute o corpo na ordem, acompanhando cada atualização local até return.",
+      "explanation": "Quando há laço e condição, monte uma pequena tabela com item atual, resultado da condição e estado do acumulador. return encerra a chamada e entrega o valor alcançado.",
+      "code": "def somar_pares(valores):\n    total = 0\n    for valor in valores:\n        if valor % 2 == 0:\n            total += valor\n    return total\n\nresultado = somar_pares([1, 2, 3, 6])\n# resultado recebe 8",
+      "connection": "Integra listas, for, if, operador %, acumulador e ordem de execução antes de NumPy.",
+      "trap": "Colocar mentalmente return dentro do laço quando ele está fora, ou ignorar uma atualização do acumulador.",
+      "visuals": [
+        {
+          "type": "table",
+          "title": "Rastreamento de somar_pares([1,2,3,6])",
+          "headers": [
+            "valor",
+            "é par?",
+            "total depois da iteração"
+          ],
+          "rows": [
+            [
+              "1",
+              "não",
+              "0"
+            ],
+            [
+              "2",
+              "sim",
+              "2"
+            ],
+            [
+              "3",
+              "não",
+              "2"
+            ],
+            [
+              "6",
+              "sim",
+              "8"
+            ]
+          ],
+          "caption": "return está fora do for, então só ocorre depois de todas as iterações."
+        }
+      ],
+      "supportVisuals": [
+        {
+          "type": "flow",
+          "title": "Procedimento de leitura",
+          "steps": [
+            "mapeie a entrada",
+            "inicialize locais",
+            "percorra um item",
+            "teste a condição",
+            "atualize o estado",
+            "repita",
+            "execute return"
+          ],
+          "caption": "O fluxo reduz a leitura a uma sequência repetível, em vez de tentar enxergar toda a função de uma vez."
+        }
+      ],
+      "supportDetails": {
+        "core": "Rastrear é registrar o estado local depois de cada linha relevante.",
+        "intuition": "Faça o papel do interpretador: uma linha, uma decisão e uma atualização por vez.",
+        "why": "Essa estratégia evita pular itens do laço, aplicar a condição ao valor errado ou devolver cedo demais.",
+        "identify": "Procure parâmetros, inicializações, variável do laço, condição, atualização e indentação de return.",
+        "example": "Em def contar_positivos(nums): total=0; for n in nums: if n>0: total+=1; return total, a entrada [-1,4,2] termina com total=2.",
+        "contrast": "return fora do for espera o laço terminar; return indentado dentro do for pode encerrar na primeira iteração que o alcançar.",
+        "commonError": "Somar o próprio item quando o código total+=1 está contando ocorrências, ou somar 1 quando total+=n está acumulando valores.",
+        "trap": "Colocar mentalmente return dentro do laço quando ele está fora, ou ignorar uma atualização do acumulador.",
+        "connection": "Integra listas, for, if, operador %, acumulador e ordem de execução antes de NumPy.",
+        "steps": [
+          "associe a entrada ao parâmetro",
+          "anote os valores locais iniciais",
+          "crie uma linha por iteração",
+          "avalie a condição antes de atualizar",
+          "observe a indentação de return",
+          "entregue o estado final"
+        ],
+        "checklist": [
+          "Qual é o valor inicial do acumulador?",
+          "Quantas iterações ocorrem?",
+          "A condição foi verdadeira em quais itens?",
+          "A atualização soma 1 ou soma o item?",
+          "return está dentro ou fora do laço?"
+        ],
+        "microcheck": "Se total começa em 0 e total+=1 ocorre três vezes, return total devolve 3."
+      },
+      "supportPractice": [
+        {
+          "id": "PY-FUNC-SUP-C06-R01",
+          "kind": "reasoning",
+          "prompt": "Em uma função com total=0 e total+=1 sempre que palavra tem mais de 4 letras, o que total representa?",
+          "options": [
+            "A soma do tamanho das palavras",
+            "A quantidade de palavras com mais de 4 letras",
+            "A última palavra do laço"
+          ],
+          "optionIds": [
+            "soma_comprimentos",
+            "conta_palavras_longas",
+            "guarda_ultima_palavra"
+          ],
+          "correctOptionId": "conta_palavras_longas",
+          "answer": 1,
+          "feedbackByOption": {
+            "soma_comprimentos": "Para somar tamanhos seria necessário algo como total += len(palavra). Aqui cada ocorrência acrescenta apenas 1.",
+            "conta_palavras_longas": "Correto. Cada palavra que passa na condição aumenta o contador em uma unidade.",
+            "guarda_ultima_palavra": "total recebe números e é atualizado por +1; não recebe o texto da palavra."
+          },
+          "optionRationales": {
+            "soma_comprimentos": "Confunde contador com acumulador de valores.",
+            "conta_palavras_longas": "Interpreta corretamente total+=1 sob condição.",
+            "guarda_ultima_palavra": "Confunde variável de laço com acumulador."
+          },
+          "activityRole": "support",
+          "formalAssessment": false,
+          "writesLearnerEvidence": false,
+          "masteryEffect": "none",
+          "firstAttemptPolicy": "immutable_after_correction",
+          "disclosurePolicy": "feedback_and_correct_answer_after_valid_attempt"
+        },
+        {
+          "id": "PY-FUNC-SUP-C06-REA01",
+          "kind": "reasoning",
+          "prompt": "Se return total está alinhado com for, fora do corpo do laço, quando ele é executado?",
+          "options": [
+            "Depois que todas as iterações terminam",
+            "No início de cada iteração",
+            "Somente quando a condição if é falsa"
+          ],
+          "optionIds": [
+            "apos_todas_iteracoes",
+            "inicio_de_cada_iteracao",
+            "apenas_quando_if_falso"
+          ],
+          "correctOptionId": "apos_todas_iteracoes",
+          "answer": 0,
+          "feedbackByOption": {
+            "apos_todas_iteracoes": "Exato. A indentação coloca return depois do laço.",
+            "inicio_de_cada_iteracao": "Isso ocorreria se return estivesse indentado dentro do corpo e fosse alcançado; alinhado com for, ele espera o laço acabar.",
+            "apenas_quando_if_falso": "A execução de return depende de sua posição no fluxo, não diretamente de a última condição ser falsa."
+          },
+          "optionRationales": {
+            "apos_todas_iteracoes": "Lê corretamente a indentação.",
+            "inicio_de_cada_iteracao": "Move mentalmente return para dentro do laço.",
+            "apenas_quando_if_falso": "Vincula return à condição errada."
+          },
+          "activityRole": "support",
+          "formalAssessment": false,
+          "writesLearnerEvidence": false,
+          "masteryEffect": "none",
+          "firstAttemptPolicy": "immutable_after_correction",
+          "disclosurePolicy": "feedback_and_correct_answer_after_valid_attempt"
+        }
+      ],
+      "immediate": [
+        {
+          "id": "PY-FUNC-I06",
+          "prompt": "Considere:\n\ndef contar_longas(palavras):\n    total = 0\n    for palavra in palavras:\n        if len(palavra) > 3:\n            total += 1\n    return total\n\nresultado = contar_longas(['sol', 'dados', 'IA', 'python'])\n\nQual é o valor de resultado?",
+          "options": [
+            "1",
+            "3",
+            "2",
+            "10"
+          ],
+          "optionIds": [
+            "conta_apenas_python",
+            "conta_tres_palavras",
+            "conta_dados_e_python",
+            "soma_comprimentos"
+          ],
+          "correctOptionId": "conta_dados_e_python",
+          "answer": 2,
+          "explanation": "'dados' e 'python' têm mais de 3 caracteres. A condição é verdadeira duas vezes, então total termina em 2.",
+          "feedbackByOption": {
+            "conta_apenas_python": "Você provavelmente desconsiderou 'dados', que possui 5 caracteres e também passa na condição.",
+            "conta_tres_palavras": "'sol' tem exatamente 3 caracteres; a condição usa >3, não >=3.",
+            "conta_dados_e_python": "Correto. Apenas 'dados' e 'python' fazem total aumentar.",
+            "soma_comprimentos": "O código usa total+=1, portanto conta palavras; não soma len(palavra)."
+          },
+          "optionRationales": {
+            "conta_apenas_python": "Perde uma iteração válida.",
+            "conta_tres_palavras": "Confunde > com >=.",
+            "conta_dados_e_python": "Rastreia todas as iterações e a condição.",
+            "soma_comprimentos": "Confunde contagem com soma de comprimentos."
+          },
+          "origin": {
+            "type": "authorial_fgv_style",
+            "label": "Autoral — fixação"
+          }
+        }
+      ]
+    }
+  ],
+  "finalQuestions": [
+    {
+      "id": "PY-FUNC-F01",
+      "prompt": "Considere o código:\n\ndef ajustar(x):\n    x = x + 2\n    return x\n\na = 3\nb = ajustar(a)\n\nApós a execução, os valores de a e b são, respectivamente:",
+      "options": [
+        "5 e 5",
+        "3 e 3",
+        "3 e 5",
+        "5 e 3",
+        "3 e None"
+      ],
+      "optionIds": [
+        "altera_a_externo_e_retorna_cinco",
+        "ignora_ajuste",
+        "preserva_a_e_retorna_cinco",
+        "altera_a_e_retorna_tres",
+        "supoe_sem_retorno"
+      ],
+      "correctOptionId": "preserva_a_e_retorna_cinco",
+      "answer": 2,
+      "explanation": "Na chamada, o parâmetro local x recebe o valor 3 e passa a 5. return entrega 5 para b; a atribuição local a x não altera o nome externo a, que continua 3.",
+      "feedbackByOption": {
+        "altera_a_externo_e_retorna_cinco": "Você acertou o retorno, mas tratou x local como se fosse o nome externo a. A função não atribui nada a a.",
+        "ignora_ajuste": "O nome a permanece 3, mas o corpo executa x=x+2 e devolve 5 para b.",
+        "preserva_a_e_retorna_cinco": "Correto. a fica 3 e b recebe o retorno 5.",
+        "altera_a_e_retorna_tres": "A função não altera a externo e também não devolve o valor antigo: devolve x após a soma.",
+        "supoe_sem_retorno": "Há return x explícito, portanto b não recebe None."
+      },
+      "optionRationales": {
+        "altera_a_externo_e_retorna_cinco": "Confunde parâmetro local com variável externa.",
+        "ignora_ajuste": "Ignora a execução do corpo.",
+        "preserva_a_e_retorna_cinco": "Aplica corretamente escopo e retorno.",
+        "altera_a_e_retorna_tres": "Inverte os efeitos interno e externo.",
+        "supoe_sem_retorno": "Ignora return explícito."
+      },
+      "cognitiveOperation": "trace_execution",
+      "difficulty": "medium",
+      "fgvMechanisms": [
+        "neighboring_concepts",
+        "plausible_incorrect_trace"
+      ],
+      "level": "Questão autoral — estilo FGV",
+      "origin": {
+        "type": "authorial_fgv_style",
+        "label": "Autoral — estilo FGV"
+      },
+      "provenance": {
+        "kind": "authorial",
+        "realFgv": false
+      }
+    },
+    {
+      "id": "PY-FUNC-F02",
+      "prompt": "Considere:\n\ndef intervalo(inicio, fim):\n    return fim - inicio\n\nresultado = intervalo(fim=10, inicio=4)\n\nO valor de resultado é:",
+      "options": [
+        "6",
+        "-6",
+        "14",
+        "4",
+        "Ocorre erro porque a ordem das palavras-chave foi invertida"
+      ],
+      "optionIds": [
+        "dez_menos_quatro",
+        "quatro_menos_dez",
+        "soma_dez_e_quatro",
+        "retorna_inicio",
+        "supoe_ordem_nomeada_invalida"
+      ],
+      "correctOptionId": "dez_menos_quatro",
+      "answer": 0,
+      "explanation": "Palavras-chave mapeiam pelo nome: fim recebe 10 e inicio recebe 4. O corpo calcula 10-4=6.",
+      "feedbackByOption": {
+        "dez_menos_quatro": "Correto. O mapeamento nominal produz fim=10 e inicio=4.",
+        "quatro_menos_dez": "Você seguiu a ordem visual da chamada. Com palavras-chave, use os nomes: o corpo é fim-inicio.",
+        "soma_dez_e_quatro": "Os parâmetros foram mapeados corretamente, mas o operador do return é subtração.",
+        "retorna_inicio": "A função não devolve um parâmetro isolado; devolve a diferença.",
+        "supoe_ordem_nomeada_invalida": "A ordem entre argumentos nomeados pode variar quando os nomes são válidos e não se repetem."
+      },
+      "optionRationales": {
+        "dez_menos_quatro": "Mapeia por nome e calcula o operador correto.",
+        "quatro_menos_dez": "Trata palavra-chave como posição.",
+        "soma_dez_e_quatro": "Troca o operador.",
+        "retorna_inicio": "Ignora a expressão do retorno.",
+        "supoe_ordem_nomeada_invalida": "Inventa restrição de ordem."
+      },
+      "cognitiveOperation": "apply",
+      "difficulty": "medium",
+      "fgvMechanisms": [
+        "relation_inversion",
+        "scope_shift"
+      ],
+      "level": "Questão autoral — estilo FGV",
+      "origin": {
+        "type": "authorial_fgv_style",
+        "label": "Autoral — estilo FGV"
+      },
+      "provenance": {
+        "kind": "authorial",
+        "realFgv": false
+      }
+    },
+    {
+      "id": "PY-FUNC-F03",
+      "prompt": "Considere:\n\ndef informar(n):\n    print(n + 1)\n\nx = informar(4)\n\nAssinale a afirmativa correta.",
+      "options": [
+        "Nada é exibido e x recebe 5.",
+        "É exibido 4 e x recebe 5.",
+        "É exibido 5 e x recebe 5.",
+        "É exibido None e x recebe 5.",
+        "É exibido 5 e x recebe None."
+      ],
+      "optionIds": [
+        "nao_exibe_retorna_cinco",
+        "exibe_quatro_retorna_cinco",
+        "exibe_cinco_retorna_cinco",
+        "exibe_none_retorna_cinco",
+        "exibe_cinco_retorna_none"
+      ],
+      "correctOptionId": "exibe_cinco_retorna_none",
+      "answer": 4,
+      "explanation": "print(n+1) exibe 5. Como não há return explícito, a chamada devolve None e x recebe None.",
+      "feedbackByOption": {
+        "nao_exibe_retorna_cinco": "print é executado, então há saída; mas não existe return de 5.",
+        "exibe_quatro_retorna_cinco": "O corpo soma 1 antes de imprimir e não devolve 5.",
+        "exibe_cinco_retorna_cinco": "Você acertou a saída, mas confundiu print com return.",
+        "exibe_none_retorna_cinco": "None é o retorno implícito; ele não é o conteúdo passado a print, que recebe 5.",
+        "exibe_cinco_retorna_none": "Correto. A tela recebe 5 e a atribuição recebe None."
+      },
+      "optionRationales": {
+        "nao_exibe_retorna_cinco": "Inverte os destinos de print e return.",
+        "exibe_quatro_retorna_cinco": "Ignora o cálculo e inventa retorno.",
+        "exibe_cinco_retorna_cinco": "Confunde exibição com retorno.",
+        "exibe_none_retorna_cinco": "Troca saída e retorno.",
+        "exibe_cinco_retorna_none": "Separa corretamente os dois efeitos."
+      },
+      "cognitiveOperation": "analyze",
+      "difficulty": "medium",
+      "fgvMechanisms": [
+        "neighboring_concepts",
+        "partially_true"
+      ],
+      "level": "Questão autoral — estilo FGV",
+      "origin": {
+        "type": "authorial_fgv_style",
+        "label": "Autoral — estilo FGV"
+      },
+      "provenance": {
+        "kind": "authorial",
+        "realFgv": false
+      }
+    },
+    {
+      "id": "PY-FUNC-F04",
+      "prompt": "Considere:\n\ndef calcular(valor, taxa=0.20):\n    return valor * taxa\n\na = calcular(100)\nb = calcular(100, 0.30)\n\nOs valores de a e b são, respectivamente:",
+      "options": [
+        "20.0 e 20.0",
+        "20.0 e 30.0",
+        "30.0 e 20.0",
+        "100 e 100",
+        "Ocorre erro na segunda chamada"
+      ],
+      "optionIds": [
+        "usa_padrao_nas_duas",
+        "usa_padrao_depois_argumento_explicito",
+        "inverte_chamadas",
+        "ignora_multiplicacao",
+        "supoe_erro_ao_substituir_padrao"
+      ],
+      "correctOptionId": "usa_padrao_depois_argumento_explicito",
+      "answer": 1,
+      "explanation": "Na primeira chamada, taxa é omitida e vale 0.20: a=20.0. Na segunda, 0.30 substitui o padrão: b=30.0.",
+      "feedbackByOption": {
+        "usa_padrao_nas_duas": "O padrão vale na primeira chamada, mas a segunda fornece taxa=0.30 explicitamente.",
+        "usa_padrao_depois_argumento_explicito": "Correto. O padrão preenche omissão; o argumento explícito o substitui naquela chamada.",
+        "inverte_chamadas": "Você trocou qual chamada usa o padrão e qual fornece 0.30.",
+        "ignora_multiplicacao": "return calcula valor*taxa em cada chamada.",
+        "supoe_erro_ao_substituir_padrao": "Fornecer um argumento para um parâmetro com padrão é válido."
+      },
+      "optionRationales": {
+        "usa_padrao_nas_duas": "Trata o padrão como obrigatório mesmo diante de argumento.",
+        "usa_padrao_depois_argumento_explicito": "Aplica corretamente as duas rotas.",
+        "inverte_chamadas": "Troca os contextos.",
+        "ignora_multiplicacao": "Ignora o corpo.",
+        "supoe_erro_ao_substituir_padrao": "Confunde padrão com valor fixo."
+      },
+      "cognitiveOperation": "apply",
+      "difficulty": "medium",
+      "fgvMechanisms": [
+        "scope_change",
+        "plausible_incorrect_procedure"
+      ],
+      "level": "Questão autoral — estilo FGV",
+      "origin": {
+        "type": "authorial_fgv_style",
+        "label": "Autoral — estilo FGV"
+      },
+      "provenance": {
+        "kind": "authorial",
+        "realFgv": false
+      }
+    },
+    {
+      "id": "PY-FUNC-F05",
+      "prompt": "Considere:\n\ndef obter_codigo():\n    codigo = 7\n    return codigo\n\nx = obter_codigo()\nprint(codigo)\n\nA execução da última linha:",
+      "options": [
+        "imprime 7, porque codigo foi retornado",
+        "imprime x",
+        "imprime None",
+        "gera NameError, porque codigo é local",
+        "gera TypeError, porque a função não tem parâmetros"
+      ],
+      "optionIds": [
+        "imprime_sete_por_retorno",
+        "imprime_nome_x",
+        "imprime_none",
+        "name_error_codigo_local",
+        "type_error_sem_parametros"
+      ],
+      "correctOptionId": "name_error_codigo_local",
+      "answer": 3,
+      "explanation": "x recebe o valor 7, mas o nome codigo foi criado no escopo local da função. Fora dela, print(codigo) não encontra o nome e gera NameError.",
+      "feedbackByOption": {
+        "imprime_sete_por_retorno": "return entrega o valor para x; ele não exporta o identificador local codigo.",
+        "imprime_nome_x": "print(codigo) procura o nome codigo, não o nome x.",
+        "imprime_none": "A função tem return 7; o problema é a consulta externa a codigo.",
+        "name_error_codigo_local": "Correto. O valor saiu, mas o nome local não ficou disponível fora.",
+        "type_error_sem_parametros": "Uma função sem parâmetros pode ser chamada com parênteses vazios normalmente."
+      },
+      "optionRationales": {
+        "imprime_sete_por_retorno": "Confunde valor retornado com nome exportado.",
+        "imprime_nome_x": "Substitui o identificador consultado.",
+        "imprime_none": "Aplica retorno implícito apesar de return explícito.",
+        "name_error_codigo_local": "Reconhece corretamente o limite do escopo.",
+        "type_error_sem_parametros": "Inventa obrigatoriedade de parâmetros."
+      },
+      "cognitiveOperation": "analyze",
+      "difficulty": "medium",
+      "fgvMechanisms": [
+        "partially_true",
+        "neighboring_concepts"
+      ],
+      "level": "Questão autoral — estilo FGV",
+      "origin": {
+        "type": "authorial_fgv_style",
+        "label": "Autoral — estilo FGV"
+      },
+      "provenance": {
+        "kind": "authorial",
+        "realFgv": false
+      }
+    },
+    {
+      "id": "PY-FUNC-F06",
+      "prompt": "Considere:\n\ndef classificar(n):\n    if n % 2 == 0:\n        return 'par'\n    return 'ímpar'\n\nresultado = classificar(7)\n\nO valor de resultado é:",
+      "options": [
+        "'ímpar'",
+        "'par'",
+        "7",
+        "None",
+        "Ocorre erro porque há dois return"
+      ],
+      "optionIds": [
+        "retorna_impar",
+        "retorna_par",
+        "retorna_sete",
+        "retorna_none",
+        "supoe_erro_dois_returns"
+      ],
+      "correctOptionId": "retorna_impar",
+      "answer": 0,
+      "explanation": "7%2 é 1, então o primeiro return não é executado. O fluxo segue e alcança return 'ímpar'.",
+      "feedbackByOption": {
+        "retorna_impar": "Correto. A condição é falsa e o segundo return é alcançado.",
+        "retorna_par": "O teste n%2==0 é falso para 7.",
+        "retorna_sete": "n é a entrada, mas o corpo devolve uma das strings de classificação.",
+        "retorna_none": "Um return explícito é alcançado tanto no caso par quanto no ímpar.",
+        "supoe_erro_dois_returns": "Ter caminhos com returns diferentes é válido; em uma chamada, apenas o caminho alcançado é executado."
+      },
+      "optionRationales": {
+        "retorna_impar": "Rastreia condição e caminho de retorno.",
+        "retorna_par": "Erra o resto da divisão.",
+        "retorna_sete": "Confunde argumento com retorno.",
+        "retorna_none": "Ignora o return alcançado.",
+        "supoe_erro_dois_returns": "Interpreta alternativas de fluxo como conflito sintático."
+      },
+      "cognitiveOperation": "trace_execution",
+      "difficulty": "medium",
+      "fgvMechanisms": [
+        "necessary_condition",
+        "plausible_incorrect_trace"
+      ],
+      "level": "Questão autoral — estilo FGV",
+      "origin": {
+        "type": "authorial_fgv_style",
+        "label": "Autoral — estilo FGV"
+      },
+      "provenance": {
+        "kind": "authorial",
+        "realFgv": false
+      }
+    },
+    {
+      "id": "PY-FUNC-F07",
+      "prompt": "Considere:\n\ndef total_positivos(valores):\n    total = 0\n    for n in valores:\n        if n > 0:\n            total += n\n    return total\n\nresultado = total_positivos([-2, 3, 0, 5])\n\nO valor de resultado é:",
+      "options": [
+        "2",
+        "3",
+        "5",
+        "6",
+        "8"
+      ],
+      "optionIds": [
+        "conta_dois_positivos",
+        "mantem_primeiro_positivo",
+        "mantem_ultimo_positivo",
+        "soma_todos_incluindo_menos_dois",
+        "soma_tres_e_cinco"
+      ],
+      "correctOptionId": "soma_tres_e_cinco",
+      "answer": 4,
+      "explanation": "A condição aceita apenas 3 e 5. Como o código usa total+=n, ele soma esses valores: 0+3+5=8.",
+      "feedbackByOption": {
+        "conta_dois_positivos": "Você contou quantos valores passam na condição, mas o código soma n, não 1.",
+        "mantem_primeiro_positivo": "O laço continua depois de 3 e também soma 5.",
+        "mantem_ultimo_positivo": "total acumula; ele não é substituído pelo último valor.",
+        "soma_todos_incluindo_menos_dois": "-2 não passa em n>0; 0 também não é positivo.",
+        "soma_tres_e_cinco": "Correto. Os únicos termos acumulados são 3 e 5."
+      },
+      "optionRationales": {
+        "conta_dois_positivos": "Confunde total+=n com total+=1.",
+        "mantem_primeiro_positivo": "Encerra o laço cedo sem return interno.",
+        "mantem_ultimo_positivo": "Confunde acumulação com atribuição simples.",
+        "soma_todos_incluindo_menos_dois": "Ignora a condição.",
+        "soma_tres_e_cinco": "Rastreia condição e acumulador."
+      },
+      "cognitiveOperation": "trace_execution",
+      "difficulty": "hard",
+      "fgvMechanisms": [
+        "plausible_incorrect_procedure",
+        "quantifier_scope"
+      ],
+      "level": "Questão autoral — estilo FGV",
+      "origin": {
+        "type": "authorial_fgv_style",
+        "label": "Autoral — estilo FGV"
+      },
+      "provenance": {
+        "kind": "authorial",
+        "realFgv": false
+      }
+    },
+    {
+      "id": "PY-FUNC-F08",
+      "prompt": "A respeito de funções em Python, assinale a afirmativa correta.",
+      "options": [
+        "Os argumentos são os nomes escritos na definição, e os parâmetros são os valores da chamada.",
+        "Toda função que usa print devolve automaticamente o valor impresso.",
+        "Um parâmetro com valor padrão usa esse padrão quando o argumento correspondente é omitido.",
+        "Uma variável criada no corpo sempre permanece disponível após a chamada.",
+        "A existência de dois comandos return em caminhos diferentes torna a função inválida."
+      ],
+      "optionIds": [
+        "inverte_parametro_argumento",
+        "equipara_print_a_return",
+        "define_uso_do_valor_padrao",
+        "globaliza_variavel_local",
+        "proibe_returns_em_caminhos"
+      ],
+      "correctOptionId": "define_uso_do_valor_padrao",
+      "answer": 2,
+      "explanation": "O padrão preenche o parâmetro quando a chamada omite o argumento. As demais alternativas invertem parâmetro/argumento, confundem print com return, ignoram escopo ou proíbem caminhos válidos.",
+      "feedbackByOption": {
+        "inverte_parametro_argumento": "Os papéis estão invertidos: parâmetros são nomes da definição; argumentos são valores da chamada.",
+        "equipara_print_a_return": "print exibe e não transforma automaticamente o valor exibido em retorno.",
+        "define_uso_do_valor_padrao": "Correto. O padrão é usado justamente quando o argumento correspondente não é fornecido.",
+        "globaliza_variavel_local": "Nomes criados localmente não ficam automaticamente disponíveis fora.",
+        "proibe_returns_em_caminhos": "Caminhos condicionais podem possuir returns diferentes; apenas o caminho alcançado encerra a chamada."
+      },
+      "optionRationales": {
+        "inverte_parametro_argumento": "Troca definições vizinhas.",
+        "equipara_print_a_return": "Confunde dois efeitos distintos.",
+        "define_uso_do_valor_padrao": "Enuncia corretamente a regra.",
+        "globaliza_variavel_local": "Ignora escopo.",
+        "proibe_returns_em_caminhos": "Confunde alternativas de controle com erro sintático."
+      },
+      "cognitiveOperation": "differentiate",
+      "difficulty": "hard",
+      "fgvMechanisms": [
+        "neighboring_concepts",
+        "partially_true",
+        "scope_change"
+      ],
+      "level": "Questão autoral — estilo FGV",
+      "origin": {
+        "type": "authorial_fgv_style",
+        "label": "Autoral — estilo FGV"
+      },
+      "provenance": {
+        "kind": "authorial",
+        "realFgv": false
+      }
+    }
+  ],
+  "reviewSummary": [
+    "def define a função; nome(...) chama e executa o corpo.",
+    "Parâmetros são nomes da definição; argumentos são valores da chamada.",
+    "print exibe; return devolve; sem return explícito, a chamada devolve None.",
+    "Parâmetros e atribuições internas pertencem ao escopo local.",
+    "Valor padrão é usado somente quando o argumento correspondente é omitido.",
+    "Para rastrear, acompanhe argumentos, locais, laço, condição, acumulador, indentação e return."
+  ],
+  "nextStep": "Estudar esta sessão depois de PY-LOOP-001. Após concluir Laços e Funções, avançar para NP-001 — NumPy: arrays, shape, dtype, indexação e operações vetorizadas.",
+  "sourceReference": "Escopo curricular: Edital Oficial DATAPREV 2026 — Python: condicionais, repetição e funções. Verdade técnica: Documentação oficial do Python 3.13, Tutorial §4.8–4.9 (definição, argumentos, return e valores padrão), Referência §7.6 (return) e Tutorial §9.2 (escopos e espaços de nomes), verificadas em 2026-08-21.",
+  "sourceReferences": [
+    {
+      "title": "Documentação Python 3.13 — Tutorial, §4.8–4.9",
+      "role": "truth",
+      "url": "https://docs.python.org/pt-br/3.13/tutorial/controlflow.html#defining-functions",
+      "locator": "Defining Functions; More on Defining Functions; Default Argument Values; Keyword Arguments",
+      "verifiedAt": "2026-08-21",
+      "rights": "Referência por link à documentação pública oficial; sem reprodução extensa."
+    },
+    {
+      "title": "Documentação Python 3.13 — Instrução return",
+      "role": "truth",
+      "url": "https://docs.python.org/pt-br/3.13/reference/simple_stmts.html#the-return-statement",
+      "locator": "§7.6 A instrução return",
+      "verifiedAt": "2026-08-21",
+      "rights": "Referência por link à documentação pública oficial; sem reprodução extensa."
+    },
+    {
+      "title": "Documentação Python 3.13 — Escopos e espaços de nomes",
+      "role": "truth",
+      "url": "https://docs.python.org/pt-br/3.13/tutorial/classes.html#python-scopes-and-namespaces",
+      "locator": "§9.2 Escopos e espaços de nomes do Python",
+      "verifiedAt": "2026-08-21",
+      "rights": "Referência por link à documentação pública oficial; sem reprodução extensa."
+    }
+  ],
+  "provenance": {
+    "kind": "authorial_session",
+    "label": "Conteúdo autoral — questões em estilo FGV; nenhuma questão foi rotulada como prova real.",
+    "contentVersion": "2026.08.21-py-func-001-v1",
+    "curriculumRelations": [
+      {
+        "coverageId": "COV-PY-0002",
+        "role": "primary",
+        "mappingStatus": "mapped_proposed"
+      },
+      {
+        "coverageId": "COV-PY-0005",
+        "role": "prerequisite_support",
+        "mappingStatus": "mapped_proposed"
+      },
+      {
+        "coverageId": "COV-PY-0007",
+        "role": "prerequisite_support",
+        "mappingStatus": "mapped_proposed"
+      }
+    ],
+    "learnerEvidencePolicy": {
+      "usesDeclaredWeakPythonBaseForDepth": true,
+      "infersMastery": false,
+      "writesLearnerEvidence": false,
+      "changesOfficialHistory": false
+    },
+    "supportPracticePolicy": {
+      "activityRole": "support",
+      "formalAssessment": false,
+      "writesLearnerEvidence": false,
+      "masteryEffect": "none"
+    }
+  }
+}

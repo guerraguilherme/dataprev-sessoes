@@ -1,0 +1,1499 @@
+{
+  "id": "PY-LOOP-001",
+  "discipline": "Python",
+  "topic": "Laços e controle de repetição",
+  "itemEdital": "Linguagens de Programação e Softwares em Ciências de Dados — Python",
+  "title": "Laços for e while",
+  "objective": "Aprender a percorrer iteráveis, construir sequências com range, controlar repetições com while e rastrear alterações de estado, incluindo o uso introdutório e seguro de break e continue.",
+  "estimatedMinutes": 65,
+  "priority": "alta",
+  "status": "published",
+  "level": "fundamental progressivo",
+  "prerequisites": [
+    "PY-COLL-001",
+    "variáveis e tipos",
+    "listas, strings, tuplas e dicionários",
+    "if/elif/else",
+    "and, or e not",
+    "comparações e operadores aritméticos",
+    "ordem de execução"
+  ],
+  "adaptiveContext": {
+    "recentEvidence": [
+      "A base declarada do aluno em Python é frágil; a sessão mantém rastreamento explícito em vez de pressupor leitura fluente de laços.",
+      "PY-COND-R01 registrou consolidação de condicionais, mas isso não autoriza inferir domínio de repetição.",
+      "PY-COLL-001 introduz list comprehension como uma forma compacta de iteração; nenhuma conclusão dessa sessão é presumida aqui."
+    ],
+    "strategy": "Partir de coleções já conhecidas, tornar cada mudança de variável visível em tabelas de rastreamento e só então integrar condição, acumulador, break e continue. Os apoios usam contextos diferentes das fixações seguintes para exigir reconstrução, não memória imediata."
+  },
+  "sourceReference": "Edital Oficial DATAPREV 2026 — Linguagens de Programação e Softwares em Ciências de Dados — Python (escopo); Python 3.14.7 Documentation — Tutorial, More Control Flow Tools, seções 4.2 a 4.4, e Language Reference, Compound Statements, seções 8.2 e 8.3 (verdade técnica), verificadas em 21/08/2026.",
+  "visuals": [
+    {
+      "kind": "comparison_table",
+      "content": "for: recebe sucessivamente os itens de um iterável; while: repete enquanto a condição for verdadeira; break: encerra o laço; continue: pula o restante da iteração atual."
+    }
+  ],
+  "concepts": [
+    {
+      "id": "PY-LOOP-C01",
+      "title": "1. for: um item de cada vez",
+      "what": "O laço for percorre os itens de um iterável na ordem fornecida por ele.",
+      "explanation": "Antes de cada repetição, o próximo item é atribuído à variável do laço; depois, o bloco indentado é executado. Quando não há mais itens, o programa segue após o laço.",
+      "code": "for letra in \"FGV\":\n    print(letra)\n\n# saída:\n# F\n# G\n# V",
+      "connection": "Você já usou in para testar pertencimento. Em for, a expressão após in fornece os itens que serão visitados, um por vez.",
+      "trap": "for não significa automaticamente 'contar números'. Ele pode percorrer strings, listas, tuplas, dicionários e outros iteráveis.",
+      "visuals": [
+        {
+          "type": "flow",
+          "title": "Rastreamento do laço sobre a string FGV",
+          "steps": [
+            "letra recebe 'F' e imprime F",
+            "letra recebe 'G' e imprime G",
+            "letra recebe 'V' e imprime V",
+            "iterável termina; o laço termina"
+          ],
+          "caption": "A variável letra muda a cada iteração; o corpo executa uma vez para cada caractere."
+        }
+      ],
+      "supportDetails": {
+        "core": "A leitura segura é: 'para cada item do iterável, execute o bloco'.",
+        "intuition": "Imagine uma esteira que entrega um objeto por vez. A variável do laço é a etiqueta temporária do objeto que acabou de chegar.",
+        "why": "O for pede um iterável, cria internamente o percurso e interrompe quando os itens acabam; você não precisa atualizar manualmente uma posição para fazê-lo avançar.",
+        "identify": "Localize a variável entre for e in, identifique o iterável depois de in e marque quais linhas pertencem ao bloco pela indentação.",
+        "example": "Em nomes=['Lia','Rui'], o código for nome in nomes: print(nome) primeiro usa 'Lia' e depois 'Rui', imprimindo Lia e Rui.",
+        "contrast": "No teste 'Lia' in nomes, o resultado é True ou False. No laço for nome in nomes, nome recebe cada elemento e o bloco pode agir sobre ele.",
+        "commonError": "Ler a variável do laço como se ela guardasse a coleção inteira, ou ignorar que ela recebe um novo valor antes de cada execução do bloco.",
+        "steps": [
+          "escreva os itens do iterável na ordem",
+          "atribua o primeiro item à variável do laço",
+          "execute somente as linhas indentadas",
+          "repita com o próximo item até o iterável acabar"
+        ],
+        "checklist": [
+          "Qual é o iterável?",
+          "Qual valor a variável recebe agora?",
+          "Quais linhas estão dentro do laço?",
+          "O bloco altera alguma variável externa?"
+        ],
+        "microcheck": "Em for cor in ('azul','verde'), a variável cor recebe 'azul' e depois 'verde'."
+      },
+      "supportVisuals": [
+        {
+          "type": "table",
+          "title": "Segunda representação — variável temporária",
+          "headers": [
+            "Iteração",
+            "Próximo item",
+            "Valor de nome",
+            "Ação"
+          ],
+          "rows": [
+            [
+              "1",
+              "'Lia'",
+              "'Lia'",
+              "imprime Lia"
+            ],
+            [
+              "2",
+              "'Rui'",
+              "'Rui'",
+              "imprime Rui"
+            ],
+            [
+              "fim",
+              "nenhum",
+              "permanece 'Rui'",
+              "segue após o laço"
+            ]
+          ],
+          "caption": "O nome da variável não é o item; ele recebe temporariamente cada item."
+        }
+      ],
+      "supportPractice": [
+        {
+          "id": "PY-LOOP-SP-C01-01",
+          "kind": "recognition",
+          "prompt": "Em for cidade in ['Recife','Natal'], qual valor cidade recebe na segunda iteração?",
+          "options": [
+            "'Recife'",
+            "'Natal'",
+            "['Recife','Natal']"
+          ],
+          "optionIds": [
+            "first_item",
+            "second_item",
+            "whole_iterable"
+          ],
+          "correctOptionId": "second_item",
+          "answer": 1,
+          "feedbackByOption": {
+            "first_item": "'Recife' é o valor da primeira iteração. Depois, o laço pede o próximo item.",
+            "second_item": "Correto. Na segunda iteração, cidade recebe o segundo elemento: 'Natal'.",
+            "whole_iterable": "A lista inteira é o iterável após in; cidade recebe um elemento por vez, não a lista completa."
+          }
+        },
+        {
+          "id": "PY-LOOP-SP-C01-02",
+          "kind": "reasoning",
+          "prompt": "Qual é o valor final de texto?\n\ntexto = ''\nfor letra in 'oi':\n    texto = letra + texto",
+          "options": [
+            "'oi'",
+            "'io'",
+            "'o'"
+          ],
+          "optionIds": [
+            "preserved_order",
+            "reversed_by_prepend",
+            "last_item_only"
+          ],
+          "correctOptionId": "reversed_by_prepend",
+          "answer": 1,
+          "feedbackByOption": {
+            "preserved_order": "Isso ocorreria com texto = texto + letra. Aqui cada nova letra é colocada antes do texto existente.",
+            "reversed_by_prepend": "Correto. Primeiro texto vira 'o'; depois, 'i' + 'o' produz 'io'.",
+            "last_item_only": "O valor anterior não é descartado: ele reaparece à direita em letra + texto."
+          }
+        }
+      ],
+      "immediate": [
+        {
+          "id": "PY-LOOP-I01",
+          "prompt": "Qual é a saída?\n\nfor numero in [3, 1, 4]:\n    print(numero + 1)",
+          "options": [
+            "3, 1 e 4",
+            "4, 2 e 5",
+            "4 apenas",
+            "9"
+          ],
+          "optionIds": [
+            "items_without_operation",
+            "each_item_plus_one",
+            "first_item_plus_one_only",
+            "sum_plus_one"
+          ],
+          "correctOptionId": "each_item_plus_one",
+          "answer": 1,
+          "explanation": "O laço visita 3, 1 e 4. Em cada visita, imprime o valor atual acrescido de 1: 4, 2 e 5.",
+          "feedbackByOption": {
+            "items_without_operation": "Você identificou a ordem do iterável, mas deixou de executar +1 dentro do bloco.",
+            "each_item_plus_one": "Correto. A operação numero + 1 é refeita para cada item.",
+            "first_item_plus_one_only": "O bloco não executa apenas na primeira passagem; ele executa para os três itens.",
+            "sum_plus_one": "O código não possui acumulador nem soma os itens entre si; cada resultado é impresso separadamente."
+          }
+        }
+      ]
+    },
+    {
+      "id": "PY-LOOP-C02",
+      "title": "2. range: início, parada e passo",
+      "what": "range cria uma sequência iterável de inteiros e nunca inclui o valor de parada.",
+      "explanation": "Em range(início, parada, passo), o início entra, o passo é somado a cada avanço e a parada funciona como limite excluído. Em range(parada), o início padrão é 0 e o passo padrão é 1.",
+      "code": "valores = list(range(2, 9, 3))\nprint(valores)\n\n# saída: [2, 5, 8]",
+      "connection": "É a mesma convenção do slicing: o início entra e o limite final não entra.",
+      "trap": "range(5) não produz 1, 2, 3, 4, 5. Ele começa em 0 e termina em 4.",
+      "visuals": [
+        {
+          "type": "table",
+          "title": "Como ler range(2, 9, 3)",
+          "headers": [
+            "Parte",
+            "Valor",
+            "Papel"
+          ],
+          "rows": [
+            [
+              "início",
+              "2",
+              "primeiro valor"
+            ],
+            [
+              "parada",
+              "9",
+              "limite excluído"
+            ],
+            [
+              "passo",
+              "3",
+              "soma a cada avanço"
+            ],
+            [
+              "sequência",
+              "2, 5, 8",
+              "o próximo seria 11 e ultrapassaria o limite"
+            ]
+          ]
+        }
+      ],
+      "supportDetails": {
+        "core": "range não é uma lista pronta; é um objeto iterável que fornece inteiros conforme início, parada e passo.",
+        "intuition": "Pense em saltos numa reta numérica: pouse no início, repita o tamanho do passo e pare antes de tocar ou atravessar o limite na direção do movimento.",
+        "why": "A exclusão da parada permite produzir diretamente índices válidos de uma sequência com n itens: 0 até n-1.",
+        "identify": "Conte quantos argumentos aparecem. Um argumento é parada; dois são início e parada; três são início, parada e passo.",
+        "example": "range(5, 0, -2) começa em 5 e recua de 2 em 2: 5, 3, 1. O zero é o limite excluído.",
+        "contrast": "range(1,5) produz 1,2,3,4; range(1,5,2) produz 1,3. O terceiro argumento muda o salto, não o limite.",
+        "commonError": "Incluir a parada, esquecer o início zero ou usar passo positivo quando seria necessário diminuir.",
+        "steps": [
+          "identifique início, parada e passo",
+          "escreva o primeiro valor",
+          "some o passo sucessivamente",
+          "pare antes do limite excluído"
+        ],
+        "checklist": [
+          "A parada foi excluída?",
+          "O passo tem o sinal correto?",
+          "Começa em 0 quando só há um argumento?",
+          "Estou contando valores ou somando esses valores?"
+        ],
+        "microcheck": "range(3) fornece 0, 1 e 2: três valores."
+      },
+      "supportVisuals": [
+        {
+          "type": "flow",
+          "title": "Segunda representação — saltos até o limite",
+          "steps": [
+            "começa em 1",
+            "soma 2 e chega a 3",
+            "soma 2 e chega a 5",
+            "o próximo seria 7; parada 7 não entra"
+          ],
+          "caption": "range(1, 7, 2) fornece 1, 3 e 5."
+        }
+      ],
+      "supportPractice": [
+        {
+          "id": "PY-LOOP-SP-C02-01",
+          "kind": "memorization",
+          "prompt": "Qual sequência list(range(4)) produz?",
+          "options": [
+            "[0, 1, 2, 3]",
+            "[1, 2, 3, 4]",
+            "[0, 1, 2, 3, 4]"
+          ],
+          "optionIds": [
+            "zero_to_three",
+            "one_to_four",
+            "zero_to_four"
+          ],
+          "correctOptionId": "zero_to_three",
+          "answer": 0,
+          "feedbackByOption": {
+            "zero_to_three": "Correto. Com um argumento, range começa em 0 e exclui a parada 4.",
+            "one_to_four": "Essa leitura começa em 1 e inclui a parada. Em range(4), ocorre o oposto: início 0 e parada 4 excluída.",
+            "zero_to_four": "Você acertou o início, mas incluiu a parada. O 4 não entra."
+          }
+        },
+        {
+          "id": "PY-LOOP-SP-C02-02",
+          "kind": "reasoning",
+          "prompt": "Qual sequência list(range(5, 0, -2)) produz?",
+          "options": [
+            "[5, 3, 1]",
+            "[5, 3, 1, 0]",
+            "[5, 7, 9]"
+          ],
+          "optionIds": [
+            "descending_exclusive_stop",
+            "descending_including_stop",
+            "ascending_wrong_sign"
+          ],
+          "correctOptionId": "descending_exclusive_stop",
+          "answer": 0,
+          "feedbackByOption": {
+            "descending_exclusive_stop": "Correto. O passo -2 produz 5, 3 e 1; a parada 0 continua excluída.",
+            "descending_including_stop": "Mesmo em uma sequência decrescente, a parada não entra. Além disso, saltos de -2 a partir de 1 chegariam a -1, não a 0.",
+            "ascending_wrong_sign": "O passo é negativo, portanto a sequência diminui, não aumenta."
+          }
+        }
+      ],
+      "immediate": [
+        {
+          "id": "PY-LOOP-I02",
+          "prompt": "Qual é o resultado de list(range(3, 11, 3))?",
+          "options": [
+            "[3, 6, 9]",
+            "[3, 6, 9, 12]",
+            "[0, 3, 6, 9]",
+            "[3, 4, 5, 6, 7, 8, 9, 10]"
+          ],
+          "optionIds": [
+            "start_three_step_three",
+            "crossed_stop",
+            "default_zero_start",
+            "ignored_step"
+          ],
+          "correctOptionId": "start_three_step_three",
+          "answer": 0,
+          "explanation": "A sequência começa em 3, soma 3 e permanece abaixo da parada 11: 3, 6 e 9.",
+          "feedbackByOption": {
+            "start_three_step_three": "Correto. O próximo valor seria 12, que já ultrapassa a parada 11.",
+            "crossed_stop": "O 12 não pode entrar porque a sequência precisa permanecer abaixo da parada 11.",
+            "default_zero_start": "O início foi informado como 3; zero só é usado quando há apenas o argumento de parada.",
+            "ignored_step": "O terceiro argumento 3 é o passo; a sequência não avança de um em um."
+          }
+        },
+        {
+          "id": "PY-LOOP-I03",
+          "prompt": "Quanto vale contagem ao final?\n\ncontagem = 0\nfor i in range(2, 9, 2):\n    contagem += 1",
+          "options": [
+            "3",
+            "4",
+            "5",
+            "8"
+          ],
+          "optionIds": [
+            "three_iterations",
+            "four_iterations",
+            "included_stop",
+            "last_value"
+          ],
+          "correctOptionId": "four_iterations",
+          "answer": 1,
+          "explanation": "range(2,9,2) fornece 2, 4, 6 e 8. O bloco executa quatro vezes e incrementa contagem em cada uma.",
+          "feedbackByOption": {
+            "three_iterations": "Faltou considerar um dos valores 2, 4, 6 e 8.",
+            "four_iterations": "Correto. Há quatro itens no range e quatro incrementos.",
+            "included_stop": "A parada 9 não entra e, de todo modo, o passo de 2 a partir de 8 chegaria a 10.",
+            "last_value": "Oito é o último valor de i, mas contagem registra quantas iterações ocorreram."
+          }
+        }
+      ]
+    },
+    {
+      "id": "PY-LOOP-C03",
+      "title": "3. Acumuladores, contadores e rastreamento",
+      "what": "Um acumulador guarda um resultado parcial que é atualizado em cada iteração.",
+      "explanation": "Para prever a saída, registre o valor inicial e atualize a variável uma linha por vez. Soma costuma começar em 0; produto costuma começar em 1; contador aumenta apenas quando sua condição é satisfeita.",
+      "code": "total = 0\nfor valor in [3, 1, 4]:\n    total += valor\nprint(total)\n\n# saída: 8",
+      "connection": "Retoma atribuição, operadores e if: o laço apenas faz essas operações acontecerem várias vezes, com valores diferentes.",
+      "trap": "Confundir o último item visitado com o acumulado. Ao final, valor é 4, mas total é 8.",
+      "visuals": [
+        {
+          "type": "table",
+          "title": "Tabela de rastreamento do acumulador",
+          "headers": [
+            "Momento",
+            "valor",
+            "total antes",
+            "total depois"
+          ],
+          "rows": [
+            [
+              "início",
+              "—",
+              "—",
+              "0"
+            ],
+            [
+              "iteração 1",
+              "3",
+              "0",
+              "3"
+            ],
+            [
+              "iteração 2",
+              "1",
+              "3",
+              "4"
+            ],
+            [
+              "iteração 3",
+              "4",
+              "4",
+              "8"
+            ]
+          ]
+        }
+      ],
+      "supportDetails": {
+        "core": "A variável acumuladora carrega o efeito das iterações anteriores para a próxima.",
+        "intuition": "Pense em um placar: cada rodada começa com o total já alcançado e acrescenta ou remove algo.",
+        "why": "A atribuição total = total + valor lê o total antigo, calcula um novo resultado e só então substitui o valor armazenado.",
+        "identify": "Procure uma inicialização antes do laço e uma atribuição à mesma variável dentro dele, como total += valor ou quantidade += 1.",
+        "example": "Para contar letras 'a' em 'casa', comece quantidade=0 e incremente apenas quando letra == 'a'. Considerando o estado inicial e depois c, a, s, a, o rastreamento produz 0→0→1→1→2.",
+        "contrast": "total += valor acumula os valores; total = valor apenas substitui o resultado anterior pelo item atual.",
+        "commonError": "Pular atualizações intermediárias, inicializar produto em 0 ou incrementar um contador fora da condição que deveria controlá-lo.",
+        "steps": [
+          "anote o valor inicial",
+          "crie uma linha da tabela para cada item",
+          "avalie a condição, se houver",
+          "calcule o valor depois da atribuição"
+        ],
+        "checklist": [
+          "Qual é o valor inicial?",
+          "A atualização ocorre em toda iteração ou só sob condição?",
+          "A variável acumula ou apenas substitui?",
+          "Qual é o valor depois da última iteração?"
+        ],
+        "microcheck": "Em produto=1; produto*=4; produto*=2, o valor final é 8. Se começasse em 0, permaneceria 0."
+      },
+      "supportVisuals": [
+        {
+          "type": "table",
+          "title": "Segunda representação — contador condicionado",
+          "headers": [
+            "letra em 'casa'",
+            "letra == 'a'?",
+            "quantidade"
+          ],
+          "rows": [
+            [
+              "c",
+              "False",
+              "0"
+            ],
+            [
+              "a",
+              "True",
+              "1"
+            ],
+            [
+              "s",
+              "False",
+              "1"
+            ],
+            [
+              "a",
+              "True",
+              "2"
+            ]
+          ],
+          "caption": "O contador só muda nas linhas em que a condição é verdadeira."
+        }
+      ],
+      "supportPractice": [
+        {
+          "id": "PY-LOOP-SP-C03-01",
+          "kind": "recognition",
+          "prompt": "Qual valor inicial é o mais adequado para acumular uma soma?",
+          "options": [
+            "0",
+            "1",
+            "O primeiro índice obrigatoriamente"
+          ],
+          "optionIds": [
+            "additive_identity_zero",
+            "multiplicative_identity_one",
+            "index_confusion"
+          ],
+          "correctOptionId": "additive_identity_zero",
+          "answer": 0,
+          "feedbackByOption": {
+            "additive_identity_zero": "Correto. Somar zero não altera o primeiro valor e permite acumular todos os itens.",
+            "multiplicative_identity_one": "Um é o início comum de um produto. Em uma soma, ele acrescentaria uma unidade indevida.",
+            "index_confusion": "Índice indica posição; não é uma regra de inicialização para somas."
+          }
+        },
+        {
+          "id": "PY-LOOP-SP-C03-02",
+          "kind": "reasoning",
+          "prompt": "Quanto vale maior?\n\nmaior = 0\nfor n in [1, 4, 2]:\n    if n > maior:\n        maior = n",
+          "options": [
+            "2",
+            "4",
+            "7"
+          ],
+          "optionIds": [
+            "last_item",
+            "largest_seen",
+            "sum_of_items"
+          ],
+          "correctOptionId": "largest_seen",
+          "answer": 1,
+          "feedbackByOption": {
+            "last_item": "O último item é 2, mas ele não substitui 4 porque 2 > 4 é False.",
+            "largest_seen": "Correto. maior passa de 0 para 1, depois para 4 e permanece 4.",
+            "sum_of_items": "O código compara e substitui; não existe operação de soma."
+          }
+        }
+      ],
+      "immediate": [
+        {
+          "id": "PY-LOOP-I04",
+          "prompt": "Quanto vale produto ao final?\n\nproduto = 1\nfor n in [2, 3, 2]:\n    produto *= n",
+          "options": [
+            "7",
+            "12",
+            "6",
+            "0"
+          ],
+          "optionIds": [
+            "sum_instead_of_product",
+            "cumulative_product",
+            "ignored_last_item",
+            "zero_initialization_assumed"
+          ],
+          "correctOptionId": "cumulative_product",
+          "answer": 1,
+          "explanation": "O produto começa em 1 e passa por 2, 6 e 12: 1×2×3×2 = 12.",
+          "feedbackByOption": {
+            "sum_instead_of_product": "Sete é a soma 2+3+2, mas o operador *= realiza multiplicações sucessivas.",
+            "cumulative_product": "Correto. O valor anterior participa de cada nova multiplicação.",
+            "ignored_last_item": "Seis é o resultado após os dois primeiros itens; ainda falta multiplicar pelo último 2.",
+            "zero_initialization_assumed": "O código inicializa produto com 1, não com 0."
+          }
+        },
+        {
+          "id": "PY-LOOP-I05",
+          "prompt": "Quanto vale quantidade ao final?\n\nquantidade = 0\nfor n in [7, 2, 9, 4]:\n    if n > 4:\n        quantidade += 1",
+          "options": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
+          "optionIds": [
+            "count_one_match",
+            "count_two_matches",
+            "count_three_matches",
+            "count_all_items"
+          ],
+          "correctOptionId": "count_two_matches",
+          "answer": 1,
+          "explanation": "Somente 7 e 9 satisfazem n > 4. O contador aumenta duas vezes.",
+          "feedbackByOption": {
+            "count_one_match": "Há dois valores maiores que 4: 7 e 9.",
+            "count_two_matches": "Correto. A condição é verdadeira em exatamente duas iterações.",
+            "count_three_matches": "O número 4 não satisfaz n > 4; a comparação é estrita.",
+            "count_all_items": "O incremento está dentro do if e não ocorre nas quatro iterações."
+          }
+        }
+      ]
+    },
+    {
+      "id": "PY-LOOP-C04",
+      "title": "4. while: repetir enquanto a condição for verdadeira",
+      "what": "O laço while testa uma condição antes de cada iteração e repete o bloco somente enquanto ela for verdadeira.",
+      "explanation": "O estado usado na condição normalmente precisa mudar dentro do laço. Se a condição já for falsa no primeiro teste, o bloco executa zero vezes; se nunca se tornar falsa, o laço pode não terminar.",
+      "code": "n = 1\nwhile n < 6:\n    print(n)\n    n += 2\n\n# saída: 1, 3 e 5",
+      "connection": "A condição do while usa os mesmos True, False, comparadores e operadores booleanos estudados em if.",
+      "trap": "Esquecer n += 2 manteria n sempre igual a 1, fazendo n < 6 permanecer True e criando um laço infinito.",
+      "visuals": [
+        {
+          "type": "timeline",
+          "title": "Condição testada antes de cada volta",
+          "points": [
+            [
+              "n=1",
+              "1<6 é True; imprime 1 e atualiza para 3"
+            ],
+            [
+              "n=3",
+              "3<6 é True; imprime 3 e atualiza para 5"
+            ],
+            [
+              "n=5",
+              "5<6 é True; imprime 5 e atualiza para 7"
+            ],
+            [
+              "n=7",
+              "7<6 é False; termina sem executar o bloco"
+            ]
+          ]
+        }
+      ],
+      "supportDetails": {
+        "core": "while significa 'teste; se True, execute; atualize; volte ao teste'.",
+        "intuition": "É como permanecer numa fila enquanto ainda há senha disponível: a permanência depende de uma pergunta refeita a cada rodada.",
+        "why": "Como a quantidade de repetições pode depender do estado produzido pelo próprio bloco, o programa reavalia a condição antes de decidir cada nova execução.",
+        "identify": "Localize a condição depois de while, anote seu valor antes da primeira execução e procure qual linha altera as variáveis usadas nela.",
+        "example": "Com saldo=3 e while saldo>0: saldo-=1, os estados são 3→2→1→0. Ao chegar a 0, a condição fica falsa e o bloco não executa de novo.",
+        "contrast": "if decide uma execução possível; while volta à condição e pode executar zero, uma ou várias vezes.",
+        "commonError": "Executar mentalmente o corpo antes de testar a condição ou esquecer a atualização que aproxima o estado da parada.",
+        "steps": [
+          "anote o estado inicial",
+          "avalie a condição antes do bloco",
+          "se True, execute e registre cada alteração",
+          "retorne à condição; se False, saia"
+        ],
+        "checklist": [
+          "A condição é verdadeira inicialmente?",
+          "Qual variável controla a parada?",
+          "Essa variável realmente muda?",
+          "Em que estado a condição se torna falsa?"
+        ],
+        "microcheck": "x=4; while x>4: x-=1 não executa nenhuma vez, porque 4>4 já é False."
+      },
+      "supportVisuals": [
+        {
+          "type": "table",
+          "title": "Segunda representação — estado antes e depois",
+          "headers": [
+            "saldo antes do teste",
+            "saldo > 0",
+            "executa saldo -= 1?",
+            "saldo depois"
+          ],
+          "rows": [
+            [
+              "3",
+              "True",
+              "sim",
+              "2"
+            ],
+            [
+              "2",
+              "True",
+              "sim",
+              "1"
+            ],
+            [
+              "1",
+              "True",
+              "sim",
+              "0"
+            ],
+            [
+              "0",
+              "False",
+              "não",
+              "0"
+            ]
+          ]
+        }
+      ],
+      "supportPractice": [
+        {
+          "id": "PY-LOOP-SP-C04-01",
+          "kind": "recognition",
+          "prompt": "Se a condição de um while for falsa no primeiro teste, quantas vezes seu bloco executa?",
+          "options": [
+            "Nenhuma",
+            "Uma",
+            "Infinitas"
+          ],
+          "optionIds": [
+            "zero_iterations",
+            "one_before_test",
+            "infinite_without_true"
+          ],
+          "correctOptionId": "zero_iterations",
+          "answer": 0,
+          "feedbackByOption": {
+            "zero_iterations": "Correto. A condição é verificada antes do corpo.",
+            "one_before_test": "Isso exigiria executar antes de testar, mas while testa primeiro.",
+            "infinite_without_true": "Um laço infinito exige que a condição permaneça verdadeira; aqui ela já começa falsa."
+          }
+        },
+        {
+          "id": "PY-LOOP-SP-C04-02",
+          "kind": "reasoning",
+          "prompt": "Quanto vale passos?\n\nn = 8\npassos = 0\nwhile n > 2:\n    n -= 3\n    passos += 1",
+          "options": [
+            "1",
+            "2",
+            "3"
+          ],
+          "optionIds": [
+            "stopped_after_first",
+            "two_iterations",
+            "included_false_state"
+          ],
+          "correctOptionId": "two_iterations",
+          "answer": 1,
+          "feedbackByOption": {
+            "stopped_after_first": "Após a primeira volta n vale 5, e 5>2 ainda é True.",
+            "two_iterations": "Correto. n passa de 8 para 5 e depois para 2; com n=2, a condição fica falsa.",
+            "included_false_state": "Quando n chega a 2, a condição já é falsa e não existe terceira execução."
+          }
+        }
+      ],
+      "immediate": [
+        {
+          "id": "PY-LOOP-I06",
+          "prompt": "Quanto vale x ao final?\n\nx = 5\nwhile x > 2:\n    x -= 1",
+          "options": [
+            "5",
+            "3",
+            "2",
+            "1"
+          ],
+          "optionIds": [
+            "no_execution",
+            "stopped_while_true",
+            "first_false_state",
+            "one_extra_iteration"
+          ],
+          "correctOptionId": "first_false_state",
+          "answer": 2,
+          "explanation": "x passa por 5→4→3→2. Quando chega a 2, x > 2 é False e o laço termina.",
+          "feedbackByOption": {
+            "no_execution": "A condição 5>2 é verdadeira inicialmente, então o bloco executa.",
+            "stopped_while_true": "Com x=3, a condição 3>2 ainda é verdadeira; ocorre mais uma atualização.",
+            "first_false_state": "Correto. Dois é o primeiro estado que torna x>2 falsa.",
+            "one_extra_iteration": "O corpo não executa com x=2, pois a condição é testada antes."
+          }
+        },
+        {
+          "id": "PY-LOOP-I07",
+          "prompt": "Quanto vale x ao final?\n\nx = 3\nwhile x < 3:\n    x += 1",
+          "options": [
+            "3",
+            "4",
+            "2",
+            "O laço é infinito"
+          ],
+          "optionIds": [
+            "unchanged_zero_iterations",
+            "executed_once_before_test",
+            "decremented",
+            "infinite_loop"
+          ],
+          "correctOptionId": "unchanged_zero_iterations",
+          "answer": 0,
+          "explanation": "A condição 3 < 3 é falsa já no primeiro teste. O corpo não executa e x permanece 3.",
+          "feedbackByOption": {
+            "unchanged_zero_iterations": "Correto. while pode executar zero vezes.",
+            "executed_once_before_test": "O corpo não executa antes do teste; a condição vem primeiro.",
+            "decremented": "A única atualização escrita é x += 1, e ela nem chega a executar.",
+            "infinite_loop": "A condição começa falsa, portanto não há repetição."
+          }
+        }
+      ]
+    },
+    {
+      "id": "PY-LOOP-C05",
+      "title": "5. break e continue",
+      "what": "break encerra o laço mais interno; continue pula o restante da iteração atual e segue para a próxima.",
+      "explanation": "Os dois alteram o fluxo normal do laço, mas em escalas diferentes: break abandona o laço inteiro, enquanto continue abandona apenas o que restava fazer naquela volta.",
+      "code": "saida = []\nfor n in [1, 2, 3, 4, 5]:\n    if n == 3:\n        continue\n    saida.append(n)\nprint(saida)\n\n# saída: [1, 2, 4, 5]",
+      "connection": "A decisão de interromper ou pular nasce de uma condição if avaliada dentro do laço.",
+      "trap": "continue não termina o laço. No exemplo, ele impede apenas o append de 3; os valores 4 e 5 ainda são processados.",
+      "visuals": [
+        {
+          "type": "comparison",
+          "title": "Duas saídas diferentes do bloco",
+          "left": {
+            "title": "break",
+            "items": [
+              "encerra o laço",
+              "não visita os próximos itens",
+              "segue depois do laço"
+            ]
+          },
+          "right": {
+            "title": "continue",
+            "items": [
+              "encerra só a iteração atual",
+              "visita o próximo item",
+              "não executa as linhas restantes daquela volta"
+            ]
+          },
+          "caption": "Pergunte sempre: saiu do laço inteiro ou apenas desta volta?"
+        }
+      ],
+      "supportDetails": {
+        "core": "break responde 'pare o laço'; continue responde 'ignore o restante desta volta'.",
+        "intuition": "Numa fila de documentos, break fecha a conferência; continue descarta apenas o documento atual e chama o próximo.",
+        "why": "Ambos transferem imediatamente o controle: break para a primeira linha depois do laço; continue para o próximo item ou novo teste da condição.",
+        "identify": "Marque a condição que aciona a palavra e observe quais linhas aparecem abaixo dela no mesmo bloco.",
+        "example": "Com codigos=[10,-1,20], break ao encontrar -1 guarda apenas 10. Usando continue, -1 é ignorado e o resultado guarda 10 e 20.",
+        "contrast": "break impede qualquer item posterior; continue permite itens posteriores, mas pula as ações restantes do item atual.",
+        "commonError": "Tratar continue como sinônimo de break ou executar mentalmente uma linha que aparece depois de continue na mesma iteração.",
+        "steps": [
+          "localize a condição de desvio",
+          "execute normalmente até ela ser verdadeira",
+          "com break, saia do laço",
+          "com continue, pule as linhas restantes e avance"
+        ],
+        "checklist": [
+          "A condição do desvio foi satisfeita?",
+          "É break ou continue?",
+          "Quais linhas deixam de executar?",
+          "Itens posteriores ainda serão visitados?"
+        ],
+        "microcheck": "Se continue aparece antes de total += n, o n daquela iteração não entra no total."
+      },
+      "supportVisuals": [
+        {
+          "type": "table",
+          "title": "Segunda representação — mesmo dado, decisões diferentes",
+          "headers": [
+            "Código atual",
+            "Ação com break",
+            "Ação com continue"
+          ],
+          "rows": [
+            [
+              "10",
+              "guarda 10",
+              "guarda 10"
+            ],
+            [
+              "-1",
+              "encerra tudo",
+              "ignora -1"
+            ],
+            [
+              "20",
+              "não é visitado",
+              "guarda 20"
+            ],
+            [
+              "resultado",
+              "[10]",
+              "[10, 20]"
+            ]
+          ]
+        }
+      ],
+      "supportPractice": [
+        {
+          "id": "PY-LOOP-SP-C05-01",
+          "kind": "recognition",
+          "prompt": "Qual comando faz o laço abandonar todos os itens restantes?",
+          "options": [
+            "break",
+            "continue",
+            "in"
+          ],
+          "optionIds": [
+            "terminate_loop",
+            "skip_iteration",
+            "membership_or_iteration_keyword"
+          ],
+          "correctOptionId": "terminate_loop",
+          "answer": 0,
+          "feedbackByOption": {
+            "terminate_loop": "Correto. break transfere o controle para depois do laço.",
+            "skip_iteration": "continue mantém o laço ativo e tenta a próxima iteração.",
+            "membership_or_iteration_keyword": "in participa do for ou testa pertencimento; não encerra o laço."
+          }
+        },
+        {
+          "id": "PY-LOOP-SP-C05-02",
+          "kind": "reasoning",
+          "prompt": "Quanto vale soma?\n\nsoma = 0\nfor n in [2, 5, 1]:\n    if n == 5:\n        continue\n    soma += n",
+          "options": [
+            "3",
+            "7",
+            "8"
+          ],
+          "optionIds": [
+            "skipped_five",
+            "stopped_before_one",
+            "included_every_item"
+          ],
+          "correctOptionId": "skipped_five",
+          "answer": 0,
+          "feedbackByOption": {
+            "skipped_five": "Correto. Dois e um entram na soma; cinco aciona continue e é pulado.",
+            "stopped_before_one": "Continue não encerra o laço; o item 1 ainda é processado.",
+            "included_every_item": "A linha soma += n não executa na iteração em que n vale 5."
+          }
+        }
+      ],
+      "immediate": [
+        {
+          "id": "PY-LOOP-I08",
+          "prompt": "Quanto vale total ao final?\n\ntotal = 0\nfor n in [2, 4, 7, 8]:\n    if n == 7:\n        break\n    total += n",
+          "options": [
+            "6",
+            "13",
+            "14",
+            "21"
+          ],
+          "optionIds": [
+            "sum_before_break",
+            "included_break_item",
+            "skipped_break_then_eight",
+            "summed_all_items"
+          ],
+          "correctOptionId": "sum_before_break",
+          "answer": 0,
+          "explanation": "Dois e quatro são somados. Quando n vale 7, break encerra o laço antes de somar 7; o 8 nem é visitado. Total = 6.",
+          "feedbackByOption": {
+            "sum_before_break": "Correto. Só os itens anteriores ao 7 participam.",
+            "included_break_item": "A linha total += n vem depois de break e não executa para n=7.",
+            "skipped_break_then_eight": "Esse raciocínio trata break como continue. Com break, 8 não é visitado.",
+            "summed_all_items": "O laço não chega ao fim do iterável porque break é acionado em 7."
+          }
+        },
+        {
+          "id": "PY-LOOP-I09",
+          "prompt": "Qual é o resultado?\n\nresultado = []\nfor n in range(5):\n    if n % 2 == 0:\n        continue\n    resultado.append(n)",
+          "options": [
+            "[0, 2, 4]",
+            "[1, 3]",
+            "[0, 1, 2, 3, 4]",
+            "[]"
+          ],
+          "optionIds": [
+            "kept_even_values",
+            "kept_odd_values",
+            "ignored_continue",
+            "terminated_loop"
+          ],
+          "correctOptionId": "kept_odd_values",
+          "answer": 1,
+          "explanation": "range(5) fornece 0 a 4. Os pares acionam continue e não chegam ao append; entram apenas 1 e 3.",
+          "feedbackByOption": {
+            "kept_even_values": "Os pares satisfazem o if, mas justamente por isso acionam continue e pulam o append.",
+            "kept_odd_values": "Correto. Somente os ímpares alcançam resultado.append(n).",
+            "ignored_continue": "Continue impede o append dos valores pares.",
+            "terminated_loop": "Continue não termina o laço; as iterações ímpares continuam chegando ao append."
+          }
+        }
+      ]
+    },
+    {
+      "id": "PY-LOOP-C06",
+      "title": "6. Escolher o laço e integrar a leitura",
+      "what": "Use for quando a tarefa é percorrer itens de um iterável; use while quando a repetição depende de uma condição que será reavaliada.",
+      "explanation": "A escolha deve tornar a regra de parada evidente. Depois de escolher, rastreie separadamente o item ou estado atual, a condição e qualquer variável alterada dentro do bloco.",
+      "code": "dados = [4, 1, 6]\nmaiores = []\nfor valor in dados:\n    if valor > 3:\n        maiores.append(valor)\nprint(maiores)\n\n# saída: [4, 6]",
+      "connection": "Esse fluxo reúne coleções, comparação, if, mutação de lista e ordem de execução; é a base para compreender funções e, depois, operações com dados.",
+      "trap": "Não escolha while apenas porque existe uma condição dentro do bloco. Se a tarefa principal é visitar cada item de uma coleção, for continua sendo a leitura natural.",
+      "visuals": [
+        {
+          "type": "comparison",
+          "title": "Pergunta de decisão",
+          "left": {
+            "title": "Tenho itens para percorrer",
+            "items": [
+              "string, lista, tupla, dicionário",
+              "cada item deve ser visitado",
+              "prefira for"
+            ]
+          },
+          "right": {
+            "title": "Tenho uma condição de permanência",
+            "items": [
+              "quantidade pode depender do estado",
+              "estado muda durante a repetição",
+              "prefira while"
+            ]
+          }
+        }
+      ],
+      "supportDetails": {
+        "core": "A pergunta central é: o programa percorre uma fonte de itens ou repete até uma condição mudar?",
+        "intuition": "for é uma visita a uma fila de itens; while é a manutenção de uma ação enquanto uma regra continuar autorizando.",
+        "why": "As duas estruturas podem expressar muitos dos mesmos processos, mas a escolha adequada deixa avanço e parada mais fáceis de verificar.",
+        "identify": "Se há coleção depois de in, pense em percurso. Se há uma expressão booleana depois de while, procure estado inicial, atualização e parada.",
+        "example": "Para ler todas as notas=[7,8,6], use for. Para repetir uma tentativa enquanto senha_correta for False e tentativas<3, use while.",
+        "contrast": "Uma condição if dentro de for filtra ações por item; ela não transforma automaticamente o percurso em while.",
+        "commonError": "Escolher pelo número de linhas ou pela presença de if, em vez de identificar o mecanismo real de avanço.",
+        "steps": [
+          "identifique o que provoca cada repetição",
+          "escolha for para itens ou while para condição",
+          "marque variáveis alteradas dentro do bloco",
+          "confirme quando e por que o laço termina"
+        ],
+        "checklist": [
+          "Existe um iterável explícito?",
+          "A quantidade depende de uma condição dinâmica?",
+          "O caminho de parada está claro?",
+          "Consigo rastrear uma iteração por vez?"
+        ],
+        "microcheck": "Percorrer todas as chaves de um dicionário é um caso natural de for; insistir até receber uma entrada válida é um caso natural de while."
+      },
+      "supportVisuals": [
+        {
+          "type": "table",
+          "title": "Segunda representação — matriz de escolha",
+          "headers": [
+            "Situação",
+            "Laço mais direto",
+            "Motivo"
+          ],
+          "rows": [
+            [
+              "visitar cada nome de uma lista",
+              "for",
+              "a lista fornece os itens"
+            ],
+            [
+              "repetir até saldo chegar a zero",
+              "while",
+              "a condição decide a permanência"
+            ],
+            [
+              "visitar cada chave de um dicionário",
+              "for",
+              "o dicionário é iterável"
+            ],
+            [
+              "pedir novamente enquanto entrada for inválida",
+              "while",
+              "não se sabe de antemão quando ficará válida"
+            ]
+          ]
+        }
+      ],
+      "supportPractice": [
+        {
+          "id": "PY-LOOP-SP-C06-01",
+          "kind": "recognition",
+          "prompt": "Qual laço comunica melhor a intenção de visitar uma vez cada chave de um dicionário?",
+          "options": [
+            "for",
+            "while",
+            "Nenhum laço pode percorrer dicionário"
+          ],
+          "optionIds": [
+            "for_iterable_keys",
+            "while_without_dynamic_condition",
+            "dictionary_not_iterable"
+          ],
+          "correctOptionId": "for_iterable_keys",
+          "answer": 0,
+          "feedbackByOption": {
+            "for_iterable_keys": "Correto. O dicionário fornece suas chaves na iteração padrão.",
+            "while_without_dynamic_condition": "Seria possível construir um controle manual, mas não expressaria tão diretamente o percurso das chaves.",
+            "dictionary_not_iterable": "Dicionários são iteráveis; por padrão, for percorre suas chaves."
+          }
+        },
+        {
+          "id": "PY-LOOP-SP-C06-02",
+          "kind": "reasoning",
+          "prompt": "Qual laço comunica melhor 'repita a operação enquanto saldo > 0', atualizando saldo a cada volta?",
+          "options": [
+            "while",
+            "for sobre uma string",
+            "if sem laço"
+          ],
+          "optionIds": [
+            "while_dynamic_condition",
+            "for_unrelated_iterable",
+            "single_conditional_execution"
+          ],
+          "correctOptionId": "while_dynamic_condition",
+          "answer": 0,
+          "feedbackByOption": {
+            "while_dynamic_condition": "Correto. A permanência depende de uma condição reavaliada após cada atualização.",
+            "for_unrelated_iterable": "Uma string forneceria caracteres, mas não representa a regra saldo > 0.",
+            "single_conditional_execution": "if testa uma vez; não volta automaticamente à condição."
+          }
+        }
+      ],
+      "immediate": [
+        {
+          "id": "PY-LOOP-I10",
+          "prompt": "Qual estrutura expressa mais diretamente 'para cada item da tupla, imprima o item'?",
+          "options": [
+            "for",
+            "while sem atualização",
+            "if",
+            "break"
+          ],
+          "optionIds": [
+            "for_over_tuple",
+            "while_no_progress",
+            "single_condition",
+            "loop_termination_only"
+          ],
+          "correctOptionId": "for_over_tuple",
+          "answer": 0,
+          "explanation": "A tupla é um iterável e a tarefa pede visitar cada elemento; for expressa esse percurso diretamente.",
+          "feedbackByOption": {
+            "for_over_tuple": "Correto. for recebe cada item da tupla na ordem da iteração.",
+            "while_no_progress": "Sem atualização, while nem sequer apresenta um caminho seguro de término.",
+            "single_condition": "if decide uma execução, mas não percorre automaticamente os elementos.",
+            "loop_termination_only": "break só pode interromper um laço já existente; não realiza o percurso."
+          }
+        },
+        {
+          "id": "PY-LOOP-I11",
+          "prompt": "Quanto vale tentativas ao final?\n\ntentativas = 0\nencontrou = False\nwhile tentativas < 4 and not encontrou:\n    tentativas += 1\n    if tentativas == 3:\n        encontrou = True",
+          "options": [
+            "2",
+            "3",
+            "4",
+            "O laço é infinito"
+          ],
+          "optionIds": [
+            "stopped_before_match",
+            "stopped_after_match",
+            "ignored_found_flag",
+            "ignored_updates"
+          ],
+          "correctOptionId": "stopped_after_match",
+          "answer": 1,
+          "explanation": "Na terceira iteração, tentativas vira 3 e encontrou vira True. No teste seguinte, not encontrou é False e o laço termina.",
+          "feedbackByOption": {
+            "stopped_before_match": "Com tentativas=2, encontrou ainda é False e as duas partes da condição permitem nova iteração.",
+            "stopped_after_match": "Correto. O estado muda na terceira volta e impede a quarta.",
+            "ignored_found_flag": "O limite 4 não é a única parada; encontrou=True torna a condição composta falsa antes disso.",
+            "ignored_updates": "As duas variáveis da condição são atualizadas, portanto existe caminho claro de término."
+          }
+        }
+      ]
+    }
+  ],
+  "finalQuestions": [
+    {
+      "id": "PY-LOOP-F01",
+      "prompt": "A respeito do laço for em Python, assinale a afirmativa correta.",
+      "options": [
+        "Repete o bloco enquanto uma expressão booleana permanecer verdadeira.",
+        "Só pode percorrer números produzidos por range.",
+        "A cada iteração, atribui o próximo item do iterável à variável do laço e executa o bloco.",
+        "Exige que a variável do laço seja declarada antes do for.",
+        "Executa o bloco uma única vez depois de consumir todos os itens."
+      ],
+      "optionIds": [
+        "describes_while",
+        "range_only_false",
+        "next_item_then_execute",
+        "predeclaration_required_false",
+        "single_execution_after_consumption"
+      ],
+      "correctOptionId": "next_item_then_execute",
+      "answer": 2,
+      "explanation": "for recebe os itens sucessivos de qualquer iterável adequado e executa o bloco para cada um. Repetição baseada diretamente em condição descreve while; range é apenas um dos iteráveis possíveis; não há declaração prévia obrigatória; o bloco não espera o percurso acabar para executar.",
+      "feedbackByOption": {
+        "describes_while": "Você descreveu while: nele, uma condição booleana é reavaliada para decidir cada repetição. No for, o avanço vem dos itens do iterável.",
+        "range_only_false": "range é útil para inteiros, mas for também percorre strings, listas, tuplas, dicionários e outros iteráveis.",
+        "next_item_then_execute": "Correto. Essa é a sequência essencial de execução do for.",
+        "predeclaration_required_false": "Python atribui o item à variável do laço durante a iteração; não existe declaração prévia obrigatória.",
+        "single_execution_after_consumption": "O bloco executa após cada item ser atribuído, não uma vez ao final."
+      },
+      "level": "Questão autoral · estilo FGV",
+      "cognitiveOperation": "compreender",
+      "fgvMechanisms": [
+        "conceitos_vizinhos",
+        "afirmacao_parcialmente_verdadeira"
+      ],
+      "provenance": {
+        "kind": "authorial",
+        "originType": "authorial_fgv_style",
+        "label": "Autoral — estilo FGV; não é questão real da banca."
+      }
+    },
+    {
+      "id": "PY-LOOP-F02",
+      "prompt": "Qual é o resultado de list(range(1, 10, 3))?",
+      "options": [
+        "[1, 4, 7]",
+        "[1, 4, 7, 10]",
+        "[0, 3, 6, 9]",
+        "[1, 3, 6, 9]",
+        "O código gera erro."
+      ],
+      "optionIds": [
+        "start_one_step_three_stop_excluded",
+        "included_stop",
+        "default_zero_ignored_start",
+        "misread_step_as_second_value",
+        "valid_range_misclassified_error"
+      ],
+      "correctOptionId": "start_one_step_three_stop_excluded",
+      "answer": 0,
+      "explanation": "Comece em 1 e some 3: 1, 4, 7. O próximo valor seria 10, mas a parada é excluída. Começar em 0 ignora o início informado; tratar 3 como segundo elemento confunde passo com valor da sequência.",
+      "feedbackByOption": {
+        "start_one_step_three_stop_excluded": "Correto. O próximo salto alcançaria exatamente a parada 10, que não entra.",
+        "included_stop": "A parada de range nunca é incluída.",
+        "default_zero_ignored_start": "O início foi explicitamente informado como 1; zero só é o padrão quando aparece apenas a parada.",
+        "misread_step_as_second_value": "O 3 é o tamanho do salto: depois de 1 vem 4, não 3.",
+        "valid_range_misclassified_error": "Os três argumentos são válidos: início, parada e passo."
+      },
+      "level": "Questão autoral · estilo FGV",
+      "cognitiveOperation": "aplicar",
+      "fgvMechanisms": [
+        "limite_excluido",
+        "procedimento_incorreto_plausivel"
+      ],
+      "provenance": {
+        "kind": "authorial",
+        "originType": "authorial_fgv_style",
+        "label": "Autoral — estilo FGV; não é questão real da banca."
+      }
+    },
+    {
+      "id": "PY-LOOP-F03",
+      "prompt": "Considere o código:\n\ntotal = 0\nfor n in [2, 5, 1]:\n    if n > 2:\n        total += n\n    else:\n        total -= n\nprint(total)\n\nO valor impresso é:",
+      "options": [
+        "6",
+        "4",
+        "-2",
+        "3",
+        "2"
+      ],
+      "optionIds": [
+        "added_all_items",
+        "ignored_last_subtraction",
+        "only_first_iteration",
+        "stopped_after_second",
+        "full_conditional_trace"
+      ],
+      "correctOptionId": "full_conditional_trace",
+      "answer": 4,
+      "explanation": "Rastreie todas as iterações: com 2, total vira -2; com 5, vira 3; com 1, vira 2. Somar todos ignora o else; 4 ou 3 interrompem o rastreamento cedo; -2 considera só a primeira passagem.",
+      "feedbackByOption": {
+        "added_all_items": "Você somou 2+5+1, mas 2 e 1 não passam em n>2 e entram pelo else como subtrações.",
+        "ignored_last_subtraction": "Depois de chegar a 3 com n=5, ainda falta processar n=1 e subtrair 1.",
+        "only_first_iteration": "-2 é apenas o estado depois da primeira iteração; o laço continua.",
+        "stopped_after_second": "Três é o estado após n=5; o item 1 ainda precisa ser processado.",
+        "full_conditional_trace": "Correto. O rastreamento completo é 0→-2→3→2."
+      },
+      "level": "Questão autoral · estilo FGV",
+      "cognitiveOperation": "analisar",
+      "fgvMechanisms": [
+        "rastreamento_incompleto",
+        "dado_intermediario_como_resposta"
+      ],
+      "provenance": {
+        "kind": "authorial",
+        "originType": "authorial_fgv_style",
+        "label": "Autoral — estilo FGV; não é questão real da banca."
+      }
+    },
+    {
+      "id": "PY-LOOP-F04",
+      "prompt": "Considere o código:\n\nx = 10\npassos = 0\nwhile x > 4:\n    x -= 3\n    passos += 1\nprint(x, passos)\n\nA saída é:",
+      "options": [
+        "7 1",
+        "4 2",
+        "1 3",
+        "4 3",
+        "10 0"
+      ],
+      "optionIds": [
+        "stopped_after_first_true_state",
+        "first_false_state_two_steps",
+        "one_extra_iteration",
+        "correct_x_wrong_count",
+        "assumed_zero_iterations"
+      ],
+      "correctOptionId": "first_false_state_two_steps",
+      "answer": 1,
+      "explanation": "Primeira volta: x=7 e passos=1; 7>4 ainda é True. Segunda: x=4 e passos=2; no teste seguinte, 4>4 é False. Não existe terceira atualização.",
+      "feedbackByOption": {
+        "stopped_after_first_true_state": "Com x=7, a condição ainda é verdadeira; o laço precisa executar outra vez.",
+        "first_false_state_two_steps": "Correto. Quatro é o primeiro estado que encerra x>4, alcançado após duas voltas.",
+        "one_extra_iteration": "O corpo não executa com x=4, porque while testa a condição antes.",
+        "correct_x_wrong_count": "x=4 está certo, mas foram duas atualizações, não três.",
+        "assumed_zero_iterations": "10>4 é True inicialmente; o laço executa."
+      },
+      "level": "Questão autoral · estilo FGV",
+      "cognitiveOperation": "analisar",
+      "fgvMechanisms": [
+        "condicao_estrita",
+        "estado_intermediario"
+      ],
+      "provenance": {
+        "kind": "authorial",
+        "originType": "authorial_fgv_style",
+        "label": "Autoral — estilo FGV; não é questão real da banca."
+      }
+    },
+    {
+      "id": "PY-LOOP-F05",
+      "prompt": "Considere o código:\n\nsaida = []\nfor n in range(1, 7):\n    if n % 4 == 0:\n        break\n    saida.append(n)\n\nAo final, saida vale:",
+      "options": [
+        "[1, 2, 3, 5, 6]",
+        "[1, 2, 3, 4]",
+        "[4]",
+        "[1, 2, 3]",
+        "[1, 2, 3, 4, 5, 6]"
+      ],
+      "optionIds": [
+        "treated_break_as_continue",
+        "included_break_item",
+        "kept_trigger_only",
+        "items_before_break",
+        "ignored_break"
+      ],
+      "correctOptionId": "items_before_break",
+      "answer": 3,
+      "explanation": "Um, dois e três chegam ao append. Em n=4, a condição é verdadeira e break encerra o laço antes do append; 5 e 6 não são visitados. Tratar 4 como incluído ou continuar depois dele muda a posição exata do desvio.",
+      "feedbackByOption": {
+        "treated_break_as_continue": "Esse seria o efeito de pular apenas o 4. break também impede que 5 e 6 sejam visitados.",
+        "included_break_item": "break executa antes de saida.append(n), portanto 4 não entra.",
+        "kept_trigger_only": "O laço adiciona os valores anteriores ao gatilho, não o valor que provoca a interrupção.",
+        "items_before_break": "Correto. Permanecem apenas os itens processados antes de n=4.",
+        "ignored_break": "A execução não alcança 5 nem 6 após break."
+      },
+      "level": "Questão autoral · estilo FGV",
+      "cognitiveOperation": "analisar",
+      "fgvMechanisms": [
+        "break_vs_continue",
+        "ordem_de_execucao"
+      ],
+      "provenance": {
+        "kind": "authorial",
+        "originType": "authorial_fgv_style",
+        "label": "Autoral — estilo FGV; não é questão real da banca."
+      }
+    },
+    {
+      "id": "PY-LOOP-F06",
+      "prompt": "Considere o código:\n\nsoma = 0\nfor n in range(1, 6):\n    if n == 2 or n == 4:\n        continue\n    soma += n\n\nO valor final de soma é:",
+      "options": [
+        "15",
+        "6",
+        "5",
+        "8",
+        "9"
+      ],
+      "optionIds": [
+        "summed_all_values",
+        "summed_skipped_values",
+        "counted_iterations",
+        "omitted_last_value",
+        "summed_non_skipped_values"
+      ],
+      "correctOptionId": "summed_non_skipped_values",
+      "answer": 4,
+      "explanation": "range fornece 1 a 5. Quando n é 2 ou 4, continue pula soma += n. Entram apenas 1, 3 e 5: soma 9. Somar 2+4 inverte a lógica; 8 esquece o último item; 15 ignora continue.",
+      "feedbackByOption": {
+        "summed_all_values": "Você somou 1+2+3+4+5, mas 2 e 4 não alcançam a linha de soma.",
+        "summed_skipped_values": "Dois e quatro são exatamente os valores pulados, não os acumulados.",
+        "counted_iterations": "Cinco é a quantidade de itens do range; soma guarda valores, não a contagem de voltas.",
+        "omitted_last_value": "1+3=4; ainda falta incluir 5, que não aciona continue.",
+        "summed_non_skipped_values": "Correto. 1+3+5 = 9."
+      },
+      "level": "Questão autoral · estilo FGV",
+      "cognitiveOperation": "analisar",
+      "fgvMechanisms": [
+        "continue_e_linha_posterior",
+        "procedimento_incorreto_plausivel"
+      ],
+      "provenance": {
+        "kind": "authorial",
+        "originType": "authorial_fgv_style",
+        "label": "Autoral — estilo FGV; não é questão real da banca."
+      }
+    },
+    {
+      "id": "PY-LOOP-F07",
+      "prompt": "Qual situação é representada de forma mais direta por um laço while?",
+      "options": [
+        "Repetir a leitura enquanto a entrada for inválida, sem saber de antemão quantas tentativas serão necessárias.",
+        "Visitar uma vez cada caractere de uma string.",
+        "Percorrer todos os elementos de uma lista.",
+        "Aplicar a mesma transformação a cada valor de uma tupla.",
+        "Percorrer as chaves de um dicionário."
+      ],
+      "optionIds": [
+        "dynamic_condition_unknown_attempts",
+        "string_iterable_for",
+        "list_iterable_for",
+        "tuple_iterable_for",
+        "dictionary_iterable_for"
+      ],
+      "correctOptionId": "dynamic_condition_unknown_attempts",
+      "answer": 0,
+      "explanation": "A primeira situação depende de uma condição que será reavaliada após cada tentativa, encaixando naturalmente em while. As demais descrevem o percurso de itens de um iterável e são expressas diretamente por for.",
+      "feedbackByOption": {
+        "dynamic_condition_unknown_attempts": "Correto. A repetição termina quando o estado 'entrada válida' muda.",
+        "string_iterable_for": "Uma string já fornece seus caracteres como itens; for comunica melhor esse percurso.",
+        "list_iterable_for": "A lista fornece diretamente os elementos a visitar; for é a escolha mais clara.",
+        "tuple_iterable_for": "A tarefa percorre cada elemento da tupla, um caso natural de for.",
+        "dictionary_iterable_for": "Dicionários são iteráveis e fornecem chaves por padrão; for é mais direto."
+      },
+      "level": "Questão autoral · estilo FGV",
+      "cognitiveOperation": "aplicar",
+      "fgvMechanisms": [
+        "condicao_necessaria_ao_mecanismo",
+        "conceitos_vizinhos"
+      ],
+      "provenance": {
+        "kind": "authorial",
+        "originType": "authorial_fgv_style",
+        "label": "Autoral — estilo FGV; não é questão real da banca."
+      }
+    },
+    {
+      "id": "PY-LOOP-F08",
+      "prompt": "Considere o código:\n\nresultado = []\nfor n in range(2, 9):\n    if n % 3 == 0:\n        continue\n    if n > 6:\n        break\n    resultado.append(n)\nprint(resultado)\n\nA saída é:",
+      "options": [
+        "[2, 3, 4, 5, 6]",
+        "[2, 4, 5, 7, 8]",
+        "[2, 4, 5]",
+        "[2, 4, 5, 7]",
+        "[3, 6]"
+      ],
+      "optionIds": [
+        "ignored_continue_until_six",
+        "treated_break_as_continue",
+        "continue_then_break_trace",
+        "included_break_trigger",
+        "kept_multiples_instead"
+      ],
+      "correctOptionId": "continue_then_break_trace",
+      "answer": 2,
+      "explanation": "Dois entra; 3 aciona continue; 4 e 5 entram; 6 aciona continue e não chega ao segundo if; 7 não é múltiplo de 3, então chega a n>6 e aciona break antes do append. A lista é [2,4,5].",
+      "feedbackByOption": {
+        "ignored_continue_until_six": "Três e seis satisfazem n%3==0 e pulam o restante da iteração; eles não entram.",
+        "treated_break_as_continue": "Sete aciona break, encerrando o laço; nem 7 nem 8 entram.",
+        "continue_then_break_trace": "Correto. O rastreamento respeita primeiro continue em 3 e 6 e depois break em 7.",
+        "included_break_trigger": "break vem antes de resultado.append(n), portanto 7 não é acrescentado.",
+        "kept_multiples_instead": "Os múltiplos de 3 são justamente os valores pulados por continue."
+      },
+      "level": "Questão autoral · estilo FGV",
+      "cognitiveOperation": "analisar",
+      "fgvMechanisms": [
+        "ordem_de_condicoes",
+        "break_vs_continue",
+        "estado_intermediario"
+      ],
+      "provenance": {
+        "kind": "authorial",
+        "originType": "authorial_fgv_style",
+        "label": "Autoral — estilo FGV; não é questão real da banca."
+      }
+    }
+  ],
+  "reviewSummary": [
+    "for recebe um item por vez de um iterável e executa o bloco para cada item.",
+    "range usa início incluído, parada excluída e passo; com um argumento, começa em 0.",
+    "Acumuladores e contadores exigem valor inicial e rastreamento de cada atualização.",
+    "while testa a condição antes do bloco; seu estado precisa avançar para uma parada.",
+    "break encerra o laço; continue pula apenas o restante da iteração atual.",
+    "Escolha for para percorrer itens e while para repetir enquanto uma condição dinâmica permanecer verdadeira."
+  ],
+  "nextStep": "Após concluir PY-LOOP-001, avançar para PY-FUNC-001. NumPy permanece como etapa posterior a Laços e Funções na sequência curricular aprovada.",
+  "provenance": {
+    "kind": "authorial_session",
+    "label": "Conteúdo e questões autorais em estilo FGV; nenhuma questão foi rotulada como prova real.",
+    "contentVersion": "2026.08.21-py-loop-001-v1",
+    "curriculumRelations": [
+      {
+        "coverageId": "COV-PY-0002",
+        "role": "primary",
+        "mappingStatus": "mapped_proposed"
+      },
+      {
+        "coverageId": "COV-PY-0005",
+        "role": "integration",
+        "mappingStatus": "mapped_proposed"
+      }
+    ],
+    "learnerEvidencePolicy": {
+      "usesDeclaredWeakPythonBaseForDepth": true,
+      "infersMastery": false,
+      "writesLearnerEvidence": false,
+      "changesOfficialHistory": false
+    },
+    "supportPracticePolicy": {
+      "activityRole": "support",
+      "formalAssessment": false,
+      "writesLearnerEvidence": false,
+      "masteryEffect": "none"
+    },
+    "technicalTruth": [
+      {
+        "source": "Python 3.14.7 Documentation — Tutorial — More Control Flow Tools",
+        "url": "https://docs.python.org/3/tutorial/controlflow.html",
+        "locators": [
+          "4.2 for Statements",
+          "4.3 The range() Function",
+          "4.4 break and continue Statements"
+        ],
+        "verifiedAt": "2026-08-21"
+      },
+      {
+        "source": "Python 3.14.7 Language Reference — Compound Statements",
+        "url": "https://docs.python.org/3/reference/compound_stmts.html",
+        "locators": [
+          "8.2 The while statement",
+          "8.3 The for statement"
+        ],
+        "verifiedAt": "2026-08-21"
+      }
+    ],
+    "rights": "Referências oficiais citadas por link e locator; exemplos e questões deste arquivo são originais."
+  }
+}

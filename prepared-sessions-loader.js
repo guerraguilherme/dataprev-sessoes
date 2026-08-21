@@ -12,6 +12,8 @@
     {file:'ML-BASE-001.json'},
     {file:'PY-BASE-001.json'},
     {file:'PY-COLL-001.json'},
+    {file:'PY-LOOP-001.json'},
+    {file:'PY-FUNC-001.json'},
     {file:'PY-NP-001.json',canonicalId:'NP-001'},
     {file:'BD-MOD-001.json'},
     {file:'PT-INT-001.json'},
@@ -48,14 +50,14 @@
     const map=new Map(cat.sessions.map(s=>[s.id,s]));
     legacyIds.forEach(id=>map.delete(id));
     ready.forEach((s,id)=>map.set(id,s));
-    return {...cat,sessions:[...map.values()],contentVersion:'2026.08.20-sessoes-16'};
+    return {...cat,sessions:[...map.values()],contentVersion:'2026.08.21-sessoes-17'};
   }
 
   const baseApply=typeof applyCatalog==='function'?applyCatalog:null;
   if(baseApply){applyCatalog=function(nextCatalog,opts={}){return baseApply(mergeInto(nextCatalog),opts)}}
 
   Promise.all(SOURCES.map(async source=>{
-    const r=await fetch(`./${source.file}?v=20260820-16`,{cache:'no-store'});
+    const r=await fetch(`./${source.file}?v=20260821-17`,{cache:'no-store'});
     if(!r.ok)throw new Error(`${source.file}: HTTP ${r.status}`);
     const raw=await r.json();
     const session=canonicalize(raw,source);

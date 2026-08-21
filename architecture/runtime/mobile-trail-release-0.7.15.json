@@ -1,0 +1,76 @@
+{
+  "release_id": "DATAPREV-SESSOES-MOBILE-TRAIL-0.7.15",
+  "runtime_version": "0.7.15",
+  "content_version": "2026.08.21-sessoes-17",
+  "cache_version": "dataprev-sessoes-standalone-v30",
+  "environment": "github_pages_production",
+  "canonical_url": "https://guerraguilherme.github.io/dataprev-sessoes/",
+  "previous_release": "mobile-trail-release-0.7.14.json",
+  "change_scope": {
+    "kind": "prepared_session_release_and_runtime_compatibility",
+    "sessions_added": [
+      "PY-LOOP-001",
+      "PY-FUNC-001"
+    ],
+    "recommended_sequence": [
+      "PY-LOOP-001",
+      "PY-FUNC-001",
+      "NP-001"
+    ],
+    "numpy_delivery_removed": false,
+    "learner_state_schema_changed": false,
+    "official_state_write_performed": false
+  },
+  "ready_sessions": [
+    {
+      "session_id": "PY-LOOP-001",
+      "title": "Laços for e while",
+      "source_file": "PY-LOOP-001.json",
+      "mapping_status": "mapped_proposed"
+    },
+    {
+      "session_id": "PY-FUNC-001",
+      "title": "Funções: definição, parâmetros, retorno e escopo",
+      "source_file": "PY-FUNC-001.json",
+      "mapping_status": "mapped_proposed"
+    },
+    {
+      "session_id": "NP-001",
+      "title": "NumPy: arrays, shape, dtype, indexação e operações vetorizadas",
+      "source_file": "PY-NP-001.json",
+      "delivery": "preserved_ready"
+    }
+  ],
+  "golden_sample": {
+    "session_id": "EST-PROB-002",
+    "mapping_status": "mapped_validated",
+    "published": false,
+    "delivery_changed": false
+  },
+  "learner_state": {
+    "schema_or_key_changed": false,
+    "migration_performed": false,
+    "official_state_write_performed": false,
+    "progress_or_completion_changed": false
+  },
+  "authorization": {
+    "source": "explicit_user_instruction",
+    "recorded_at": "2026-08-21",
+    "scope": "release PY-LOOP-001 and PY-FUNC-001 while preserving existing NP-001 access"
+  },
+  "artifact_sha256": {
+    "PY-LOOP-001.json": "2bb4fa8829d87407e995a625e24c131278bf35aa95634868be40920197329179",
+    "PY-FUNC-001.json": "b5077170d343c18254b067d192dabfe010bff193831aa33d7538000c207dda44",
+    "PY-COLL-001.json": "e839ff75058d41e43780470149c93767229606751ea80d933a1f95d2ee87f5c7",
+    "PY-NP-001.json": "9e16dd287ddc520c04c85cdb2973c26b6d3ef2a3f1ea0f1283505f5332ffed8d",
+    "app.js": "c243d389db1dbbf6f9caaf017d619a27a166b9695a296f4ce3448663a5f3d69b",
+    "session-rich-content.js": "a9bcb0ad1c8600498d9caa231ccdb10e8216e4b63be8eafed4081a9c4bb87176",
+    "session-support-ux.js": "9166053b17b30ea7034b980034b53a1350b9694eb4728560f9273c08ee8550af",
+    "prepared-sessions-loader.js": "366322fb8b2224974bd5554d1c13563f41e817362cba315c946f74814c07be74",
+    "service-worker.js": "4b0fabf6737478e6a260f64aee299bd2dba7b10de0b068830567bdcc5c9586b4",
+    "index.html": "3189dd6a540c5ed92ad8cab9c423d87a3f7b1e589c4beb19ebf501eb3c633e79",
+    "session-generation-feedback.js": "7ad949c9b8ac928769161136701da4908d0f430f929dd7e348264eada503d227",
+    "architecture/runtime/content-factory-v3-pwa-bridge-v1.json": "157523079d7ae73cb60b2856e30faaa49b4d74f5247db4a81a9676628aa33489"
+  },
+  "source_commit": null
+}

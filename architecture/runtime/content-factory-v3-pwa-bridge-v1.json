@@ -48,5 +48,25 @@
       "loader_entry_added": true,
       "offline_cache_entry_added": true
     }
+  },
+  "python_foundation_release_0_7_15": {
+    "decision": "preserve_existing_numpy_access_and_release_missing_foundations",
+    "recommended_sequence": [
+      "PY-LOOP-001",
+      "PY-FUNC-001",
+      "NP-001"
+    ],
+    "delivery": {
+      "PY-LOOP-001": "ready",
+      "PY-FUNC-001": "ready",
+      "NP-001": "ready_unchanged"
+    },
+    "curriculum_mapping_status": {
+      "PY-LOOP-001": "mapped_proposed",
+      "PY-FUNC-001": "mapped_proposed"
+    },
+    "learner_state_write": false,
+    "learner_state_schema_change": false,
+    "authorization_source": "user_instruction_2026-08-21"
   }
 }

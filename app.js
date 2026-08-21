@@ -1,6 +1,6 @@
 'use strict';
-const APP_VERSION='0.7.14';
-const CONTENT_VERSION='2026.08.20-sessoes-16';
+const APP_VERSION='0.7.15';
+const CONTENT_VERSION='2026.08.21-sessoes-17';
 const STATE_MAP_KEY='dataprev_sessoes_states_v2';
 const LEGACY_STATE_KEY='dataprev_sessoes_state_v1';
 const SESSIONS_CFG_KEY='dataprev_sessoes_sync_config_v1';
@@ -17,6 +17,29 @@ const $=id=>document.getElementById(id);
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=ms=>{const t=Math.floor((ms||0)/1000);return `${String(Math.floor(t/60)).padStart(2,'0')}:${String(t%60).padStart(2,'0')}`};
 const clone=value=>JSON.parse(JSON.stringify(value));
+const optionId=(q,index)=>String(q?.optionIds?.[index]||`option_${index+1}`);
+const correctOptionId=q=>String(q?.correctOptionId||optionId(q,q?.answer));
+const optionIndex=(q,id)=>{const i=(q?.optionIds||[]).indexOf(String(id));return i>=0?i:-1};
+const correctOptionIndex=q=>{const i=optionIndex(q,correctOptionId(q));return i>=0?i:Number(q?.answer)};
+const selectedOptionIndex=(q,rec)=>{const i=optionIndex(q,rec?.selectedOptionId);return i>=0?i:Number.isInteger(rec?.selected)?rec.selected:-1};
+const attemptOptionId=(q,attempt)=>String(attempt?.optionId||attempt?.selectedOptionId||(Number.isInteger(attempt)?optionId(q,attempt):attempt||''));
+const attemptOptionIndex=(q,attempt)=>{const i=optionIndex(q,attemptOptionId(q,attempt));return i>=0?i:Number.isInteger(attempt)?attempt:Number.isInteger(attempt?.presentedIndex)?attempt.presentedIndex:-1};
+function optionFeedback(q,indexOrId){
+  const index=Number.isInteger(indexOrId)?indexOrId:optionIndex(q,indexOrId),id=index>=0?optionId(q,index):String(indexOrId||''),byId=q?.feedbackByOption||q?.optionRationales||{};
+  return String(byId[id]||q?.optionExplanations?.[index]||q?.explanation||'').trim();
+}
+function revealedFeedback(q,indexOrId,correct){
+  const specific=optionFeedback(q,indexOrId),general=String(q?.explanation||'').trim();
+  if(correct)return specific&&specific.length>=24?specific:[specific,general].filter((x,i,a)=>x&&a.indexOf(x)===i).join(' ')||'O raciocínio e o resultado estão corretos.';
+  const answerText=q?.options?.[correctOptionIndex(q)]??'';
+  const reconstruction=q?.explanation&&q.explanation!==specific?` ${q.explanation}`:'';
+  return `${specific}${reconstruction} A resposta correta é: ${answerText}.`.trim();
+}
+function meaningfulJustification(value){
+  const text=String(value||'').trim();
+  if(/^n[aã]o\s+sei[.!?]*$/i.test(text))return true;
+  return (text.match(/[\p{L}\p{N}]/gu)||[]).length>=3;
+}
 
 function freshState(id=''){
   return {sessionId:id,phase:'home',conceptIndex:0,finalIndex:0,conceptsCompleted:{},immediate:{},final:{},notes:{},support:{},startedAt:'',completedAt:'',activeMs:0,timerRunning:false,lastTick:Date.now(),contentVersion:CONTENT_VERSION};
@@ -186,7 +209,7 @@ function renderConceptDisclosure(concept,kind,label){
 function renderConcept(){
   show('studyPanel');const concept=session.concepts[state.conceptIndex];
   $('studyKicker').textContent=`Conceito ${state.conceptIndex+1} de ${session.concepts.length}`;$('studyTitle').textContent=concept.title;
-  const exercises=(concept.immediate||[]).map((q,n)=>{const rec=state.immediate[q.id]||{};return `<div class="exercise"><h3>Fixação imediata ${n+1}</h3><p>${esc(q.prompt)}</p>${q.options.map((o,i)=>{let cls='alt';if(rec.selected===i)cls+=' selected';if(rec.correct&&i===q.answer)cls+=' correct';if(rec.lastWrong===i)cls+=' wrong';return `<button class="${cls}" data-immediate="${q.id}" data-index="${i}" ${rec.correct?'disabled':''}>${String.fromCharCode(65+i)}. ${esc(o)}</button>`}).join('')}${rec.correct?`<div class="feedback ok">Correto. ${esc(q.explanation)}</div>`:rec.lastWrong!==undefined?`<div class="feedback bad">Ainda não. ${esc(q.explanation)} Tente novamente.</div>`:''}</div>`}).join('');
+  const exercises=(concept.immediate||[]).map((q,n)=>{const rec=state.immediate[q.id]||{},selected=selectedOptionIndex(q,rec),wrong=optionIndex(q,rec.lastWrongOptionId)>=0?optionIndex(q,rec.lastWrongOptionId):Number.isInteger(rec.lastWrong)?rec.lastWrong:-1,correct=correctOptionIndex(q);const feedback=rec.correct?revealedFeedback(q,rec.selectedOptionId||selected,true):wrong>=0?revealedFeedback(q,rec.lastWrongOptionId||wrong,false):'';return `<div class="exercise"><h3>Fixação imediata ${n+1}</h3><p>${esc(q.prompt)}</p>${q.options.map((o,i)=>{let cls='alt';if(selected===i)cls+=' selected';if(rec.correct&&i===correct)cls+=' correct';if(wrong===i)cls+=' wrong';return `<button class="${cls}" data-immediate="${q.id}" data-index="${i}" data-option-id="${esc(optionId(q,i))}" ${rec.correct?'disabled':''}>${String.fromCharCode(65+i)}. ${esc(o)}</button>`}).join('')}${rec.correct?`<div class="feedback ok">Correto. ${esc(feedback)}</div>`:wrong>=0?`<div class="feedback bad">Ainda não. ${esc(feedback)} Tente reconstruir o código antes de marcar novamente.</div>`:''}</div>`}).join('');
   $('studyBody').innerHTML=`<div class="info concept"><b>O que preciso saber</b><br>${esc(concept.what)}</div><div class="info concept"><b>Explicação objetiva</b><br>${esc(concept.explanation)}</div>${concept.code?`<pre>${esc(concept.code)}</pre>`:''}${renderConceptDisclosure(concept,'connection','Conexão com o que você já estudou')}${renderConceptDisclosure(concept,'trap','Pegadinha e erro comum')}${renderAdaptive(concept)}${exercises}<details style="margin-top:12px"><summary>Minha nota sobre este conceito</summary><textarea id="conceptNote">${esc(state.notes[concept.id]||'')}</textarea></details><div class="row" style="margin-top:14px"><button id="prevConcept" ${state.conceptIndex===0?'disabled':''}>Anterior</button><button id="nextConcept" class="primary">${state.conceptIndex===session.concepts.length-1?'Ir para questões finais':'Próximo conceito'}</button></div>`;
   document.querySelectorAll('[data-immediate]').forEach(btn=>btn.onclick=()=>answerImmediate(btn.dataset.immediate,Number(btn.dataset.index)));
   $('conceptNote').oninput=e=>{state.notes[concept.id]=e.target.value;saveState()};
@@ -204,18 +227,22 @@ function wireAdaptive(concept){
 }
 function answerImmediate(id,index){
   const concept=session.concepts[state.conceptIndex],q=(concept.immediate||[]).find(x=>x.id===id),rec=state.immediate[id]||{attempts:[]};
-  rec.attempts=[...(rec.attempts||[]),index];rec.selected=index;rec.correct=index===q.answer;rec.answeredAt=new Date().toISOString();if(rec.correct)delete rec.lastWrong;else rec.lastWrong=index;state.immediate[id]=rec;
-  if(!rec.correct&&rec.attempts.length>=2){const support=supportRecord(concept.id);support.opened=true;support.autoOpened=true;support.autoOpenedAt=new Date().toISOString()}
+  const previous=rec.attempts||[],legacyFirst=previous[0];
+  if(!rec.firstAttemptOptionId&&legacyFirst!==undefined){rec.firstAttemptOptionId=attemptOptionId(q,legacyFirst);rec.firstAttempt=attemptOptionIndex(q,legacyFirst)}
+  const chosenId=optionId(q,index),answeredAt=new Date().toISOString();
+  rec.attempts=[...previous,{optionId:chosenId,presentedIndex:index,answeredAt}];if(!rec.firstAttemptOptionId){rec.firstAttempt=index;rec.firstAttemptOptionId=chosenId}rec.selected=index;rec.selectedOptionId=chosenId;rec.correctOptionId=correctOptionId(q);rec.correct=chosenId===rec.correctOptionId;rec.answeredAt=answeredAt;if(rec.correct){delete rec.lastWrong;delete rec.lastWrongOptionId}else{rec.lastWrong=index;rec.lastWrongOptionId=chosenId}state.immediate[id]=rec;
+  if(!rec.correct&&rec.attempts.length>=2){const support=supportRecord(concept.id);support.recommended=true;support.recommendedAt=support.recommendedAt||new Date().toISOString()}
   saveState();renderConcept();
 }
 
 function renderFinal(){
   show('studyPanel');const q=session.finalQuestions[state.finalIndex],rec=state.final[q.id]||{};
-  $('studyKicker').textContent=`Questão final ${state.finalIndex+1} de ${session.finalQuestions.length} · ${q.level||'integração'}`;$('studyTitle').textContent='Integração e padrão FGV';
-  $('studyBody').innerHTML=`<div class="exercise"><p style="white-space:pre-wrap">${esc(q.prompt)}</p>${q.options.map((o,i)=>{let cls='alt';if(rec.selected===i)cls+=' selected';if(rec.submitted&&i===q.answer)cls+=' correct';if(rec.submitted&&rec.selected===i&&!rec.correct)cls+=' wrong';return `<button class="${cls}" data-final-choice="${i}" ${rec.submitted?'disabled':''}>${String.fromCharCode(65+i)}. ${esc(o)}</button>`}).join('')}</div><div class="confidence">${['baixa','media','alta'].map(v=>`<button data-confidence="${v}" class="${rec.confidence===v?'active':''}" ${rec.submitted?'disabled':''}>${v==='media'?'Média':v[0].toUpperCase()+v.slice(1)}</button>`).join('')}</div><label class="small">Justificativa obrigatória</label><textarea id="justification" ${rec.submitted?'disabled':''}>${esc(rec.justification||'')}</textarea>${rec.submitted?`<div class="feedback ${rec.correct?'ok':'bad'}"><b>${rec.correct?'Correto.':'Incorreto.'}</b> ${esc(q.explanation)}</div>`:''}<div class="row" style="margin-top:14px">${rec.submitted?`<button id="nextFinal" class="primary">${state.finalIndex===session.finalQuestions.length-1?'Concluir sessão':'Próxima questão'}</button>`:'<button id="submitFinal" class="primary">Corrigir resposta</button>'}</div>`;
-  document.querySelectorAll('[data-final-choice]').forEach(btn=>btn.onclick=()=>{rec.selected=Number(btn.dataset.finalChoice);state.final[q.id]=rec;saveState();renderFinal()});
+  $('studyKicker').textContent=`Questão final ${state.finalIndex+1} de ${session.finalQuestions.length}`;$('studyTitle').textContent='Integração e padrão FGV';
+  const selected=selectedOptionIndex(q,rec),correct=correctOptionIndex(q),feedback=rec.submitted?revealedFeedback(q,rec.selectedOptionId||selected,rec.correct):'';
+  $('studyBody').innerHTML=`<div class="exercise"><p style="white-space:pre-wrap">${esc(q.prompt)}</p>${q.options.map((o,i)=>{let cls='alt';if(selected===i)cls+=' selected';if(rec.submitted&&i===correct)cls+=' correct';if(rec.submitted&&selected===i&&!rec.correct)cls+=' wrong';return `<button class="${cls}" data-final-choice="${i}" data-option-id="${esc(optionId(q,i))}" ${rec.submitted?'disabled':''}>${String.fromCharCode(65+i)}. ${esc(o)}</button>`}).join('')}</div><div class="confidence">${['baixa','media','alta'].map(v=>`<button data-confidence="${v}" class="${rec.confidence===v?'active':''}" ${rec.submitted?'disabled':''}>${v==='media'?'Média':v[0].toUpperCase()+v.slice(1)}</button>`).join('')}</div><label class="small">Justificativa obrigatória</label><textarea id="justification" ${rec.submitted?'disabled':''}>${esc(rec.justification||'')}</textarea>${rec.submitted?`<div class="feedback ${rec.correct?'ok':'bad'}"><b>${rec.correct?'Correto.':'Incorreto.'}</b> ${esc(feedback)}</div>`:''}<div class="row" style="margin-top:14px">${rec.submitted?`<button id="nextFinal" class="primary">${state.finalIndex===session.finalQuestions.length-1?'Concluir sessão':'Próxima questão'}</button>`:'<button id="submitFinal" class="primary">Corrigir resposta</button>'}</div>`;
+  document.querySelectorAll('[data-final-choice]').forEach(btn=>btn.onclick=()=>{rec.selected=Number(btn.dataset.finalChoice);rec.selectedOptionId=optionId(q,rec.selected);state.final[q.id]=rec;saveState();renderFinal()});
   document.querySelectorAll('[data-confidence]').forEach(btn=>btn.onclick=()=>{rec.confidence=btn.dataset.confidence;state.final[q.id]=rec;saveState();renderFinal()});
-  if(!rec.submitted){$('justification').oninput=e=>{rec.justification=e.target.value;state.final[q.id]=rec;saveState()};$('submitFinal').onclick=()=>{if(rec.selected===undefined)return alert('Marque uma alternativa.');if(!rec.confidence)return alert('Informe sua segurança.');if(!(rec.justification||'').trim())return alert('Escreva uma justificativa curta.');rec.submitted=true;rec.correct=rec.selected===q.answer;rec.answeredAt=new Date().toISOString();state.final[q.id]=rec;saveState();render()}}
+  if(!rec.submitted){$('justification').oninput=e=>{rec.justification=e.target.value;state.final[q.id]=rec;saveState()};$('submitFinal').onclick=()=>{const chosen=selectedOptionIndex(q,rec);if(chosen<0)return alert('Marque uma alternativa.');if(!rec.confidence)return alert('Informe sua segurança.');if(!meaningfulJustification(rec.justification))return alert('Escreva uma justificativa curta com significado. Se não souber justificar, você pode escrever “não sei”.');rec.submitted=true;rec.selected=chosen;rec.selectedOptionId=optionId(q,chosen);rec.correctOptionId=correctOptionId(q);rec.correct=rec.selectedOptionId===rec.correctOptionId;if(!rec.firstAttemptOptionId){rec.firstAttempt=chosen;rec.firstAttemptOptionId=rec.selectedOptionId}rec.answeredAt=new Date().toISOString();state.final[q.id]=rec;saveState();render()}}
   else $('nextFinal').onclick=()=>{if(state.finalIndex<session.finalQuestions.length-1)state.finalIndex++;else{updateClock();state.timerRunning=false;state.phase='complete';state.completedAt=new Date().toISOString()}saveState();render();scrollTop()};
 }
 function renderComplete(){
@@ -226,8 +253,32 @@ function renderComplete(){
 
 function buildReport(){
   const out=['DATAPREV SESSÕES — RELATÓRIO AUTOSSUFICIENTE',`Versão do conteúdo: ${catalog.contentVersion}`,`Sessão: ${session.id} — ${session.title}`,`Disciplina: ${session.discipline}`,`Item do edital: ${session.itemEdital}`,`Início: ${state.startedAt||'—'}`,`Término: ${state.completedAt||'em andamento'}`,`Tempo ativo: ${fmt(state.activeMs)}`,'','CONCEITOS E FIXAÇÃO IMEDIATA'];
-  session.concepts.forEach((c,i)=>{out.push(`\n${i+1}. ${c.title}`,`Resumo: ${c.what}`,`Nota do usuário: ${state.notes[c.id]||'—'}`);(c.immediate||[]).forEach(q=>{const r=state.immediate[q.id]||{},last=(r.attempts||[]).at(-1);out.push(`  [${q.id}] ${q.prompt}`,`  Resposta final: ${last===undefined?'—':q.options[last]}`,`  Gabarito: ${q.options[q.answer]}`,`  Tentativas: ${(r.attempts||[]).length}`,`  Resultado: ${r.correct?'acerto':'pendente/erro'}`,`  Comentário: ${q.explanation}`)});const sup=state.support?.[c.id];if(sup)out.push(`  Apoio adaptativo: motivos=${(sup.reasons||[]).map(x=>REASONS[x]||x).join(', ')||'abertura sem seleção'}; resolvido=${sup.resolved?'sim':'não'}; microchecagem=${sup.check?(sup.check.correct?'acerto':'erro'):'não realizada'}; automático=${sup.autoOpened?'sim':'não'}`)});
-  out.push('\nQUESTÕES FINAIS');session.finalQuestions.forEach((q,i)=>{const r=state.final[q.id]||{};out.push(`\nQ${i+1} [${q.level||'integração'}] ${q.prompt}`);q.options.forEach((o,j)=>out.push(`  ${String.fromCharCode(65+j)}. ${o}`));out.push(`Resposta marcada: ${r.selected===undefined?'—':q.options[r.selected]}`,`Segurança: ${r.confidence||'—'}`,`Justificativa: ${r.justification||'—'}`,`Gabarito: ${q.options[q.answer]}`,`Resultado: ${r.submitted?(r.correct?'acerto':'erro'):'não respondida'}`,`Comentário: ${q.explanation}`)});
+  session.concepts.forEach((c,i)=>{
+    out.push(`\n${i+1}. ${c.title}`,`Resumo: ${c.what}`,`Nota do usuário: ${state.notes[c.id]||'—'}`);
+    (c.immediate||[]).forEach(q=>{
+      const r=state.immediate[q.id]||{},attempts=r.attempts||[],first=attempts[0]??r.firstAttempt,last=attempts.at(-1),revealed=attempts.length>0,firstId=r.firstAttemptOptionId||attemptOptionId(q,first),firstIndex=optionIndex(q,firstId)>=0?optionIndex(q,firstId):attemptOptionIndex(q,first),lastId=attemptOptionId(q,last),lastIndex=attemptOptionIndex(q,last),answerIndex=correctOptionIndex(q);
+      out.push(`  [${q.id}] ${q.prompt}`);
+      q.options.forEach((o,j)=>out.push(`    ${String.fromCharCode(65+j)} · ${optionId(q,j)}: ${o}`));
+      out.push(`  Primeira tentativa: ${firstIndex<0?'—':`${firstId} — ${q.options[firstIndex]}`}`,`  Resposta mais recente: ${lastIndex<0?'—':`${lastId} — ${q.options[lastIndex]}`}`,`  Tentativas: ${attempts.length}`);
+      if(revealed)out.push(`  Gabarito revelado: ${correctOptionId(q)} — ${q.options[answerIndex]}`,`  Resultado atual: ${r.correct?'acerto':'erro com nova tentativa disponível'}`,`  Feedback: ${revealedFeedback(q,lastId,r.correct)}`);
+      else out.push('  Gabarito: ainda não revelado','  Resultado: pendente');
+    });
+    const sup=state.support?.[c.id];
+    if(sup){
+      out.push(`  Apoio sob demanda: aberto=${sup.openedAt?'sim':'não'}; resolvido=${sup.resolved?'sim':'não'}; recomendado após dificuldade=${sup.recommended?'sim':'não'}; abertura automática legada=${sup.autoOpened?'sim':'não'}; motivos=${(sup.reasons||[]).map(x=>REASONS[x]||x).join(', ')||'—'}; microchecagem=${sup.check?(sup.check.correct?'acerto':'erro'):'não realizada'}`);
+      for(const p of c.supportPractice||[]){const r=sup.practice?.[p.id];if(!r?.submitted)continue;const selected=selectedOptionIndex(p,r),answerIndex=correctOptionIndex(p);out.push(`    [${p.id}] ${p.prompt}`);p.options.forEach((o,j)=>out.push(`      ${String.fromCharCode(65+j)} · ${optionId(p,j)}: ${o}`));out.push(`    Resposta: ${r.selectedOptionId||optionId(p,selected)} — ${p.options[selected]}`,`    Gabarito revelado: ${correctOptionId(p)} — ${p.options[answerIndex]}`,`    Resultado: ${r.correct?'acerto de apoio':'erro de apoio'}`,`    Feedback: ${revealedFeedback(p,r.selectedOptionId||selected,r.correct)}`)}
+    }
+  });
+  const realItems=session.concepts.map(c=>c.realQuestion).filter(Boolean);
+  if(realItems.length){out.push('\nQUESTÕES REAIS INCORPORADAS');for(const q of realItems){const r=state.realPractice?.[q.id]||{};out.push(`\n[${q.id}] ${q.prompt}`);q.options.forEach((o,j)=>out.push(`  ${String.fromCharCode(65+j)}. ${o}`));out.push(`Resposta marcada: ${r.selected===undefined?'—':q.options[r.selected]}`);if(r.submitted)out.push(`Gabarito revelado: ${q.options[q.answer]}`,`Resultado: ${r.correct?'acerto':'erro'}`,`Feedback: ${q.explanation||'—'}`);else out.push('Gabarito: ainda não revelado','Resultado: não corrigida')}}
+  out.push('\nQUESTÕES FINAIS');session.finalQuestions.forEach((q,i)=>{
+    const r=state.final[q.id]||{},selected=selectedOptionIndex(q,r),answerIndex=correctOptionIndex(q);
+    out.push(`\nQ${i+1} [${q.id}] ${q.prompt}`);
+    q.options.forEach((o,j)=>out.push(`  ${String.fromCharCode(65+j)} · ${optionId(q,j)}: ${o}`));
+    out.push(`Resposta marcada: ${selected<0?'—':`${r.selectedOptionId||optionId(q,selected)} — ${q.options[selected]}`}`,`Segurança: ${r.confidence||'—'}`,`Justificativa: ${r.justification||'—'}`);
+    if(r.submitted)out.push(`Gabarito revelado: ${correctOptionId(q)} — ${q.options[answerIndex]}`,`Resultado: ${r.correct?'acerto':'erro'}`,`Feedback: ${revealedFeedback(q,r.selectedOptionId||selected,r.correct)}`);
+    else out.push('Gabarito: ainda não revelado','Resultado: não corrigida');
+  });
   out.push('\nRESUMO',`Conceitos concluídos: ${Object.keys(state.conceptsCompleted).length}/${session.concepts.length}`,`Fixações corretas: ${immediateCorrect()}/${immediateAll().length}`,`Questões finais: ${finalCorrect()}/${finalAnswered()} acertos`,`Próximo passo: ${session.nextStep||'—'}`);return out.join('\n');
 }
 function showReport(){$('reportText').value=buildReport();show('reportPanel')}
