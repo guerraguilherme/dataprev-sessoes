@@ -22,7 +22,7 @@ const manifest=json('manifest.webmanifest');
 const session=json('EST-VA-001.json');
 const staged=json('architecture/foundation-v2/pilot/staged/EST-VA-001.staged.json');
 const bridge=json('architecture/runtime/content-factory-v3-pwa-bridge-v1.json');
-const release=json('architecture/runtime/mobile-trail-release-0.7.13.json');
+const release=json('architecture/runtime/mobile-trail-release-0.7.14.json');
 
 const sourcesLiteral=loader.match(/const SOURCES=(\[[\s\S]*?\n  \]);/)?.[1];
 assert.ok(sourcesLiteral,'SOURCES não encontrado');
@@ -32,11 +32,11 @@ assert.ok(coreLiteral,'CORE não encontrado');
 const core=vm.runInNewContext(coreLiteral);
 
 check('VERSIONS_ALIGNED',()=>{
-  assert.match(app,/const APP_VERSION='0\.7\.13'/);
+  assert.match(app,/const APP_VERSION='0\.7\.14'/);
   assert.match(app,/const CONTENT_VERSION='2026\.08\.20-sessoes-16'/);
   assert.match(loader,/contentVersion:'2026\.08\.20-sessoes-16'/);
-  assert.match(index,/PWA 0\.7\.13/);
-  assert.equal(release.runtime_version,'0.7.13');
+  assert.match(index,/PWA 0\.7\.14/);
+  assert.equal(release.runtime_version,'0.7.14');
   assert.equal(release.content_version,'2026.08.20-sessoes-16');
 });
 
@@ -92,7 +92,7 @@ check('PWA_INSTALL_CONTRACT',()=>{
   assert.equal(manifest.scope,'./');
   assert.equal(manifest.display,'standalone');
   assert.match(index,/<link rel="icon" href="\.\/icons\/icon-192\.png" type="image\/png">/);
-  assert.match(sw,/CACHE_NAME='dataprev-sessoes-standalone-v28'/);
+  assert.match(sw,/CACHE_NAME='dataprev-sessoes-standalone-v29'/);
   assert.equal(core.filter(x=>x==='./EST-VA-001.json').length,1);
   assert.match(sw,/cache\.match\(request,\{ignoreSearch:true\}\)/);
   for(const asset of core){
@@ -114,7 +114,7 @@ check('GATED_DELIVERY_ONLY',()=>{
   assert.match(read('sync-v2.js'),/aguardando liberação/);
   assert.match(lifecycle,/if\(gatedDeliveryOnly\)return/);
   assert.match(feedback,/DP_GATED_DELIVERY_ONLY/);
-  assert.match(feedback,/const UI_VERSION='0\.7\.13'/);
+  assert.match(feedback,/const UI_VERSION='0\.7\.14'/);
   assert.doesNotMatch(homeNav,/session-generation-relay-hotfix\.js/);
   assert.equal(bridge.invariants.no_mobile_content_generation,true);
   assert.equal(bridge.invariants.automatic_next_session_generation,false);
@@ -125,6 +125,26 @@ check('INDEX_ASSETS_RESOLVE',()=>{
   const refs=[...index.matchAll(/(?:src|href)="(\.\/[^"#?]+)(?:\?[^"#]*)?"/g)].map(m=>m[1]);
   assert.ok(refs.length>0);
   for(const ref of refs)assert.ok(fs.existsSync(path.join(root,ref.slice(2))),`Referência quebrada: ${ref}`);
+});
+
+check('CONCEPT_DISCLOSURES_INTERACTIVE',()=>{
+  const py=json('PY-COLL-001.json');
+  const concept=py.concepts.find(x=>x.id==='PY-COLL-C01');
+  assert.ok(concept?.supportDetails?.connection);
+  assert.ok(concept?.supportDetails?.trap);
+  assert.match(app,/function conceptDisclosureText\(concept,kind\)/);
+  assert.match(app,/concept\?\.supportDetails\|\|\{\}/);
+  assert.match(app,/<details class="info \$\{kind\} concept-disclosure">/);
+  assert.match(index,/\.concept-disclosure>summary/);
+  assert.match(index,/\.concept-disclosure\[open\]>summary::after/);
+  const start=app.indexOf('function conceptDisclosureText');
+  const end=app.indexOf('function renderConcept(){',start);
+  const context={Set,String};
+  vm.runInNewContext(`const esc=value=>String(value??'');${app.slice(start,end)};this.connection=renderConceptDisclosure(${JSON.stringify(concept)},'connection','Conexão com o que você já estudou');this.trap=renderConceptDisclosure(${JSON.stringify(concept)},'trap','Pegadinha e erro comum');this.empty=renderConceptDisclosure({},'trap','Pegadinha e erro comum');`,context);
+  assert.match(context.connection,/A mesma regra de início incluído\/fim excluído/);
+  assert.match(context.trap,/s\[1:4\] não inclui s\[4\]/);
+  assert.match(context.connection,/^<details class="info connection concept-disclosure">/);
+  assert.equal(context.empty,'');
 });
 
 async function exerciseLoader(){
@@ -193,7 +213,7 @@ async function exerciseOfflineCache(){
       skipWaiting(){},
       addEventListener(type,handler){listeners[type]=handler}
     },
-    caches:{open:async()=>cache,keys:async()=>['dataprev-sessoes-standalone-v27','dataprev-sessoes-standalone-v28'],delete:async()=>true},
+    caches:{open:async()=>cache,keys:async()=>['dataprev-sessoes-standalone-v28','dataprev-sessoes-standalone-v29'],delete:async()=>true},
     fetch:async()=>{throw new Error('offline')},
     URL,Response,Request,Promise,Error
   };
@@ -203,7 +223,7 @@ async function exerciseOfflineCache(){
   await installPromise;
   assert.equal(cacheData.size,core.length);
   for(const requestUrl of [
-    `${origin}app.js?v=0713`,
+    `${origin}app.js?v=0714`,
     `${origin}planner.js?v=0713-2`,
     `${origin}prepared-sessions-loader.js?v=0713`,
     `${origin}sync-v2.js?v=0713-2`,

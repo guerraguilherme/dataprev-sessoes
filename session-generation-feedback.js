@@ -159,7 +159,7 @@
 
 // Hotfix seguro de qualidade, sem MutationObserver recursivo.
 (function(){
-  const UI_VERSION='0.7.13';
+  const UI_VERSION='0.7.14';
   const style=document.createElement('style');
   style.textContent=`
     .dp-toast{top:calc(8px + env(safe-area-inset-top))!important;bottom:auto!important;max-width:min(88vw,440px)!important;border-radius:13px!important;padding:8px 11px!important;font-size:.72rem!important;line-height:1.28!important;font-weight:700!important;opacity:.96!important}

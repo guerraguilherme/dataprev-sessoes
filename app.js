@@ -1,5 +1,5 @@
 'use strict';
-const APP_VERSION='0.7.13';
+const APP_VERSION='0.7.14';
 const CONTENT_VERSION='2026.08.20-sessoes-16';
 const STATE_MAP_KEY='dataprev_sessoes_states_v2';
 const LEGACY_STATE_KEY='dataprev_sessoes_state_v1';
@@ -171,11 +171,23 @@ function renderAdaptive(concept){
   return `<section class="adaptive"><button id="adaptiveToggle">${rec.resolved?'✓ Ajuda usada — abrir novamente':rec.autoOpened?'⚠ Resgate recomendado':'▸ Não entendi — destravar conceito'}</button><div id="adaptivePanel" class="adaptive-panel ${rec.opened?'':'hidden'}"><p class="small">${data.intro}</p><div class="reason-grid">${Object.entries(REASONS).map(([k,v])=>`<button data-reason="${k}" class="${rec.reasons.includes(k)?'active':''}">${v}</button>`).join('')}</div>${sections}${check}<div class="row" style="margin-top:10px"><button id="supportResolved" class="primary">Entendi agora</button><button id="supportClose">Fechar ajuda</button></div></div></section>`;
 }
 function conceptDone(concept){return (concept.immediate||[]).every(q=>state.immediate[q.id]?.correct)}
+function conceptDisclosureText(concept,kind){
+  const support=concept?.supportDetails||{};
+  const values=kind==='connection'
+    ?[concept?.connection,support.connection]
+    :[concept?.trap,support.trap,concept?.commonError,support.commonError];
+  return [...new Set(values.map(value=>String(value||'').trim()).filter(Boolean))].join(' ');
+}
+function renderConceptDisclosure(concept,kind,label){
+  const text=conceptDisclosureText(concept,kind);
+  if(!text)return'';
+  return `<details class="info ${kind} concept-disclosure"><summary>${esc(label)}</summary><div class="concept-disclosure-body">${esc(text)}</div></details>`;
+}
 function renderConcept(){
   show('studyPanel');const concept=session.concepts[state.conceptIndex];
   $('studyKicker').textContent=`Conceito ${state.conceptIndex+1} de ${session.concepts.length}`;$('studyTitle').textContent=concept.title;
   const exercises=(concept.immediate||[]).map((q,n)=>{const rec=state.immediate[q.id]||{};return `<div class="exercise"><h3>Fixação imediata ${n+1}</h3><p>${esc(q.prompt)}</p>${q.options.map((o,i)=>{let cls='alt';if(rec.selected===i)cls+=' selected';if(rec.correct&&i===q.answer)cls+=' correct';if(rec.lastWrong===i)cls+=' wrong';return `<button class="${cls}" data-immediate="${q.id}" data-index="${i}" ${rec.correct?'disabled':''}>${String.fromCharCode(65+i)}. ${esc(o)}</button>`}).join('')}${rec.correct?`<div class="feedback ok">Correto. ${esc(q.explanation)}</div>`:rec.lastWrong!==undefined?`<div class="feedback bad">Ainda não. ${esc(q.explanation)} Tente novamente.</div>`:''}</div>`}).join('');
-  $('studyBody').innerHTML=`<div class="info concept"><b>O que preciso saber</b><br>${esc(concept.what)}</div><div class="info concept"><b>Explicação objetiva</b><br>${esc(concept.explanation)}</div>${concept.code?`<pre>${esc(concept.code)}</pre>`:''}<div class="info connection"><b>Conexão com o que você já estudou</b><br>${esc(concept.connection)}</div><div class="info trap"><b>Pegadinha e erro comum</b><br>${esc(concept.trap)}</div>${renderAdaptive(concept)}${exercises}<details style="margin-top:12px"><summary>Minha nota sobre este conceito</summary><textarea id="conceptNote">${esc(state.notes[concept.id]||'')}</textarea></details><div class="row" style="margin-top:14px"><button id="prevConcept" ${state.conceptIndex===0?'disabled':''}>Anterior</button><button id="nextConcept" class="primary">${state.conceptIndex===session.concepts.length-1?'Ir para questões finais':'Próximo conceito'}</button></div>`;
+  $('studyBody').innerHTML=`<div class="info concept"><b>O que preciso saber</b><br>${esc(concept.what)}</div><div class="info concept"><b>Explicação objetiva</b><br>${esc(concept.explanation)}</div>${concept.code?`<pre>${esc(concept.code)}</pre>`:''}${renderConceptDisclosure(concept,'connection','Conexão com o que você já estudou')}${renderConceptDisclosure(concept,'trap','Pegadinha e erro comum')}${renderAdaptive(concept)}${exercises}<details style="margin-top:12px"><summary>Minha nota sobre este conceito</summary><textarea id="conceptNote">${esc(state.notes[concept.id]||'')}</textarea></details><div class="row" style="margin-top:14px"><button id="prevConcept" ${state.conceptIndex===0?'disabled':''}>Anterior</button><button id="nextConcept" class="primary">${state.conceptIndex===session.concepts.length-1?'Ir para questões finais':'Próximo conceito'}</button></div>`;
   document.querySelectorAll('[data-immediate]').forEach(btn=>btn.onclick=()=>answerImmediate(btn.dataset.immediate,Number(btn.dataset.index)));
   $('conceptNote').oninput=e=>{state.notes[concept.id]=e.target.value;saveState()};
   $('prevConcept').onclick=()=>{state.conceptIndex--;saveState();render();scrollTop()};
