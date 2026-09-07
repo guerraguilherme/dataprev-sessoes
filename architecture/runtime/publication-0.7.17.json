@@ -1,0 +1,36 @@
+{
+  "runtime_version": "0.7.17",
+  "published": true,
+  "runtime_commit": "b58649cf6bcf58e2f947f332e998f2833c5790a5",
+  "implementation_commit": "9542340fce60e0fe33a935427cfd99201d183f96",
+  "pull_request": 2,
+  "canonical_url": "https://guerraguilherme.github.io/dataprev-sessoes/",
+  "pages_run": 34070947566,
+  "pages_conclusion": "success",
+  "authorization": "User requested continued improvement; prior explicit publication authorization persists. Local preview block was not treated as a new permission gate.",
+  "checks": {
+    "automated": 88,
+    "automated_failed": 0,
+    "live_version": "0.7.17",
+    "live_catalog_count": 29,
+    "live_offline_ready_indicator": "PASS",
+    "live_home_resume": "PASS",
+    "live_enhanced_EST_VA_001_open_pause": "PASS",
+    "visual_review_390px_static_fixture": "PASS",
+    "visual_teaching_desktop_static_fixture": "PASS",
+    "observed_app_console_errors": 0,
+    "extension_errors_excluded": true
+  },
+  "limits": {
+    "physical_iphone": "NOT_EXECUTED",
+    "physical_airplane_mode": "NOT_EXECUTED",
+    "review_interaction": "tested in simulated DOM; static browser render inspected",
+    "official_backend_sync": "not exercised with learner data; complete checkpoint queue and confirmation contract covered by synthetic tests"
+  },
+  "learner_data": {
+    "official_writes": 0,
+    "live_test": "cloud-browser local test session opening/pausing only; no official sync",
+    "original_content_hashes": "29 unchanged",
+    "golden_EST_PROB_002": "mapped_validated; published=false; unchanged"
+  }
+}
