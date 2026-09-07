@@ -1,0 +1,63 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "name": "No invented review evidence from canonical completion or startup",
+      "status": "PASS"
+    },
+    {
+      "name": "All 12 transfer questions have stable IDs and complete distractor feedback",
+      "status": "PASS"
+    },
+    {
+      "name": "New order removes uniform position patterns while preserving canonical answer identity",
+      "status": "PASS"
+    },
+    {
+      "name": "Legacy draft and answered question keep original order byte-for-byte",
+      "status": "PASS"
+    },
+    {
+      "name": "Shuffled selection records canonical index and persists shown order across confidence and report",
+      "status": "PASS"
+    },
+    {
+      "name": "Scheduling prioritizes recorded errors and spreads three items across sessions",
+      "status": "PASS"
+    },
+    {
+      "name": "Unseen enhanced content never creates a transfer assessment",
+      "status": "PASS"
+    },
+    {
+      "name": "Confident success expands interval; uncertainty and failure return next day",
+      "status": "PASS"
+    },
+    {
+      "name": "Review starts without exposing answer and requires choice confidence and explanation",
+      "status": "PASS"
+    },
+    {
+      "name": "Review draft survives pause and reload of session map without leaking report answer",
+      "status": "PASS"
+    },
+    {
+      "name": "Review correction persists separate evidence and queues the full latest checkpoint",
+      "status": "PASS"
+    },
+    {
+      "name": "Corrected review is not immediately due and report includes full evidence",
+      "status": "PASS"
+    },
+    {
+      "name": "All enhanced concepts teach before asking; original question payloads unchanged",
+      "status": "PASS"
+    },
+    {
+      "name": "A taught concept can later create a transfer question with full feedback",
+      "status": "PASS"
+    }
+  ],
+  "externalLearnerWrites": 0,
+  "environment": "simulated DOM; no physical Safari certification"
+}
