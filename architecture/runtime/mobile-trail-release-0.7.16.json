@@ -4,8 +4,8 @@
   "content_version": "2026.08.21-sessoes-17",
   "cache_version": "dataprev-sessoes-standalone-v32",
   "base_commit": "acdd1399674843517e21503382e5d52a1b884e9d",
-  "status": "CANDIDATE_AWAITING_BROWSER_QA",
-  "published": false,
+  "status": "PUBLISHED_USER_AUTHORIZED",
+  "published": true,
   "learner_state": {
     "schema_or_key_changed": false,
     "migration_performed": false,
@@ -57,5 +57,30 @@
     "AT-NEWS-001.json": "7c5c41425d2cdb5104a494cd7dc89dbcb493c5c8c645886e3a6f1354a7c30dfb",
     "PY-FUNC-001.json": "b5077170d343c18254b067d192dabfe010bff193831aa33d7538000c207dda44",
     "PY-COND-R01.json": "3870e4d0af0d0b36e74884fbde69d850d871d07e3713283cf13c63edb4774ac9"
+  },
+  "publication": {
+    "authorized_by": "explicit_user_instruction_2026-09-07",
+    "runtime_commit": "b3bb454b7b0a009097a6d0ac03f06198ae86952b",
+    "pull_request": 1,
+    "pages_run": 34069110393,
+    "pages_conclusion": "success",
+    "canonical_url": "https://guerraguilherme.github.io/dataprev-sessoes/",
+    "visual_gate_override": "User authorized publication without waiting for blocked local preview; public browser smoke subsequently passed.",
+    "public_browser_smoke": {
+      "version": "0.7.16",
+      "catalog_count": 29,
+      "offline_ready_indicator": "PASS",
+      "start_from_home": "PASS",
+      "support_expansion": "PASS",
+      "help_dialog": "PASS",
+      "pause": "PASS",
+      "reload_resume": "PASS",
+      "desktop_horizontal_overflow": false,
+      "app_console_errors_observed": 0,
+      "browser_extension_errors_excluded": true,
+      "test_state": "cloud_browser_local_only_no_official_sync"
+    },
+    "physical_safari_iphone": "NOT_EXECUTED",
+    "physical_airplane_mode": "NOT_EXECUTED"
   }
 }
