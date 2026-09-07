@@ -1,0 +1,1 @@
+{"private":true,"scripts":{"test:quality":"node study-quality.test.cjs"},"devDependencies":{"jsdom":"30.0.1"}}

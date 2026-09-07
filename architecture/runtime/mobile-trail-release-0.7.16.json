@@ -1,0 +1,61 @@
+{
+  "release_id": "DATAPREV-SESSOES-STUDY-QUALITY-0.7.16",
+  "runtime_version": "0.7.16",
+  "content_version": "2026.08.21-sessoes-17",
+  "cache_version": "dataprev-sessoes-standalone-v32",
+  "base_commit": "acdd1399674843517e21503382e5d52a1b884e9d",
+  "status": "CANDIDATE_AWAITING_BROWSER_QA",
+  "published": false,
+  "learner_state": {
+    "schema_or_key_changed": false,
+    "migration_performed": false,
+    "official_state_write_performed": false
+  },
+  "golden_sample": {
+    "session_id": "EST-PROB-002",
+    "mapping_status": "mapped_validated",
+    "published": false,
+    "certified_zip_sha256": "a08cc399bea124ea72d14ca0ab00d19ba3a2b37b3667072287faa29f84034400"
+  },
+  "artifact_sha256": {
+    "app.js": "063515ef49797eef0ce21312c01daf9c76403bf02d294f8104533bb81d9daa4b",
+    "index.html": "7347ecca4ed20ca9a5bf11469177a38824f4cff3df654f34bd59763af0974856",
+    "planner.js": "0d04adda1beca5550a6427fad4ba40bd9ce56f879bc72e9071d986e45b91e416",
+    "planner-quality-fix.js": "f7d9baaed4475b95dc6aa04935041d8ca08b51eb21e459e54728b3421f6c3ca7",
+    "prepared-sessions-loader.js": "34fe957b82200072acf54cd88f856549edcd07058670bf08faebb5d22f4c136e",
+    "service-worker.js": "e489ae5cc6219ab85893e29e83db69b07069710ba02ca3c71a861d918d50a48f",
+    "sync-v2.js": "f85b8d4ae154bc1d9cf170b22039cb41870de160a8367601e34f535e094ab420",
+    "session-generation-feedback.js": "80f27df4c2b1bdd8654265918946fbe0646aaa7c22a069a1a1e5dd162db754b3"
+  },
+  "content_sha256": {
+    "MAT-LIM-001.json": "8c05e776c43880fc98f2f0085db8ab714a886540d459c8adce9cdc38657d1f0e",
+    "PT-INT-001.json": "c10e1d1821e8db4315e87f0cf1c5346cd47d9e0f93a9bfbc2b14c0c6c5c279bf",
+    "PT-ORT-001.json": "597a2abc9edb28a6502ffeb9e531537aa1b7c4412ecd5d559d31e2faae226042",
+    "AT-NEWS-W02.json": "6247e18f76f43cb411aefc76b4fce80fba6cc09bd0eddcb9d7634a278b0ee05e",
+    "PY-LOOP-001.json": "2bb4fa8829d87407e995a625e24c131278bf35aa95634868be40920197329179",
+    "RL-TV-001.json": "1872c3c0a83be37635320088ba9f6b8f0a2f1b946afea8161aad982ac076d033",
+    "RL-PROP-001.json": "ab3f876c16711ca36775a59f78aee9b2305c0761e38225c63f34381fbba6bdb8",
+    "PY-BASE-001.json": "fb065c156759592ca7c5d24338a3342a3c5082164bfe33156789d04d4feab59e",
+    "BD-MOD-001.json": "d039822856aa905edd1b0efcc04b5d6c0069c0921daa63033e5a3ac05b52ef7e",
+    "PY-NP-001.json": "9e16dd287ddc520c04c85cdb2973c26b6d3ef2a3f1ea0f1283505f5332ffed8d",
+    "MAT-ALG-004A.json": "cadc979e84f563b11ac93a0af2122b98dd0afebf81d0461d609a08c71de3cda3",
+    "MAT-FUNC-001.json": "16c437e0d5d73a6cd0a9d4a6e5039337cc21adfa735048cce1499a0155af0845",
+    "LEG-LAI-001.json": "f783a6b8faf0328142b2d112ae957b63724f33fa90114f19fff938b7bbb42f9e",
+    "ML-BASE-001.json": "d9888e3c854f6bdd712977ca0e3edd8a8834472cb569b269fcd7c99e879be258",
+    "MAT-ALG-002.json": "2b1e515523463eed5bbf886f0621ea1c89bc61e39edee2e4770044eb507aea88",
+    "PT-GEN-001.json": "7934facab04b374332db2ffb8e4fe2927a0fe1d91c89f70043a1b55b0d71bfe7",
+    "sessions.json": "e0e419a03eefb5168507f9e53402db8b76300d7ec328e573da42aae3ffad6c32",
+    "EN-TEXT-001.json": "bab0b1adf3a725f41504e5cb9ad70f6186dc8d43516728fb817e6203254b86b2",
+    "BD-NORM-002.json": "e6ada0629c501749ac4be05d5ade6c10a00d8e1d39f6b6ade81807062217d677",
+    "PY-COLL-001.json": "e839ff75058d41e43780470149c93767229606751ea80d933a1f95d2ee87f5c7",
+    "LEG-D7724-001.json": "32a8e3fa4144d0f798c8a681c41c6899a90b314cda52b3b018ac6c125d1a9c72",
+    "PT-COE-001.json": "c8a812a4f6b2678d4e659b6f9c33f9355aae199d3a316a76b14d82d086aed908",
+    "ML-MET-001.json": "4a5de59f11af385c16f467d15efb11168fc27b1353e291ba5aed823dfce54bfb",
+    "LEG-LAI-002.json": "8bd885fd30c35f6a0f682225eb745022018d76a956c666b532396530b3ba52b8",
+    "EST-PROB-001.json": "495b340c4bddbb3a5fe44e2fce6c2e991d151e24e7155d304a134335762120fd",
+    "EST-VA-001.json": "88b48319ac5fe2813f530e5b8784bd929a35f91ca7da529d66d623989c2192ff",
+    "AT-NEWS-001.json": "7c5c41425d2cdb5104a494cd7dc89dbcb493c5c8c645886e3a6f1354a7c30dfb",
+    "PY-FUNC-001.json": "b5077170d343c18254b067d192dabfe010bff193831aa33d7538000c207dda44",
+    "PY-COND-R01.json": "3870e4d0af0d0b36e74884fbde69d850d871d07e3713283cf13c63edb4774ac9"
+  }
+}

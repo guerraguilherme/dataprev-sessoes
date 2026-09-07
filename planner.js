@@ -225,8 +225,29 @@ function renderPlannerSession(row){
   return `<article class="road-session ${st==='bloqueada'?'locked':''}${current}" data-road-id="${esc(row.id)}"><div class="road-top"><div><div class="road-code">${esc(row.id)}</div><div class="road-title">${esc(row.title)}</div><div class="road-topic">${esc(row.topic)}</div></div>${chip(st)}</div><div class="road-actions">${actions}</div>${st==='bloqueada'&&used>=MANUAL_LIMIT?'<div class="prepare-note">Limite de 2 sessões antecipadas atingido.</div>':''}</article>`;
 }
 
+function studySuggestion(){
+  const map=readMap();
+  const ongoing=(catalog.sessions||[]).filter(s=>map[s.id]?.startedAt&&!map[s.id]?.completedAt&&sessionLocalStatus(s.id)!=='concluida').sort((a,b)=>(map[b.id]?.lastTick||0)-(map[a.id]?.lastTick||0));
+  if(ongoing.length)return {material:ongoing[0],resume:true};
+  const preferred=localStorage.getItem(PLANNER_OPEN_KEY);
+  const disciplines=[...new Set([preferred,...DISCIPLINE_ORDER].filter(Boolean))];
+  for(const d of disciplines){const row=roadmapRows(d).find(r=>sessionLocalStatus(r.id)==='pronta');if(row)return {material:catalogById().get(row.id),resume:false}}
+  return null;
+}
+function renderStudyFocus(){
+  const el=document.getElementById('studyFocus');if(!el)return;
+  const next=studySuggestion();
+  if(!next){el.classList.add('hidden');return}
+  el.classList.remove('hidden');
+  const s=next.material,record=readMap()[s.id],position=Math.min((record?.conceptIndex||0)+1,s.concepts?.length||1);
+  const detail=next.resume?(record?.phase==='final'||Object.keys(record?.final||{}).length?'Retome suas questões finais.':`Você parou no conceito ${position} de ${s.concepts.length}.`):'Comece por um conceito. Você pode pausar e continuar depois.';
+  el.innerHTML=`<div class="kicker">${next.resume?'Continue de onde parou':'Um conceito de cada vez'}</div><h1>${esc(s.title)}</h1><p>${esc(detail)}</p><button id="focusContinue" class="primary">${next.resume?'Continuar estudo':'Estudar próximo conceito'}</button><p class="small">${esc(s.discipline)} · Você também pode escolher outra sessão na Trilha.</p>`;
+  document.getElementById('focusContinue').onclick=()=>openSession(s.id);
+}
+
 function renderHome(){
   show('homePanel');
+  renderStudyFocus();
   const meta=plannerMeta(),openSaved=localStorage.getItem(PLANNER_OPEN_KEY)||'';
   const blocks=DISCIPLINE_ORDER.map(d=>{
     const rows=roadmapRows(d),counts=rows.reduce((a,r)=>{const s=sessionLocalStatus(r.id);a[s]=(a[s]||0)+1;return a},{}) ,open=openSaved===d;
@@ -234,9 +255,9 @@ function renderHome(){
     return `<section class="discipline-block ${open?'open':''}" data-discipline="${esc(d)}"><button class="discipline-toggle" data-toggle-discipline="${esc(d)}"><div class="discipline-main"><div class="discipline-name">${esc(d)}</div><div class="discipline-summary">${done} concluída${done===1?'':'s'} · ${available} disponível${available===1?'':'eis'}${pending?` · ${pending} em preparação`:''} · ${blocked} bloqueada${blocked===1?'':'s'}</div><div class="mini-progress"><span style="width:${rows.length?100*done/rows.length:0}%"></span></div></div><div class="discipline-right"><span class="pill">${done}/${rows.length}</span><span class="discipline-chevron">⌄</span></div></button><div class="discipline-body"><div class="discipline-scroll">${rows.length?rows.map(renderPlannerSession).join(''):'<div class="road-empty">Nenhuma sessão planejada.</div>'}</div></div></section>`;
   }).join('');
   const used=manualUsed();
-  const deliveryText=DP_GATED_DELIVERY_ONLY?'Cada disciplina mantém sua própria sequência. Novas sessões aparecem somente depois da liberação pelos gates da Content Factory.':'Cada disciplina mantém sua própria sequência. A próxima pode ficar pronta enquanto você estuda, e sessões futuras podem ser antecipadas manualmente.';
-  const deliveryBadge=DP_GATED_DELIVERY_ONLY?'Entrega validada':`Antecipações: ${used}/${MANUAL_LIMIT}`;
-  $('catalogCard').innerHTML=`<div class="catalog-shell"><div class="catalog-head"><div><div class="kicker">Trilha por disciplina</div><h1>Sessões</h1><p class="small">${deliveryText}</p></div><span class="pill manual-counter">${deliveryBadge}</span></div><div class="discipline-list">${blocks}</div><div class="small">Mapa pedagógico auditado: ${meta.done}/${meta.total} sessões planejadas concluídas. A quantidade continua variável e pode crescer com sessões extras e ajustes pedagógicos.</div></div>`;
+  const deliveryText=DP_GATED_DELIVERY_ONLY?'Escolha uma disciplina e siga a sequência. As sessões prontas já podem ser estudadas; as demais aguardam preparação.':'Cada disciplina mantém sua própria sequência. A próxima pode ficar pronta enquanto você estuda, e sessões futuras podem ser antecipadas manualmente.';
+  const deliveryBadge=DP_GATED_DELIVERY_ONLY?'Material disponível':`Antecipações: ${used}/${MANUAL_LIMIT}`;
+  $('catalogCard').innerHTML=`<div class="catalog-shell"><div class="catalog-head"><div><div class="kicker">Trilha por disciplina</div><h1>Sessões</h1><p class="small">${deliveryText}</p></div><span class="pill manual-counter">${deliveryBadge}</span></div><div class="discipline-list">${blocks}</div><div class="small">${meta.done}/${meta.total} sessões do planejamento concluídas. Essa contagem não mede domínio nem percentual de cobertura do edital.</div></div>`;
   document.querySelectorAll('[data-toggle-discipline]').forEach(btn=>btn.onclick=()=>toggleDiscipline(btn.dataset.toggleDiscipline));
   document.querySelectorAll('[data-open-session]').forEach(btn=>btn.onclick=()=>openSession(btn.dataset.openSession));
   document.querySelectorAll('[data-prepare-session]').forEach(btn=>btn.onclick=()=>confirmPrepare(btn.dataset.prepareSession));

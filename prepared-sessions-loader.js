@@ -57,15 +57,26 @@
   const baseApply=typeof applyCatalog==='function'?applyCatalog:null;
   if(baseApply){applyCatalog=function(nextCatalog,opts={}){return baseApply(mergeInto(nextCatalog),opts)}}
 
-  Promise.all(SOURCES.map(async source=>{
+  function loadPrepared(){return Promise.allSettled(SOURCES.map(async source=>{
     const r=await fetch(`./${source.file}?v=20260821-17`,{cache:'no-store'});
     if(!r.ok)throw new Error(`${source.file}: HTTP ${r.status}`);
     const raw=await r.json();
     const session=canonicalize(raw,source);
     assertRoadmapIdentity(session,source);
     return session;
-  })).then(items=>{
-    items.forEach(s=>ready.set(s.id,s));
-    if(typeof catalog!=='undefined'&&catalog?.sessions){catalog=mergeInto(catalog);if(typeof render==='function')render()}
-  }).catch(err=>console.warn('Buffer de sessões preparadas não carregado:',err));
+  })).then(results=>{
+    const failures=[];
+    results.forEach((result,i)=>{if(result.status==='fulfilled'){const s=result.value;ready.set(s.id,s)}else failures.push(SOURCES[i].file)});
+    if(typeof catalog!=='undefined'&&catalog?.sessions){
+      catalog=mergeInto(catalog);
+      const summary=document.getElementById('contentSummary');
+      if(summary)summary.textContent=`${catalog.contentVersion} · ${catalog.sessions.length} sessões · PWA ${APP_VERSION}`;
+      // Só atualizar a Home: carregar um arquivo não pode apagar um rascunho
+      // nem recolher um apoio aberto durante uma sessão.
+      if(typeof renderHome==='function'&&!document.getElementById('homePanel')?.classList.contains('hidden'))renderHome();
+    }
+    if(failures.length&&typeof setStatus==='function')setStatus(`${failures.length} material(is) não carregaram. Os demais continuam disponíveis. Use Buscar sessões para tentar novamente.`,'bad');
+  }).catch(err=>console.warn('Buffer de sessões preparadas não carregado:',err))}
+  window.DP_reloadPreparedSessions=loadPrepared;
+  void loadPrepared();
 })();

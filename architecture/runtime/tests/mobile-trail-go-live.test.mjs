@@ -23,7 +23,7 @@ const manifest=json('manifest.webmanifest');
 const session=json('EST-VA-001.json');
 const staged=json('architecture/foundation-v2/pilot/staged/EST-VA-001.staged.json');
 const bridge=json('architecture/runtime/content-factory-v3-pwa-bridge-v1.json');
-const release=json('architecture/runtime/mobile-trail-release-0.7.15.json');
+const release=json('architecture/runtime/mobile-trail-release-0.7.16.json');
 
 const sourcesLiteral=loader.match(/const SOURCES=(\[[\s\S]*?\n  \]);/)?.[1];
 assert.ok(sourcesLiteral,'SOURCES não encontrado');
@@ -33,11 +33,11 @@ assert.ok(coreLiteral,'CORE não encontrado');
 const core=vm.runInNewContext(coreLiteral);
 
 check('VERSIONS_ALIGNED',()=>{
-  assert.match(app,/const APP_VERSION='0\.7\.15'/);
+  assert.ok(app.includes(`const APP_VERSION='${release.runtime_version}'`));
   assert.match(app,/const CONTENT_VERSION='2026\.08\.21-sessoes-17'/);
   assert.match(loader,/contentVersion:'2026\.08\.21-sessoes-17'/);
-  assert.match(index,/PWA 0\.7\.15/);
-  assert.equal(release.runtime_version,'0.7.15');
+  assert.ok(index.includes(`PWA ${release.runtime_version}`));
+  assert.equal(release.runtime_version,'0.7.16');
   assert.equal(release.content_version,'2026.08.21-sessoes-17');
   for(const [relative,expected] of Object.entries(release.artifact_sha256||{})){
     assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(root,relative))).digest('hex'),expected,`hash divergente: ${relative}`);
@@ -96,7 +96,7 @@ check('PWA_INSTALL_CONTRACT',()=>{
   assert.equal(manifest.scope,'./');
   assert.equal(manifest.display,'standalone');
   assert.match(index,/<link rel="icon" href="\.\/icons\/icon-192\.png" type="image\/png">/);
-  assert.match(sw,/CACHE_NAME='dataprev-sessoes-standalone-v30'/);
+  assert.ok(sw.includes(`CACHE_NAME='${release.cache_version}'`));
   assert.equal(core.filter(x=>x==='./EST-VA-001.json').length,1);
   assert.match(sw,/cache\.match\(request,\{ignoreSearch:true\}\)/);
   for(const asset of core){
@@ -112,13 +112,13 @@ check('GATED_DELIVERY_ONLY',()=>{
   assert.match(planner,/const DP_GATED_DELIVERY_ONLY=true/);
   assert.match(planner,/if\(DP_GATED_DELIVERY_ONLY\)return'bloqueada'/);
   assert.match(planner,/Aguardando liberação/);
-  assert.match(planner,/Entrega validada/);
-  assert.match(planner,/liberação pelos gates da Content Factory/);
+  assert.match(planner,/Material disponível/);
+  assert.match(planner,/sessões prontas já podem ser estudadas/);
   assert.doesNotMatch(index,/antecipadas manualmente/);
   assert.match(read('sync-v2.js'),/aguardando liberação/);
   assert.match(lifecycle,/if\(gatedDeliveryOnly\)return/);
   assert.match(feedback,/DP_GATED_DELIVERY_ONLY/);
-  assert.match(feedback,/const UI_VERSION='0\.7\.15'/);
+  assert.match(feedback,/const UI_VERSION=APP_VERSION/);
   assert.doesNotMatch(homeNav,/session-generation-relay-hotfix\.js/);
   assert.equal(bridge.invariants.no_mobile_content_generation,true);
   assert.equal(bridge.invariants.automatic_next_session_generation,false);
@@ -155,6 +155,7 @@ async function exerciseLoader(){
   const roadmapIds=sources.map(source=>source.canonicalId||json(source.file).id);
   const warnings=[];
   const context={
+    window:{},document:{getElementById:()=>null},APP_VERSION:release.runtime_version,
     ROADMAP:{Todos:roadmapIds.map(id=>[id,id,'teste'])},
     catalog:{contentVersion:'base',sessions:[]},
     applyCatalog(next){context.catalog=next;return next},
@@ -179,6 +180,13 @@ async function exerciseLoader(){
   assert.equal(context.catalog.sessions.filter(x=>x.id==='NP-001').length,1);
   assert.equal(context.catalog.contentVersion,'2026.08.21-sessoes-17');
   assert.equal(context.catalog.sessions.some(x=>x.id==='EST-PROB-002'),false);
+  const faulty={...context,catalog:{sessions:[]},window:{},setStatus:()=>{}};
+  faulty.fetch=async url=>String(url).includes('ML-MET-001')?{ok:false,status:503}:context.fetch(url);
+  vm.runInNewContext(loader,faulty);
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(faulty.catalog.sessions.length,sources.length-1,'falha isolada não pode apagar outros materiais');
+  assert.equal(faulty.catalog.sessions.some(s=>s.id==='EST-VA-001'),true);
+
 }
 
 await exerciseLoader();
@@ -225,10 +233,12 @@ async function exerciseOfflineCache(){
     URL,Response,Request,Promise,Error
   };
   vm.runInNewContext(`${sw}\nthis.__sw={CACHE_NAME,CORE,networkFirst};`,context,{filename:'service-worker.js'});
+  let beforeCheck;const readiness=[];listeners.message({data:{type:'DP_CHECK_OFFLINE'},source:{postMessage:m=>readiness.push(m)},waitUntil:p=>beforeCheck=p});await beforeCheck;assert.equal(readiness.at(-1).ready,false);
   let installPromise;
   listeners.install({waitUntil(value){installPromise=value}});
   await installPromise;
   assert.equal(cacheData.size,core.length);
+  let afterCheck;listeners.message({data:{type:'DP_CHECK_OFFLINE'},source:{postMessage:m=>readiness.push(m)},waitUntil:p=>afterCheck=p});await afterCheck;assert.equal(readiness.at(-1).ready,true);
   for(const requestUrl of [
     `${origin}app.js?v=0715`,
     `${origin}planner.js?v=0713-2`,

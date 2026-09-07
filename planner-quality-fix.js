@@ -24,12 +24,5 @@
   }
   fixAvailabilityGrammar();
 
-  // Carrega a UX de ajuda das Sessões em camada própria, para poder evoluir
-  // sem mexer no motor de progresso/checkpoint.
-  if(!document.querySelector('script[data-session-support-ux]')){
-    const s=document.createElement('script');
-    s.src='./session-support-ux.js?v=20260808-01';
-    s.dataset.sessionSupportUx='1';
-    document.head.appendChild(s);
-  }
+  // session-support-ux.js é carregado uma única vez, na ordem do index.html.
 })();
