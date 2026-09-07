@@ -1,0 +1,13 @@
+{
+  "guide_count": 12,
+  "transfer_items": 12,
+  "python_guide_examples_executed": 6,
+  "numpy_transfer_checks": 6,
+  "probability_checks": 3,
+  "manual_conceptual_review": "discrete vs continuous, sample-space mapping, conditional denominator, source independence and no question-answer preview",
+  "status": "PASS",
+  "sources": [
+    "https://numpy.org/doc/stable/user/absolute_beginners.html",
+    "https://docs.python.org/3/tutorial/controlflow.html"
+  ]
+}

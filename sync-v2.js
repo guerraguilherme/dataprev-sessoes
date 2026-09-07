@@ -31,11 +31,12 @@ function dpUpdateSyncBadge(){
   badge.textContent='Sync local';
 }
 
-function dpSnapshotCurrent(reason='state_change'){
-  if(!state?.sessionId||!state.startedAt)return;
-  const q=dpReadQueue();q[state.sessionId]={sessionId:state.sessionId,stateJson:JSON.stringify(state),contentVersion:catalog?.contentVersion||state.contentVersion||'',queuedAt:new Date().toISOString(),reason};
-  dpWriteQueue(q);dpScheduleFlush(state.completedAt||state.phase==='complete'?1200:DP_SYNC_NORMAL_DELAY);
+function dpQueueSessionSnapshot(record,reason='state_change'){
+  if(!record?.sessionId||!record.startedAt)return;
+  const q=dpReadQueue();q[record.sessionId]={sessionId:record.sessionId,stateJson:JSON.stringify(record),contentVersion:catalog?.contentVersion||record.contentVersion||'',queuedAt:new Date().toISOString(),reason};
+  dpWriteQueue(q);dpScheduleFlush(record.completedAt||record.phase==='complete'?1200:DP_SYNC_NORMAL_DELAY);
 }
+function dpSnapshotCurrent(reason='state_change'){dpQueueSessionSnapshot(state,reason)}
 function dpScheduleFlush(delay=DP_SYNC_NORMAL_DELAY){if(dpSyncTimer)return;dpSyncTimer=setTimeout(()=>{dpSyncTimer=null;dpFlushQueue()},delay)}
 async function dpFlushQueue(){
   if(dpSyncRunning)return;const cfg=readConfig(),queue=dpReadQueue();

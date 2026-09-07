@@ -23,7 +23,7 @@ check('all 156 concepts render without initial answer leakage',()=>{
  }
  assert.equal(count,156);
 });
-check('existing guided example appears before the exercise',()=>{run("session=catalog.sessions.find(s=>s.id==='EST-VA-001');state=freshState(session.id);state.phase='concepts';renderConcept()");assert.match(w.document.querySelector('.concept-example').textContent,/Duas moedas/);assert(w.document.querySelector('.concept-example').compareDocumentPosition(w.document.querySelector('.exercise'))&4)});
+check('existing guided example appears before the exercise',()=>{run("session=catalog.sessions.find(s=>s.id==='EST-VA-001');state=freshState(session.id);state.phase='concepts';renderConcept()");assert.match(w.document.querySelector('.learning-guide, .concept-example').textContent,/Duas moedas/);assert(w.document.querySelector('.learning-guide, .concept-example').compareDocumentPosition(w.document.querySelector('.exercise'))&4)});
 run("session=catalog.sessions.find(s=>s.id==='PY-LOOP-001');state=freshState(session.id);state.phase='concepts';state.startedAt='2026-09-06T10:00:00.000Z';renderConcept()");
 check('wrong then correct preserves first attempt',()=>{
  const q=run('session.concepts[0].immediate[0]');const wrong=(q.answer+1)%q.options.length;
@@ -62,6 +62,6 @@ check('old sync acknowledgement preserves new same-session and other-session sna
 run(`dpWriteQueue({A:{stateJson:'sent',queuedAt:'sent',contentVersion:'v'}});jsonp=async()=>({found:true,checksum:'hash-sent'})`);await run('dpFlushQueue()');
 check('exact confirmed snapshot leaves queue',()=>assert.equal(run('dpQueueCount()'),0));
 assert.equal(errors.length,0,errors.join('\n'));
-fs.writeFileSync(process.env.DATAPREV_QA_OUTPUT||path.join(root,'architecture/runtime/study-quality-qa-0.7.16.json'),JSON.stringify({ok:true,checks,externalLearnerWrites:0,environment:'jsdom simulated DOM; not Safari or visual-browser certification'},null,2));
+fs.writeFileSync(process.env.DATAPREV_QA_OUTPUT||path.join(root,'architecture/runtime/study-quality-qa-0.7.17.json'),JSON.stringify({ok:true,checks,externalLearnerWrites:0,environment:'jsdom simulated DOM; not Safari or visual-browser certification'},null,2));
 console.log(JSON.stringify({ok:true,checks},null,2));process.exit(0);
 })().catch(e=>{console.error(e);process.exit(1)});
