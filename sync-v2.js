@@ -32,7 +32,7 @@ function dpUpdateSyncBadge(){
 }
 
 function dpSnapshotCurrent(reason='state_change'){
-  if(!state?.sessionId)return;
+  if(!state?.sessionId||!state.startedAt)return;
   const q=dpReadQueue();q[state.sessionId]={sessionId:state.sessionId,stateJson:JSON.stringify(state),contentVersion:catalog?.contentVersion||state.contentVersion||'',queuedAt:new Date().toISOString(),reason};
   dpWriteQueue(q);dpScheduleFlush(state.completedAt||state.phase==='complete'?1200:DP_SYNC_NORMAL_DELAY);
 }
@@ -41,12 +41,18 @@ async function dpFlushQueue(){
   if(dpSyncRunning)return;const cfg=readConfig(),queue=dpReadQueue();
   if(!Object.keys(queue).length){dpUpdateSyncBadge();return}
   if(!navigator.onLine||!cfg.endpoint||!cfg.token||!cfg.deviceId){dpUpdateSyncBadge();dpScheduleFlush(DP_SYNC_RETRY_DELAY);return}
-  dpSyncRunning=true;dpUpdateSyncBadge();const remaining={...queue};
+  dpSyncRunning=true;dpUpdateSyncBadge();
   try{for(const [id,item] of Object.entries(queue)){const checksum=await sha256(item.stateJson);try{
     void fetch(cfg.endpoint,{method:'POST',mode:'no-cors',cache:'no-store',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'push_session_state',token:cfg.token,device_id:cfg.deviceId,app_version:APP_VERSION,content_version:item.contentVersion,session_id:id,checksum,state_json:item.stateJson})}).catch(()=>{});
     let confirmed=null;for(let attempt=0;attempt<5&&!confirmed;attempt++){await new Promise(r=>setTimeout(r,attempt===0?900:1400));try{const meta=await jsonp(cfg.endpoint,{action:'session_state_meta',token:cfg.token,device_id:cfg.deviceId,session_id:id},9000);if(meta?.found&&meta.checksum===checksum)confirmed=meta}catch{}}
-    if(confirmed){delete remaining[id];localStorage.setItem(DP_SYNC_META_KEY,JSON.stringify({lastConfirmedAt:confirmed.updated_at||new Date().toISOString(),sessionId:id}))}
-  }catch(error){console.warn('Auto-sync não confirmado para',id,error)}}}finally{dpWriteQueue(remaining);dpSyncRunning=false;if(Object.keys(remaining).length)dpScheduleFlush(DP_SYNC_RETRY_DELAY)}
+    if(confirmed){
+      // A confirmação só quita o snapshot enviado. Uma nova resposta pode ter
+      // entrado na fila enquanto a rede aguardava a confirmação.
+      const current=dpReadQueue();
+      if(current[id]?.stateJson===item.stateJson&&current[id]?.queuedAt===item.queuedAt){delete current[id];dpWriteQueue(current)}
+      localStorage.setItem(DP_SYNC_META_KEY,JSON.stringify({lastConfirmedAt:confirmed.updated_at||new Date().toISOString(),sessionId:id}));
+    }
+  }catch(error){console.warn('Auto-sync não confirmado para',id,error)}}}finally{dpSyncRunning=false;dpUpdateSyncBadge();if(dpQueueCount())dpScheduleFlush(DP_SYNC_RETRY_DELAY)}
 }
 
 const dpBaseSaveState=saveState;
@@ -61,7 +67,7 @@ renderPlannerSession=function(row){
 
 function dpSetHomeDashboard(){
   const rows=Object.values(ROADMAP).flat(),statuses=rows.map(r=>sessionLocalStatus(r[0]));
-  const done=statuses.filter(s=>s==='concluida').length,ready=statuses.filter(s=>s==='pronta').length,course=statuses.filter(s=>s==='em_curso').length,pending=statuses.filter(s=>s==='pendente_geracao').length;
+  const done=statuses.filter(s=>s==='concluida').length,ready=statuses.filter(s=>s==='pronta').length,course=statuses.filter(s=>s==='em_curso').length,pending=statuses.filter(s=>s==='pendente_geracao'||(DP_GATED_DELIVERY_ONLY&&s==='bloqueada')).length;
   const labels=document.querySelectorAll('.stats .stat span');
   if(labels.length>=4){labels[0].textContent='sessões concluídas';labels[1].textContent='prontas';labels[2].textContent='em curso';labels[3].textContent=typeof DP_GATED_DELIVERY_ONLY!=='undefined'&&DP_GATED_DELIVERY_ONLY?'aguardando liberação':'aguardando geração'}
   $('conceptStat').textContent=`${done}/${rows.length}`;$('immediateStat').textContent=ready;$('finalStat').textContent=course;$('timeStat').textContent=pending;
@@ -75,14 +81,22 @@ renderHome=function(){dpBasePlannerRenderHome();dpSetHomeDashboard();dpUpdateSyn
 // repintar o painel com os dados da última sessão aberta.
 const dpBaseRenderStats=renderStats;
 renderStats=function(){
-  if(dpHomeVisible()){dpSetHomeDashboard();return}
+  if(dpHomeVisible())return;
   const labels=document.querySelectorAll('.stats .stat span');
   if(labels.length>=4){labels[0].textContent='conceitos';labels[1].textContent='fixações';labels[2].textContent='questões finais';labels[3].textContent='tempo ativo'}
   dpBaseRenderStats();
 };
 
-const dpBaseSyncNow=syncNow;
-syncNow=async function(){await dpFlushQueue();return dpBaseSyncNow()};
+syncNow=async function(){
+  const cfg=readConfig();
+  if(!cfg.endpoint||!cfg.token||!cfg.deviceId)return setStatus('Configure a sincronização para enviar o progresso. O estudo continua salvo neste aparelho.','');
+  if(dpSyncRunning)return setStatus('A sincronização já está em andamento.','');
+  if(state?.startedAt){updateClock();dpSnapshotCurrent('manual_sync')}
+  $('syncBtn').disabled=true;setStatus('Sincronizando checkpoints…');
+  try{await dpFlushQueue();setStatus(dpQueueCount()?'Ainda há alterações aguardando confirmação. O progresso local está salvo.':'Checkpoints confirmados.','');dpUpdateSyncBadge()}
+  finally{$('syncBtn').disabled=false}
+};
+$('syncBtn').onclick=()=>syncNow();
 window.addEventListener('online',()=>{dpUpdateSyncBadge();dpScheduleFlush(800)});window.addEventListener('offline',dpUpdateSyncBadge);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){dpSnapshotCurrent('background');dpFlushQueue()}else dpUpdateSyncBadge()});
 window.addEventListener('pagehide',()=>{dpSnapshotCurrent('pagehide');dpFlushQueue()});
