@@ -3,7 +3,7 @@
   "runtime_version": "0.8.0",
   "content_version": "2026.08.21-sessoes-17",
   "teaching_layer_version": "1.0.0",
-  "cache_version": "dataprev-sessoes-standalone-v36",
+  "cache_version": "dataprev-sessoes-standalone-v37",
   "base_commit": "09bf45bd1689b0c81fa5fd8cd45b4d2604d510eb",
   "status": "AUTHORIZED_FOR_PUBLICATION",
   "published": false,
@@ -23,8 +23,8 @@
   },
   "artifact_sha256": {
     "app.js": "12bcdb374eb21d0e253c47f0cdb1e354fe6eb10a34770cf765dac6541b2685f7",
-    "index.html": "40dd44c06e71896496ef061d9333d99489a1f5a3b1b50d469378934d8a6e88d5",
-    "experience.js": "85ec7495fb5772c37658de70fe8b4a644ec711192bf2270d576feacf72aa46f6",
+    "index.html": "13054c6ba62c9dced1f093cb702769ab4431013341c52642355bf4706e5a3e3f",
+    "experience.js": "8bd7e72ab483e61720e729ab4c465157905fa7c2d310ecd50132bf75c9a1670b",
     "experience.css": "05946d786ba4ec48aa7cad4faecf8970926472872d08fd4bae7734ec3163f94b",
     "sync-v2.js": "a139867df836e2009a98560bcb2f8312c29174ef15128c5b6f74bb3c50db7f36",
     "simulados.js": "ddc9b42a900b1e59a53d0939feadb216504650c7526b4c1bc67b2dea6707c191",
@@ -33,7 +33,8 @@
     "session-lifecycle.js": "38804d59d594a324c9042c5ecd86281cb25dc12dc6358600a765cf46c27ad720",
     "session-home-nav.js": "ed5a6ee129463b145b3b9feadeffb75d6d17b72ba01b34c40c3907a15aa2b779",
     "session-support-ux.js": "e7a2e0b2f872e4d41b2a4ca2fc48908744bb670cbcf3579e0ff893033d25122e",
-    "service-worker.js": "4ed974798811ee81f058aae278c3c760d7276317a7030e327021ffb8bc485f77"
+    "service-worker.js": "ad11487712b5efacf5668762827c5e821229b30fee02cba2b70229ea1085f5d8",
+    "study-coach.js": "1812bc125b40b8507667491d7f5f121ba8bc097b312b891a72919f63f8234aed"
   },
   "content_sha256": {
     "MAT-LIM-001.json": "8c05e776c43880fc98f2f0085db8ab714a886540d459c8adce9cdc38657d1f0e",

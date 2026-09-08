@@ -61,7 +61,7 @@
       block.querySelector('[data-toggle-discipline]')?.setAttribute('aria-expanded',String(open));
     });
     document.querySelectorAll('[data-trail-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.trailFilter===filter)));
-    const result=document.getElementById('trailResult');if(result)result.textContent=total?`${total} sessão${total===1?'':'ões'} nesta seleção.${filter==='available'?' Inclui resultados já registrados.':''}`:'Nenhuma sessão nesta seleção. Tente outro termo ou filtro.';
+    const result=document.getElementById('trailResult');if(result)result.textContent=total?`${total} ${total===1?'sessão':'sessões'} nesta seleção.${filter==='available'?' Inclui resultados já registrados.':''}`:'Nenhuma sessão nesta seleção. Tente outro termo ou filtro.';
   }
   const baseToggle=toggleDiscipline;
   toggleDiscipline=function(name){baseToggle(name);document.querySelectorAll('[data-toggle-discipline]').forEach(b=>b.setAttribute('aria-expanded',String(b.closest('.discipline-block').classList.contains('open'))))};
