@@ -6,6 +6,7 @@ A prática e as questões finais continuam obrigatórias. O sumário só abre co
 
 ## Correções operacionais
 
+- Fechar o relatório retoma o relógio somente quando a aula estava ativa antes de abri-lo; estatísticas da aula se atualizam imediatamente na entrada.
 - Atualização do catálogo preserva os objetos da aula e do rascunho ativos; bootstrap não repete uma consulta que substitui a aula. Entrega gated não consome publicação remota ad hoc.
 - Configuração de sync é validada antes da gravação, incluindo importação; entrada inválida mantém configuração anterior.
 - Status local distingue salvamento no aparelho de confirmação de sync. Erros operacionais aparecem fora de controles recolhidos.
@@ -17,7 +18,7 @@ A prática e as questões finais continuam obrigatórias. O sumário só abre co
 
 Não há migração de chaves, alterações no estado oficial do aluno nem novos campos de aprendizagem. Os 29 arquivos de conteúdo e o material certificado EST-PROB-002 permanecem inalterados. O Golden permanece mapped_validated e não publicado. O relatório recalcula apenas respostas confirmadas de simulados, sem modificar tentativas armazenadas.
 
-102 verificações automatizadas: experiência (14), qualidade das sessões (16), revisão/coach (14), entrega e cache (12), Python (8), fundação (38). Os 156 conceitos são renderizados pelo teste de qualidade. Fixtures usam dados fictícios e não enviam estado externo. O contrato de offline é exercitado em service worker simulado; não equivale a um novo teste físico em Safari/iPhone.
+104 verificações automatizadas: experiência (16), qualidade das sessões (16), revisão/coach (14), entrega e cache (12), Python (8), fundação (38). Os 156 conceitos são renderizados pelo teste de qualidade. Fixtures usam dados fictícios e não enviam estado externo. O contrato de offline é exercitado em service worker simulado; não equivale a um novo teste físico em Safari/iPhone.
 
 O validador HTML da skill lê arquivos isolados e não resolve scripts externos: index.html isolado informa quatro ausências de contrato. Com app.js e experience.js anexados à superfície, apresenta zero erros e um aviso sobre overflow; dimensões serão verificadas visualmente no browser. Não se introduz overflow-x:hidden para ocultar falhas de layout.
 

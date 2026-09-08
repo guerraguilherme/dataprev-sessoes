@@ -335,7 +335,9 @@ function buildReport(){
   const evidence=learningEvidence(session,state);out.push('\nEVIDÊNCIAS DE APRENDIZAGEM',`Fixações na primeira tentativa registrada: ${evidence.firstCorrect}/${evidence.firstKnown}`,`Acertos após feedback: ${evidence.correctAfterFeedback}`,`Finais incorretas: ${evidence.wrongFinal}`,`Finais corretas com segurança/justificativa a revisar: ${evidence.uncertainFinal}`,`Conceitos com apoio aberto: ${evidence.helpedConcepts}`,`Revisão prioritária: ${evidence.review.join('; ')||'Consultar erros e segurança das questões finais.'}`,'Conclusão não equivale a retenção comprovada.');
   out.push('\nRESUMO',`Conceitos concluídos: ${Object.keys(state.conceptsCompleted).length}/${session.concepts.length}`,`Fixações corretas: ${immediateCorrect()}/${immediateAll().length}`,`Questões finais: ${finalCorrect()}/${finalAnswered()} acertos`,`Próximo passo: ${session.nextStep||'—'}`);return out.join('\n');
 }
-function showReport(){if(state?.timerRunning)pauseTimer();$('reportText').value=buildReport();show('reportPanel')}
+let reportResumeSessionId='';
+function closeReport(){if(reportResumeSessionId===state?.sessionId&&!state.completedAt&&['concepts','final'].includes(state.phase))startTimer();reportResumeSessionId='';render();scrollTop()}
+function showReport(){reportResumeSessionId=state?.timerRunning?state.sessionId:'';if(state?.timerRunning)pauseTimer();$('reportText').value=buildReport();show('reportPanel')}
 
 async function sha256(text){const buffer=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text));return[...new Uint8Array(buffer)].map(b=>b.toString(16).padStart(2,'0')).join('')}
 async function syncNow(){
@@ -352,7 +354,7 @@ async function refreshCatalog(){setStatus('Consultando sessões…');try{await w
 
 $('timerBtn').onclick=()=>state?.timerRunning?pauseTimer():startTimer();
 $('homeBtn').onclick=()=>{if(state){pauseTimer();state.phase='home';saveState()}renderHome();renderStats();scrollTop()};
-$('reportBtn').onclick=showReport;$('closeReportBtn').onclick=render;$('copyReportBtn').onclick=async()=>{try{await navigator.clipboard.writeText($('reportText').value);alert('Relatório copiado.')}catch{$('reportText').select();document.execCommand('copy');alert('Relatório copiado.')}};
+$('reportBtn').onclick=showReport;$('closeReportBtn').onclick=closeReport;$('copyReportBtn').onclick=async()=>{try{await navigator.clipboard.writeText($('reportText').value);alert('Relatório copiado.')}catch{$('reportText').select();document.execCommand('copy');alert('Relatório copiado.')}};
 $('resetBtn').onclick=()=>{if(!state||!confirm('Apagar apenas o progresso desta sessão?'))return;state=freshState(session.id);saveState();render()};
 $('syncBtn').onclick=syncNow;$('refreshBtn').onclick=refreshCatalog;
 $('saveConfigBtn').onclick=()=>{try{const endpoint=new URL($('endpointInput').value.trim());if(endpoint.protocol!=='https:'||!endpoint.pathname.endsWith('/exec'))throw new Error('Use uma URL HTTPS terminada em /exec.');const cfg=saveConfig({endpoint:endpoint.toString(),token:$('tokenInput').value,deviceId:$('deviceInput').value});if(!cfg.token||!cfg.deviceId)throw new Error('Preencha todos os campos.');setStatus('Configuração salva.','ok')}catch(error){setStatus('Falha: '+error.message,'bad')}};

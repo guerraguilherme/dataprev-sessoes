@@ -80,7 +80,7 @@
     outline.querySelectorAll('[data-lesson-concept]').forEach(b=>b.onclick=()=>{state.phase='concepts';state.conceptIndex=Number(b.dataset.lessonConcept);saveState();renderConcept();renderStats();scrollTop()});
     if(state.phase==='concepts'){
       const next=document.getElementById('nextConcept');
-      if(next?.disabled){const hint=document.createElement('p');hint.className='next-step-hint';hint.textContent='Para continuar, resolva a fixação abaixo. Se travar, abra “Não entendi”.';next.parentElement.insertAdjacentElement('beforebegin',hint)}
+      if(next?.disabled){const hint=document.createElement('p');hint.className='next-step-hint';hint.textContent='Para continuar, resolva a fixação deste conceito. Se travar, abra “Não entendi”.';next.parentElement.insertAdjacentElement('beforebegin',hint)}
     }
     if(state.phase==='final'){
       const conf=document.querySelector('#studyBody .confidence');if(conf){conf.setAttribute('role','group');conf.setAttribute('aria-label','Sua segurança na resposta');conf.insertAdjacentHTML('beforebegin','<h2>Sua segurança na resposta</h2>')}
@@ -88,6 +88,7 @@
       const back=document.createElement('button');back.id='prevFinal';back.textContent='Anterior';document.querySelector('#studyBody .row')?.prepend(back);
       back.onclick=()=>{if(state.finalIndex>0)state.finalIndex--;else{state.phase='concepts';state.conceptIndex=session.concepts.length-1}saveState();render();scrollTop()};
     }
+    renderStats();
     document.querySelectorAll('#studyBody .confidence button').forEach(b=>b.setAttribute('aria-pressed',String(b.classList.contains('active'))));
   }
   const baseConcept=renderConcept;renderConcept=function(){baseConcept();lessonNavigation()};

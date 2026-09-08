@@ -38,6 +38,14 @@
       "status": "PASS"
     },
     {
+      "name": "Closing report resumes only a previously running lesson timer",
+      "status": "PASS"
+    },
+    {
+      "name": "Lesson statistics update immediately on entry rather than displaying planner counts",
+      "status": "PASS"
+    },
+    {
       "name": "Opening exam pauses lesson and starts exam timer",
       "status": "PASS"
     },
