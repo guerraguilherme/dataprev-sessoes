@@ -1,0 +1,57 @@
+{
+  "release": "0.8.0",
+  "status": "PUBLISHED",
+  "published": true,
+  "runtime_commit": "393a8beee9c1df99e4349db57adab3e911d69cdf",
+  "runtime_tree": "9e69443d7c3f9b6855ee6288483dcaaf808d56bd",
+  "canonical_url": "https://guerraguilherme.github.io/dataprev-sessoes/",
+  "cache": "dataprev-sessoes-standalone-v37",
+  "github_pages": {
+    "run_id": 34180989967,
+    "conclusion": "success"
+  },
+  "automatic_checks": {
+    "passed": 104,
+    "failed": 0,
+    "suites": {
+      "experience": 16,
+      "study_quality": 16,
+      "study_coach": 14,
+      "mobile_runtime": 12,
+      "python_foundation": 8,
+      "foundation": 38
+    }
+  },
+  "browser": {
+    "live_home_trail_search_settings": "PASS",
+    "lesson_help_escape_practice_next_pause_reload_resume": "PASS",
+    "exam_open_exit_resume": "PASS",
+    "offline_badge": "Offline pronto",
+    "application_console_errors": 0,
+    "extension_errors_excluded": true,
+    "visual_fixtures": {
+      "iframe_widths": [
+        390,
+        1024
+      ],
+      "document_client_widths": [
+        375,
+        1009
+      ],
+      "horizontal_overflow": false
+    },
+    "physical_iPhone": "NOT_EXECUTED_THIS_RELEASE",
+    "offline_airplane_mode": "NOT_EXECUTED_THIS_RELEASE",
+    "live_full_asset_http_sweep": "UNAVAILABLE_TERMINAL_NETWORK_APPROVAL_CANCELLED"
+  },
+  "preservation": {
+    "official_learner_writes": 0,
+    "original_content_files_changed": 0,
+    "state_key_migration": false,
+    "golden_EST_PROB_002_published": false
+  },
+  "notes": [
+    "Synthetic and browser QA used isolated local test activity; no configured external learner sync.",
+    "Publication explicitly authorized by user. Runtime checks do not certify all pedagogy or predict exam score."
+  ]
+}
