@@ -1,0 +1,71 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "name": "catalog loads all 29 sessions",
+      "status": "PASS"
+    },
+    {
+      "name": "catalog count refreshed",
+      "status": "PASS"
+    },
+    {
+      "name": "idle clock and sync leave learner map unchanged",
+      "status": "PASS"
+    },
+    {
+      "name": "dashboard counts unavailable sessions",
+      "status": "PASS"
+    },
+    {
+      "name": "single support module",
+      "status": "PASS"
+    },
+    {
+      "name": "all 156 concepts render without initial answer leakage",
+      "status": "PASS"
+    },
+    {
+      "name": "existing guided example appears before the exercise",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong then correct preserves first attempt",
+      "status": "PASS"
+    },
+    {
+      "name": "note persists and pause offers resume",
+      "status": "PASS"
+    },
+    {
+      "name": "support opens once and closes",
+      "status": "PASS"
+    },
+    {
+      "name": "final confidence and justification preserve selected answer; report hides pending feedback",
+      "status": "PASS"
+    },
+    {
+      "name": "reload reproduces corrected state",
+      "status": "PASS"
+    },
+    {
+      "name": "report pauses clock",
+      "status": "PASS"
+    },
+    {
+      "name": "reset cancelled leaves data intact",
+      "status": "PASS"
+    },
+    {
+      "name": "old sync acknowledgement preserves new same-session and other-session snapshots",
+      "status": "PASS"
+    },
+    {
+      "name": "exact confirmed snapshot leaves queue",
+      "status": "PASS"
+    }
+  ],
+  "externalLearnerWrites": 0,
+  "environment": "jsdom simulated DOM; not Safari or visual-browser certification"
+}

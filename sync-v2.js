@@ -25,6 +25,7 @@ function dpUpdateSyncBadge(){
   const badge=document.getElementById('syncBadge');if(!badge)return;
   const n=dpQueueCount();badge.classList.remove('ok');
   if(!navigator.onLine){badge.textContent='Offline · progresso protegido';return}
+  const cfg=readConfig();if(!cfg.endpoint||!cfg.token||!cfg.deviceId){badge.textContent='Salvo neste aparelho';return}
   if(n){badge.textContent=`${n} aguardando envio`;return}
   const meta=readJson(DP_SYNC_META_KEY,{});
   if(meta.lastConfirmedAt){badge.textContent='✓ Sincronizado';badge.classList.add('ok');return}

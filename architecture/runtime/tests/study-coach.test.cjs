@@ -53,7 +53,7 @@ check('Review starts without exposing answer and requires choice confidence and 
 // Static render fixture: actual component markup/styles, no scripts or learner storage.
 const visualFrames=[];
 function captureVisual(label){
- const css=w.document.querySelector('style').textContent+fs.readFileSync(path.join(root,'planner.css'),'utf8')+fs.readFileSync(path.join(root,'study-coach.css'),'utf8');
+ const css=w.document.querySelector('style').textContent+fs.readFileSync(path.join(root,'planner.css'),'utf8')+fs.readFileSync(path.join(root,'study-coach.css'),'utf8')+fs.readFileSync(path.join(root,'experience.css'),'utf8');
  const cloned=w.document.body.cloneNode(true);cloned.querySelectorAll('script,.hidden').forEach(x=>x.remove());
  visualFrames.push({label,html:'<!doctype html><html lang="pt-BR"><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>'+css+'</style></head>'+cloned.outerHTML+'</html>'});
 }
@@ -89,8 +89,8 @@ check('A taught concept can later create a transfer question with full feedback'
 });
 run("session=catalog.sessions.find(s=>s.id==='NP-001');state=freshState(session.id);state.phase='concepts';state.conceptIndex=1;renderConcept()");w.document.body.classList.remove('review-mode');captureVisual('NumPy: shape, dimensões e tamanho');
 const e=s=>s.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
-fs.writeFileSync(path.join(root,'architecture/learning/visual-qa-0.7.17.html'),'<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>DATAPREV 0.7.17 — visual QA fictício</title><style>body{font:16px system-ui;background:#eee;padding:16px}iframe{display:block;border:1px solid #bbb;margin:12px 0 32px;height:1400px;max-width:100%}</style><h1>Prévia estática — dados fictícios</h1><p>Componentes renderizados pelo teste. Sem scripts, armazenamento ou sincronização.</p>'+visualFrames.map(f=>'<h2>'+f.label+'</h2><iframe title="'+f.label+' mobile" width="390" sandbox srcdoc="'+e(f.html)+'"></iframe><iframe title="'+f.label+' desktop" width="1024" sandbox srcdoc="'+e(f.html)+'"></iframe>').join('')+'</html>');
+fs.writeFileSync(path.join(root,'architecture/learning/visual-qa-0.8.0.html'),'<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>DATAPREV 0.8.0 — visual QA fictício</title><style>body{font:16px system-ui;background:#eee;padding:16px}iframe{display:block;border:1px solid #bbb;margin:12px 0 32px;height:1400px;max-width:100%}</style><h1>Prévia estática — dados fictícios</h1><p>Componentes renderizados pelo teste. Sem scripts, armazenamento ou sincronização.</p>'+visualFrames.map(f=>'<h2>'+f.label+'</h2><iframe title="'+f.label+' mobile" width="390" sandbox srcdoc="'+e(f.html)+'"></iframe><iframe title="'+f.label+' desktop" width="1024" sandbox srcdoc="'+e(f.html)+'"></iframe>').join('')+'</html>');
 assert.equal(errors.length,0,errors.join('\n'));
-fs.writeFileSync(path.join(root,'architecture/runtime/study-coach-qa-0.7.17.json'),JSON.stringify({ok:true,checks,externalLearnerWrites:0,environment:'simulated DOM; no physical Safari certification'},null,2));
+fs.writeFileSync(path.join(root,'architecture/runtime/study-coach-qa-0.8.0.json'),JSON.stringify({ok:true,checks,externalLearnerWrites:0,environment:'simulated DOM; no physical Safari certification'},null,2));
 console.log(JSON.stringify({ok:true,checks},null,2));process.exit(0);
 })().catch(e=>{console.error(e);process.exit(1)});

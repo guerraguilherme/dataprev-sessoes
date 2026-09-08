@@ -10,13 +10,8 @@
   document.head.appendChild(style);
 
   function preserveY(fn){
-    const y=window.scrollY;
     fn();
-    const restore=()=>window.scrollTo({top:y,left:0,behavior:'auto'});
-    restore();
-    requestAnimationFrame(()=>{restore();requestAnimationFrame(restore)});
-    setTimeout(restore,50);
-    setTimeout(restore,140);
+    window.scrollTo({top:0,behavior:'auto'});
   }
 
   // Intercepta antes dos handlers legados, que chamam scrollTop()/scrollIntoView().
