@@ -79,28 +79,5 @@
     }
   }
 
-  function injectNav(){
-    const panel=document.getElementById('studyPanel');if(!panel||panel.classList.contains('hidden')||document.querySelector('.session-page-nav'))return;
-    if(!state||!session||!['concepts','final','complete'].includes(state.phase))return;
-    const nav=document.createElement('div');nav.className='session-page-nav';
-    const back=document.createElement('button');back.type='button';back.textContent='‹';back.setAttribute('aria-label','Página anterior');
-    const next=document.createElement('button');next.type='button';next.textContent='›';next.setAttribute('aria-label','Próxima página');
-    nav.append(back,next);document.getElementById('studyTitle')?.insertAdjacentElement('afterend',nav);
-    back.disabled=state.phase==='concepts'&&state.conceptIndex===0;next.disabled=state.phase==='complete';
-    back.onclick=()=>{
-      if(state.phase==='concepts'){document.getElementById('prevConcept')?.click();return}
-      if(state.phase==='final'){
-        if(state.finalIndex>0){state.finalIndex--;saveState();render();scrollTop()}
-        else{state.phase='concepts';state.conceptIndex=Math.max(0,(session.concepts?.length||1)-1);saveState();render();scrollTop()}
-        return;
-      }
-      if(state.phase==='complete'){state.phase='final';state.finalIndex=Math.max(0,(session.finalQuestions?.length||1)-1);saveState();render();scrollTop()}
-    };
-    next.onclick=()=>{
-      if(state.phase==='concepts'){document.getElementById('nextConcept')?.click();return}
-      if(state.phase==='final'){const btn=document.getElementById('nextFinal');if(btn)btn.click();else toast('Corrija a resposta atual antes de avançar.')}
-    };
-  }
-  const observer=new MutationObserver(()=>requestAnimationFrame(injectNav));observer.observe(document.body,{childList:true,subtree:true});
-  document.addEventListener('click',()=>setTimeout(injectNav,0));setTimeout(injectNav,500);
+  // Lesson navigation is rendered synchronously by experience.js.
 })();

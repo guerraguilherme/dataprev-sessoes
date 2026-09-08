@@ -23,7 +23,7 @@ const manifest=json('manifest.webmanifest');
 const session=json('EST-VA-001.json');
 const staged=json('architecture/foundation-v2/pilot/staged/EST-VA-001.staged.json');
 const bridge=json('architecture/runtime/content-factory-v3-pwa-bridge-v1.json');
-const release=json('architecture/runtime/mobile-trail-release-0.7.17.json');
+const release=json('architecture/runtime/mobile-trail-release-0.8.0.json');
 
 const sourcesLiteral=loader.match(/const SOURCES=(\[[\s\S]*?\n  \]);/)?.[1];
 assert.ok(sourcesLiteral,'SOURCES não encontrado');
@@ -37,7 +37,7 @@ check('VERSIONS_ALIGNED',()=>{
   assert.match(app,/const CONTENT_VERSION='2026\.08\.21-sessoes-17'/);
   assert.match(loader,/contentVersion:'2026\.08\.21-sessoes-17'/);
   assert.ok(index.includes(`PWA ${release.runtime_version}`));
-  assert.equal(release.runtime_version,'0.7.17');
+  assert.equal(release.runtime_version,'0.8.0');
   assert.equal(release.content_version,'2026.08.21-sessoes-17');
   for(const [relative,expected] of Object.entries(release.artifact_sha256||{})){
     assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(root,relative))).digest('hex'),expected,`hash divergente: ${relative}`);

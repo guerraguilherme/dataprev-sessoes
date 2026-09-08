@@ -1,0 +1,63 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "name": "Navigation among study trail and settings does not create learner evidence",
+      "status": "PASS"
+    },
+    {
+      "name": "Available filter hides unpublished sessions and preserves Python order",
+      "status": "PASS"
+    },
+    {
+      "name": "Search normalizes accents and opens relevant results with accessible expansion",
+      "status": "PASS"
+    },
+    {
+      "name": "Empty search gives useful recovery without losing stored study",
+      "status": "PASS"
+    },
+    {
+      "name": "Lesson outline prevents skipping practice and replaces duplicate navigation",
+      "status": "PASS"
+    },
+    {
+      "name": "Catalog update preserves exact active state, note and teaching object",
+      "status": "PASS"
+    },
+    {
+      "name": "Help expands once within lesson and Escape returns focus without grading",
+      "status": "PASS"
+    },
+    {
+      "name": "Invalid sync configuration cannot overwrite a valid saved configuration",
+      "status": "PASS"
+    },
+    {
+      "name": "Final question has previous navigation, labelled confidence and no answer leakage",
+      "status": "PASS"
+    },
+    {
+      "name": "Opening exam pauses lesson and starts exam timer",
+      "status": "PASS"
+    },
+    {
+      "name": "Leaving exam saves paused state and returning resumes active clock",
+      "status": "PASS"
+    },
+    {
+      "name": "Exam result excludes correct but unconfirmed draft answers",
+      "status": "PASS"
+    },
+    {
+      "name": "Gated exam cannot initiate mobile content generation",
+      "status": "PASS"
+    },
+    {
+      "name": "Operational failures are announced outside collapsed settings",
+      "status": "PASS"
+    }
+  ],
+  "externalLearnerWrites": 0,
+  "environment": "jsdom synthetic fixtures; physical iPhone not exercised"
+}

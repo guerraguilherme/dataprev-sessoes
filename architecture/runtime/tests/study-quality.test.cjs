@@ -62,6 +62,6 @@ check('old sync acknowledgement preserves new same-session and other-session sna
 run(`dpWriteQueue({A:{stateJson:'sent',queuedAt:'sent',contentVersion:'v'}});jsonp=async()=>({found:true,checksum:'hash-sent'})`);await run('dpFlushQueue()');
 check('exact confirmed snapshot leaves queue',()=>assert.equal(run('dpQueueCount()'),0));
 assert.equal(errors.length,0,errors.join('\n'));
-fs.writeFileSync(process.env.DATAPREV_QA_OUTPUT||path.join(root,'architecture/runtime/study-quality-qa-0.7.17.json'),JSON.stringify({ok:true,checks,externalLearnerWrites:0,environment:'jsdom simulated DOM; not Safari or visual-browser certification'},null,2));
+fs.writeFileSync(process.env.DATAPREV_QA_OUTPUT||path.join(root,'architecture/runtime/study-quality-qa-0.8.0.json'),JSON.stringify({ok:true,checks,externalLearnerWrites:0,environment:'jsdom simulated DOM; not Safari or visual-browser certification'},null,2));
 console.log(JSON.stringify({ok:true,checks},null,2));process.exit(0);
 })().catch(e=>{console.error(e);process.exit(1)});

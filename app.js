@@ -1,5 +1,5 @@
 'use strict';
-const APP_VERSION='0.7.17';
+const APP_VERSION='0.8.0';
 const CONTENT_VERSION='2026.08.21-sessoes-17';
 const STATE_MAP_KEY='dataprev_sessoes_states_v2';
 const LEGACY_STATE_KEY='dataprev_sessoes_state_v1';
@@ -94,6 +94,8 @@ function readConfig(){
 }
 function saveConfig(cfg){
   const clean={endpoint:String(cfg.endpoint||'').trim(),token:String(cfg.token||'').trim(),deviceId:String(cfg.deviceId||'').trim()};
+  const endpoint=new URL(clean.endpoint);
+  if(endpoint.protocol!=='https:'||!endpoint.pathname.endsWith('/exec')||!clean.token||!clean.deviceId)throw new Error('Informe a URL HTTPS terminada em /exec, a chave e o aparelho.');
   localStorage.setItem(SESSIONS_CFG_KEY,JSON.stringify(clean));
   return clean;
 }
@@ -134,7 +136,9 @@ function chooseSession(){
 }
 function applyCatalog(nextCatalog,{preferCurrent=true}={}){
   const current=session?.id;
+  const keepActive=!!state?.startedAt&&$('homePanel').classList.contains('hidden');
   catalog=nextCatalog;
+  if(keepActive){$('contentSummary').textContent=`${catalog.contentVersion} · ${catalog.sessions.length} sessões · PWA ${APP_VERSION}`;return}
   const selected=preferCurrent&&current?catalog.sessions.find(s=>s.id===current):null;
   session=selected||chooseSession();
   if(!session)throw new Error('Nenhuma sessão disponível no catálogo.');
@@ -144,7 +148,7 @@ function applyCatalog(nextCatalog,{preferCurrent=true}={}){
 async function loadCatalog({preferCurrent=true,includeRemote=true}={}){
   const fallback=await loadFallback();
   applyCatalog(fallback,{preferCurrent});
-  if(!includeRemote)return;
+  if(!includeRemote||(typeof DP_GATED_DELIVERY_ONLY!=='undefined'&&DP_GATED_DELIVERY_ONLY))return;
   let remote=null;
   try{remote=await loadRemote()}catch(error){console.warn('Consulta remota não bloqueante:',error)}
   if(remote?.sessions?.length)applyCatalog(remote,{preferCurrent:true});
@@ -212,7 +216,8 @@ function renderHome(){
 }
 function inferPhase(s){if(s.completedAt)return'complete';if(s.phase==='final'||Object.keys(s.final||{}).length)return'final';return'concepts'}
 function openSession(id){
-  updateClock();state.timerRunning=false;saveState();
+  if(!catalog.sessions.some(s=>s.id===id))return;
+  if(state?.startedAt){updateClock();state.timerRunning=false;saveState()}
   session=catalog.sessions.find(s=>s.id===id);state=getState(id);
   if(state.completedAt){state.phase='complete';saveState();render();scrollTop();return}
   state.phase=inferPhase(state);startTimer();render();scrollTop();
@@ -377,11 +382,10 @@ async function bootstrap(){
         $('offlineBadge').textContent='Offline não confirmado';$('offlineBadge').classList.remove('ok');
       });
     }else $('offlineBadge').textContent='Uso online';
-    void loadCatalog({preferCurrent:true,includeRemote:true})
-      .then(()=>render())
-      .catch(error=>console.warn('Atualização remota em segundo plano:',error));
+    // The prepared allowlist owns delivery. Do not reload a second catalog over an active lesson.
+
   }catch(error){
-    $('catalogCard').innerHTML=`<div class="feedback bad"><b>Falha ao carregar.</b><br>${esc(error.message)}</div>`;
+    setStatus('Não foi possível carregar as sessões. Confira a conexão e reabra o aplicativo. '+error.message,'bad');
   }
 }
 bootstrap();
