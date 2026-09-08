@@ -6,6 +6,7 @@ A prática e as questões finais continuam obrigatórias. O sumário só abre co
 
 ## Correções operacionais
 
+- Micropráticas de apoio preservam indentação significativa de Python, além das quebras de linha.
 - Fechar o relatório retoma o relógio somente quando a aula estava ativa antes de abri-lo; estatísticas da aula se atualizam imediatamente na entrada.
 - Atualização do catálogo preserva os objetos da aula e do rascunho ativos; bootstrap não repete uma consulta que substitui a aula. Entrega gated não consome publicação remota ad hoc.
 - Configuração de sync é validada antes da gravação, incluindo importação; entrada inválida mantém configuração anterior.
