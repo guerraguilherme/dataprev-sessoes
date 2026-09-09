@@ -1,0 +1,78 @@
+{
+  "release": "DATAPREV Ciclos 1.0.0",
+  "runtime_commit": "71cb88c1009326222c6df42d7097ceb76d49cbb0",
+  "runtime_tree": "d89552f88bf75833eb2da0c8e7e037280d990b8f",
+  "publication": "published",
+  "url": "https://guerraguilherme.github.io/dataprev-sessoes/ciclos/",
+  "pages": {
+    "run_id": 34294712591,
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "browser": {
+    "engine": "Chrome cloud",
+    "home": "PASS",
+    "question_open": "PASS",
+    "correction": "PASS",
+    "note_after_reload": "PASS",
+    "first_attempt_after_reload": "PASS",
+    "review_hides_previous_answer": "PASS",
+    "review_preserves_original_error": "PASS",
+    "offline_ready_message": "PASS",
+    "app_console_errors_observed": 0,
+    "excluded_console_noise": "Browser-extension metadata errors; not emitted by the application."
+  },
+  "layout": [
+    {
+      "screen": "home",
+      "frame_width": 390,
+      "client_width": 375,
+      "scroll_width": 375
+    },
+    {
+      "screen": "question",
+      "frame_width": 390,
+      "client_width": 375,
+      "scroll_width": 375
+    },
+    {
+      "screen": "open_explanation",
+      "frame_width": 390,
+      "client_width": 375,
+      "scroll_width": 375
+    },
+    {
+      "screen": "open_explanation",
+      "frame_width": 1024,
+      "client_width": 1009,
+      "scroll_width": 1009
+    }
+  ],
+  "scope_limits": [
+    "Layout checks use static generated DOM in fixed-width browser frames, not physical iPhone hardware.",
+    "Offline navigation/fetch failure is simulated in a service-worker VM; the live browser confirmed precache readiness.",
+    "Physical Safari/iPhone installation and keyboard verification were not executed.",
+    "This bank is authored and representative; it is not full syllabus coverage or psychometrically calibrated.",
+    "New Ciclos state is local and checkpoint-based, without automatic cloud synchronization."
+  ],
+  "legacy": {
+    "baseline": "77811e9eb893fc03b0d89e6302d1726cc797b39f",
+    "files_modified": 0,
+    "student_migration": false,
+    "official_student_state_writes": false,
+    "golden_sample_published": false
+  },
+  "sha256": {
+    "index.html": "78f525f1d65a6cfcc8f3f61419e3bd6f5da80300c6f1463d69814d7dad565a43",
+    "app.js": "1e69916e145ffe193b7c5a07dd946684219aee71db1bfd0d4596e65df10a7fef",
+    "model.js": "4f480dff3a2fd85df017c91a09076e464757fe83309e5e4defa1241a240aadb4",
+    "styles.css": "3538fb7ef1e1c394a27b9aabcd87ac255fd1622486a4cae93d7e7079d18031c8",
+    "service-worker.js": "352c1347479337cca906e63f1426f14387a9e6c751f258151fe953aea6a4a0d9",
+    "content/bank.json": "93db2f1c17dfb2e3a8a944ed467a2ef4aefde82895dd6ef7a4998f0fc0eb2ca2",
+    "reader.html": "b863b835f63ec609f68e4e378b6ef51bf6b03bff44dd1845918bdb9fd771ed56",
+    "manifest.webmanifest": "c6ca714fe35212c45393da5671dee7243df14e035bd03af923691c324406bdfb",
+    "icon.svg": "b7be1f457f3a3ceaa0ddd8fc0e99648618ed8c27356377d680a3ed44b51e8620",
+    "icon-192.png": "dd96ae4b0a0fe3b4cea9d9f4a21d5389c2d3b2b96f23b3c04c9f560c6496be58",
+    "icon-512.png": "a41459bc6f4af83b84c6fa2fcb07054644cc14b80e5d8f692682d4b22db03d2e"
+  }
+}
