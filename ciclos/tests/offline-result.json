@@ -1,0 +1,16 @@
+{
+  "status": "PASS",
+  "httpRequests": 11,
+  "non200": 0,
+  "checks": [
+    "clean install caches all assets",
+    "first and second cycles offline",
+    "navigation with query",
+    "versioned assets offline",
+    "offline ready requires complete cache",
+    "failed install does not activate",
+    "old cycles cache cleanup scoped",
+    "legacy cache preserved"
+  ],
+  "scope": "Service worker executed in isolated VM against actual local HTTP assets; offline network failure simulated. Not a physical iPhone install test."
+}

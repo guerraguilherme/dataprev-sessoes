@@ -1,0 +1,119 @@
+{
+  "status": "PASS",
+  "checks": 28,
+  "tests": [
+    {
+      "name": "first attempt immutable and independent of later selection",
+      "status": "PASS"
+    },
+    {
+      "name": "complete two distinct cycles and weighted scoring",
+      "status": "PASS"
+    },
+    {
+      "name": "all 700 option paths have exactly one correct classification per item",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid and missing selections never create evidence",
+      "status": "PASS"
+    },
+    {
+      "name": "recovery preserves local first attempt, notes and imported evidence",
+      "status": "PASS"
+    },
+    {
+      "name": "checkpoint restores pending draft and current cycle on empty device",
+      "status": "PASS"
+    },
+    {
+      "name": "tampered checkpoint fails atomically, unknown IDs and completed-but-pending rejected",
+      "status": "PASS"
+    },
+    {
+      "name": "report excludes answers and rationale for pending questions",
+      "status": "PASS"
+    },
+    {
+      "name": "review date follows recorded attempt, not synthetic mastery",
+      "status": "PASS"
+    },
+    {
+      "name": "clean boot no legacy mutation or invented progress",
+      "status": "PASS"
+    },
+    {
+      "name": "question first, no premature feedback",
+      "status": "PASS"
+    },
+    {
+      "name": "reload restores note and pending choice",
+      "status": "PASS"
+    },
+    {
+      "name": "correction and immutable first response",
+      "status": "PASS"
+    },
+    {
+      "name": "help after correction cannot reclassify original response",
+      "status": "PASS"
+    },
+    {
+      "name": "help before response tracked, confidence enters notebook",
+      "status": "PASS"
+    },
+    {
+      "name": "review starts without old gabarito or previous choice",
+      "status": "PASS"
+    },
+    {
+      "name": "review stored separately and does not fix first score",
+      "status": "PASS"
+    },
+    {
+      "name": "real backup payload downloadable and valid",
+      "status": "PASS"
+    },
+    {
+      "name": "download includes note, reviews, checkpoint and no foreign keys",
+      "status": "PASS"
+    },
+    {
+      "name": "file import drives complete recovery through UI",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid import leaves storage byte-for-byte intact",
+      "status": "PASS"
+    },
+    {
+      "name": "storage failure shown and no false saved claim",
+      "status": "PASS"
+    },
+    {
+      "name": "emergency backup preserves unsaved note",
+      "status": "PASS"
+    },
+    {
+      "name": "retry persists actual in-memory state",
+      "status": "PASS"
+    },
+    {
+      "name": "ciclo-01 completed through all 70 visible question actions",
+      "status": "PASS"
+    },
+    {
+      "name": "ciclo-02 completed through all 70 visible question actions",
+      "status": "PASS"
+    },
+    {
+      "name": "after second cycle no fictional third cycle",
+      "status": "PASS"
+    },
+    {
+      "name": "corrupt preexisting local record is not overwritten",
+      "status": "PASS"
+    }
+  ],
+  "scope": "Isolated jsdom runtime and model tests, including 140-question UI completion, not Safari hardware certification."
+}

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f6f3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="description" content="Uma questão por vez. Aprenda, pratique e transforme seus erros em um próximo passo de estudo.">
+<title>DATAPREV · Ciclos</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="styles.css?v=1.0.0">
+<script src="model.js?v=1.0.0" defer></script>
+<script src="app.js?v=1.0.0" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Ir para o conteúdo</a>
+<header class="site-header">
+<a class="brand" href="./" aria-label="DATAPREV Ciclos, início"><span class="brand-mark" aria-hidden="true">c.</span><span>DATAPREV<span class="brand-sub">Ciclos de estudo</span></span></a>
+<nav aria-label="Navegação principal"><button data-action="home" aria-current="page">Ciclos</button><button data-action="notebook">Caderno <span id="notebook-count" class="nav-count">0</span></button><button data-action="tools">Meu estudo</button></nav>
+</header>
+<div id="save-alert" class="save-alert" role="alert" hidden></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<main id="main" tabindex="-1">
+<section class="welcome fallback">
+<p class="eyebrow">DATAPREV · Perfil 4</p><h1>Uma questão.<br>Um passo adiante.</h1>
+<p class="lead">Responda o que você sabe. Aprenda o que ainda falta. O próximo passo cabe nesta página.</p>
+<p id="load-status" role="status">Preparando seus ciclos…</p>
+<a class="button secondary" href="reader.html">Abrir material para leitura</a>
+<noscript><p>Ative o JavaScript para registrar respostas e retomar o estudo. O material para leitura continua disponível no link acima.</p></noscript>
+</section>
+</main>
+<footer class="site-footer"><span>DATAPREV · Ciclos <span id="app-version">1.0.0</span></span><span id="save-status">Registros neste aparelho</span><span id="offline-status">Preparando modo offline</span><a href="../">Plataforma anterior ↗</a></footer>
+<input id="restore-file" type="file" accept="application/json,.json" hidden aria-label="Escolher backup de Ciclos">
+</body></html>

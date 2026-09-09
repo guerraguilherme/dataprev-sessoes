@@ -1,0 +1,7 @@
+{
+  "status": "PASS",
+  "checks": 328,
+  "questionCount": 140,
+  "lessonCount": 56,
+  "scope": "Structural completeness, executable code, selected independent calculations and logic/SQL checks; not psychometric calibration or proof of exhaustive syllabus coverage."
+}

@@ -1,0 +1,997 @@
+[
+  {
+    "id": "CICLO-01-Q001",
+    "code": "",
+    "check": null,
+    "correctText": "considerar tanto a rapidez das decisões quanto as condições de produção dos dados utilizados."
+  },
+  {
+    "id": "CICLO-01-Q002",
+    "code": "",
+    "check": null,
+    "correctText": "Embora o tempo médio de atendimento tenha caído, bairros com poucos registros continuaram recebendo menos visitas."
+  },
+  {
+    "id": "CICLO-01-Q003",
+    "code": "",
+    "check": null,
+    "correctText": "uma conclusão extraída da limitação de acesso ao canal de registro."
+  },
+  {
+    "id": "CICLO-01-Q004",
+    "code": "",
+    "check": null,
+    "correctText": "a formação dos dados já estava condicionada antes de sua análise pelo sistema."
+  },
+  {
+    "id": "CICLO-01-Q005",
+    "code": "",
+    "check": null,
+    "correctText": "tornar a negação menos delimitada, eliminando a ressalva sobre a atuação isolada do sistema."
+  },
+  {
+    "id": "CICLO-01-Q006",
+    "code": "",
+    "check": null,
+    "correctText": "Analisaram-se os pedidos e precisou-se de novos critérios."
+  },
+  {
+    "id": "CICLO-01-Q007",
+    "code": "",
+    "check": null,
+    "correctText": "à — à — a"
+  },
+  {
+    "id": "CICLO-01-Q008",
+    "code": "",
+    "check": null,
+    "correctText": "As lacunas foram identificadas pela auditoria."
+  },
+  {
+    "id": "CICLO-01-Q009",
+    "code": "",
+    "check": null,
+    "correctText": "a primeira restringe os bairros referidos; a segunda apresenta o acesso precário como informação sobre o conjunto referido."
+  },
+  {
+    "id": "CICLO-01-Q010",
+    "code": "",
+    "check": null,
+    "correctText": "Não bastava a falta de pedidos para concluir que não havia necessidade."
+  },
+  {
+    "id": "CICLO-01-Q011",
+    "code": "",
+    "check": null,
+    "correctText": "a passagem de uma possibilidade para uma afirmação de necessidade."
+  },
+  {
+    "id": "CICLO-01-Q012",
+    "code": "",
+    "check": null,
+    "correctText": "argumentativa, pois usa um caso para sustentar um limite na avaliação de um sistema."
+  },
+  {
+    "id": "CICLO-01-Q013",
+    "code": "",
+    "check": null,
+    "correctText": "its apparent precision did not reflect differences in the evidence available across neighborhoods."
+  },
+  {
+    "id": "CICLO-01-Q014",
+    "code": "",
+    "check": null,
+    "correctText": "a clarification of the alternative response the researchers supported."
+  },
+  {
+    "id": "CICLO-01-Q015",
+    "code": "",
+    "check": null,
+    "correctText": "the confidence scores."
+  },
+  {
+    "id": "CICLO-01-Q016",
+    "code": "",
+    "check": null,
+    "correctText": "a past action received by the model, with the agent left unspecified."
+  },
+  {
+    "id": "CICLO-01-Q017",
+    "code": "",
+    "check": null,
+    "correctText": "a necessary condition for the predictions to matter in the stated sense."
+  },
+  {
+    "id": "CICLO-01-Q018",
+    "code": "",
+    "check": null,
+    "correctText": "The alert will be withheld if the missing values are not checked."
+  },
+  {
+    "id": "CICLO-01-Q019",
+    "code": "",
+    "check": null,
+    "correctText": "in practice or in fact."
+  },
+  {
+    "id": "CICLO-01-Q020",
+    "code": "",
+    "check": null,
+    "correctText": "question or contest those decisions."
+  },
+  {
+    "id": "CICLO-01-Q021",
+    "code": "",
+    "check": null,
+    "correctText": "a possibility that laboratory success and disappointing field performance coexist."
+  },
+  {
+    "id": "CICLO-01-Q022",
+    "code": "",
+    "check": null,
+    "correctText": "a contrast between apparent precision and a limitation behind it."
+  },
+  {
+    "id": "CICLO-01-Q023",
+    "code": "",
+    "check": null,
+    "correctText": "Improved predictive accuracy necessarily leads to better decisions in every neighborhood."
+  },
+  {
+    "id": "CICLO-01-Q024",
+    "code": "",
+    "check": null,
+    "correctText": "information whose completeness or reliability varies across the areas being assessed."
+  },
+  {
+    "id": "CICLO-01-Q025",
+    "code": "",
+    "check": null,
+    "correctText": "Se o lote não foi validado ou não foi assinado, então não é liberado."
+  },
+  {
+    "id": "CICLO-01-Q026",
+    "code": "",
+    "check": null,
+    "correctText": "Existe relatório que contém dado sensível e não foi revisado."
+  },
+  {
+    "id": "CICLO-01-Q027",
+    "code": "",
+    "check": null,
+    "correctText": "18."
+  },
+  {
+    "id": "CICLO-01-Q028",
+    "code": "",
+    "check": null,
+    "correctText": "D é executado e B não é executado."
+  },
+  {
+    "id": "CICLO-01-Q029",
+    "code": "",
+    "check": null,
+    "correctText": "O arquivo não está íntegro ou o backup não foi concluído."
+  },
+  {
+    "id": "CICLO-01-Q030",
+    "code": "",
+    "check": null,
+    "correctText": "Houve falha de fidelidade à fonte; recuperar um documento não garante suporte à afirmação gerada."
+  },
+  {
+    "id": "CICLO-01-Q031",
+    "code": "",
+    "check": null,
+    "correctText": "a discriminação não foi automaticamente eliminada, pois outras variáveis podem funcionar como substitutas correlacionadas."
+  },
+  {
+    "id": "CICLO-01-Q032",
+    "code": "",
+    "check": null,
+    "correctText": "uma supervisão formal com condições insuficientes para revisão efetiva."
+  },
+  {
+    "id": "CICLO-01-Q033",
+    "code": "",
+    "check": null,
+    "correctText": "Ela não representa necessariamente quem abandonou ou nem conseguiu acessar o serviço."
+  },
+  {
+    "id": "CICLO-01-Q034",
+    "code": "",
+    "check": null,
+    "correctText": "aumenta 60%."
+  },
+  {
+    "id": "CICLO-01-Q035",
+    "code": "",
+    "check": null,
+    "correctText": "a taxa de reclamações por atendimento aumentou 40%, e não se pode atribuir causalidade ao chatbot."
+  },
+  {
+    "id": "CICLO-01-Q036",
+    "code": "",
+    "check": null,
+    "correctText": "A exigência de motivação é vedada; se não houver acesso imediato, a regra é até 20 dias, com possível prorrogação justificada por 10."
+  },
+  {
+    "id": "CICLO-01-Q037",
+    "code": "",
+    "check": null,
+    "correctText": "necessidade, por tratamento de dados excessivos em relação à finalidade informada."
+  },
+  {
+    "id": "CICLO-01-Q038",
+    "code": "",
+    "check": null,
+    "correctText": "Origem racial, dado de saúde e dado biométrico."
+  },
+  {
+    "id": "CICLO-01-Q039",
+    "code": "",
+    "check": null,
+    "correctText": "um ano para conexão e seis meses para acesso à aplicação."
+  },
+  {
+    "id": "CICLO-01-Q040",
+    "code": "",
+    "check": null,
+    "correctText": "25, 15 e 5 anos, contados da produção."
+  },
+  {
+    "id": "CICLO-01-Q041",
+    "code": "",
+    "check": {
+      "kind": "quadratic",
+      "coeff": [
+        -1,
+        8,
+        -7
+      ],
+      "interval": [
+        0,
+        3
+      ],
+      "max": [
+        3,
+        8
+      ]
+    },
+    "correctText": "8 e x=3."
+  },
+  {
+    "id": "CICLO-01-Q042",
+    "code": "",
+    "check": null,
+    "correctText": "0 e 4."
+  },
+  {
+    "id": "CICLO-01-Q043",
+    "code": "",
+    "check": {
+      "kind": "matrix",
+      "A": [
+        [
+          1,
+          1
+        ],
+        [
+          0,
+          1
+        ]
+      ],
+      "B": [
+        [
+          2,
+          0
+        ],
+        [
+          0,
+          3
+        ]
+      ],
+      "v": [
+        1,
+        2
+      ],
+      "expected": [
+        6,
+        6
+      ]
+    },
+    "correctText": "(6,6)."
+  },
+  {
+    "id": "CICLO-01-Q044",
+    "code": "",
+    "check": null,
+    "correctText": "3 e 5."
+  },
+  {
+    "id": "CICLO-01-Q045",
+    "code": "",
+    "check": {
+      "kind": "gradient",
+      "point": [
+        1,
+        1
+      ],
+      "gradient": [
+        3,
+        5
+      ],
+      "eta": 0.1,
+      "expected": [
+        0.7,
+        0.5
+      ]
+    },
+    "correctText": "(0,7; 0,5)."
+  },
+  {
+    "id": "CICLO-01-Q046",
+    "code": "",
+    "check": {
+      "kind": "bayes",
+      "prior": [
+        0.6,
+        0.4
+      ],
+      "rates": [
+        0.02,
+        0.05
+      ],
+      "target": 1,
+      "expected": 0.625
+    },
+    "correctText": "62,5%."
+  },
+  {
+    "id": "CICLO-01-Q047",
+    "code": "",
+    "check": null,
+    "correctText": "A e B são independentes e P(A|B)=0,4."
+  },
+  {
+    "id": "CICLO-01-Q048",
+    "code": "",
+    "check": {
+      "kind": "discrete",
+      "x": [
+        0,
+        1,
+        2
+      ],
+      "p": [
+        0.2,
+        0.5,
+        0.3
+      ],
+      "a": 2,
+      "b": -1,
+      "variance": 1.96
+    },
+    "correctText": "1,96."
+  },
+  {
+    "id": "CICLO-01-Q049",
+    "code": "",
+    "check": null,
+    "correctText": "21."
+  },
+  {
+    "id": "CICLO-01-Q050",
+    "code": "",
+    "check": null,
+    "correctText": "900."
+  },
+  {
+    "id": "CICLO-01-Q051",
+    "code": "",
+    "check": null,
+    "correctText": "0,36 e p¹⁸(1−p)³²."
+  },
+  {
+    "id": "CICLO-01-Q052",
+    "code": "",
+    "check": null,
+    "correctText": "vaza informação dos folds de validação; a seleção deve ser ajustada dentro de cada treino."
+  },
+  {
+    "id": "CICLO-01-Q053",
+    "code": "",
+    "check": {
+      "kind": "confusion",
+      "tp": 40,
+      "fp": 10,
+      "fn": 20,
+      "tn": 130,
+      "precision": 0.8,
+      "recall": 0.6666666666666666,
+      "f1": 0.7272727272727273
+    },
+    "correctText": "0,80; 2/3; 8/11."
+  },
+  {
+    "id": "CICLO-01-Q054",
+    "code": "",
+    "check": null,
+    "correctText": "L1, baseada na soma dos valores absolutos dos coeficientes."
+  },
+  {
+    "id": "CICLO-01-Q055",
+    "code": "",
+    "check": null,
+    "correctText": "0,18."
+  },
+  {
+    "id": "CICLO-01-Q056",
+    "code": "",
+    "check": null,
+    "correctText": "2."
+  },
+  {
+    "id": "CICLO-01-Q057",
+    "code": "",
+    "check": null,
+    "correctText": "4."
+  },
+  {
+    "id": "CICLO-01-Q058",
+    "code": "",
+    "check": null,
+    "correctText": "0,30; 0,75; 1,50."
+  },
+  {
+    "id": "CICLO-01-Q059",
+    "code": "",
+    "check": null,
+    "correctText": "w=1,4."
+  },
+  {
+    "id": "CICLO-01-Q060",
+    "code": "",
+    "check": null,
+    "correctText": "0."
+  },
+  {
+    "id": "CICLO-01-Q061",
+    "code": "",
+    "check": null,
+    "correctText": "0,40."
+  },
+  {
+    "id": "CICLO-01-Q062",
+    "code": "s = 0\nfor n in range(1, 6):\n    if n == 3:\n        continue\n    if n == 5:\n        break\n    s += n\nprint(s)",
+    "check": {
+      "kind": "python",
+      "stdout": "7"
+    },
+    "correctText": "7"
+  },
+  {
+    "id": "CICLO-01-Q063",
+    "code": "def f(x, itens=[]):\n    itens.append(x)\n    return itens.copy()\na = f(1)\nb = f(2)\nprint(a, b)",
+    "check": {
+      "kind": "python",
+      "stdout": "[1] [1, 2]"
+    },
+    "correctText": "[1] [1, 2]"
+  },
+  {
+    "id": "CICLO-01-Q064",
+    "code": "import numpy as np\na = np.array([[1, 2, 3], [4, 5, 6]])\nb = np.array([10, 20, 30])\nprint((a.sum(axis=0) + b).tolist())",
+    "check": {
+      "kind": "python",
+      "stdout": "[15, 27, 39]"
+    },
+    "correctText": "[15, 27, 39]"
+  },
+  {
+    "id": "CICLO-01-Q065",
+    "code": "",
+    "check": null,
+    "correctText": "8."
+  },
+  {
+    "id": "CICLO-01-Q066",
+    "code": "",
+    "check": null,
+    "correctText": "essas transformações descrevem uma computação cuja avaliação é disparada quando uma ação exige resultado."
+  },
+  {
+    "id": "CICLO-01-Q067",
+    "code": "",
+    "check": null,
+    "correctText": "1 e 0."
+  },
+  {
+    "id": "CICLO-01-Q068",
+    "code": "",
+    "check": null,
+    "correctText": "viola a 2FN por depender apenas de parte da chave composta."
+  },
+  {
+    "id": "CICLO-01-Q069",
+    "code": "",
+    "check": null,
+    "correctText": "semiaditiva: pode ser agregada entre contas compatíveis, mas a soma entre dias não representa o saldo de um instante."
+  },
+  {
+    "id": "CICLO-01-Q070",
+    "code": "",
+    "check": null,
+    "correctText": "WHERE e HAVING."
+  },
+  {
+    "id": "CICLO-02-Q001",
+    "code": "",
+    "check": null,
+    "correctText": "o histórico de escolhas pode limitar a descoberta se for usado como critério exclusivo de recomendação."
+  },
+  {
+    "id": "CICLO-02-Q002",
+    "code": "",
+    "check": null,
+    "correctText": "uma concessão que não impede a ocorrência expressa na oração principal."
+  },
+  {
+    "id": "CICLO-02-Q003",
+    "code": "",
+    "check": null,
+    "correctText": "o contraste entre os destinos dos dois grupos de obras."
+  },
+  {
+    "id": "CICLO-02-Q004",
+    "code": "",
+    "check": null,
+    "correctText": "a equipe da biblioteca."
+  },
+  {
+    "id": "CICLO-02-Q005",
+    "code": "",
+    "check": null,
+    "correctText": "existe ao menos uma obra pouco recomendada que não é pouco procurada."
+  },
+  {
+    "id": "CICLO-02-Q006",
+    "code": "",
+    "check": null,
+    "correctText": "Devem existir alternativas, mas deve haver um critério comum."
+  },
+  {
+    "id": "CICLO-02-Q007",
+    "code": "",
+    "check": null,
+    "correctText": "A comissão se opôs à proposta e permaneceu disposta a negociar."
+  },
+  {
+    "id": "CICLO-02-Q008",
+    "code": "",
+    "check": null,
+    "correctText": "“os critérios de seleção” é sujeito paciente, e o plural do verbo concorda com ele."
+  },
+  {
+    "id": "CICLO-02-Q009",
+    "code": "",
+    "check": null,
+    "correctText": "A avaliação dos dados coletados em diferentes regiões exige critérios explícitos."
+  },
+  {
+    "id": "CICLO-02-Q010",
+    "code": "",
+    "check": null,
+    "correctText": "A equipe queria considerar as preferências sem deixar que o histórico fosse o único limite das descobertas."
+  },
+  {
+    "id": "CICLO-02-Q011",
+    "code": "",
+    "check": null,
+    "correctText": "uma expectativa ou probabilidade apoiada em uma projeção."
+  },
+  {
+    "id": "CICLO-02-Q012",
+    "code": "",
+    "check": null,
+    "correctText": "explicitar uma dimensão de avaliação que o total de empréstimos, isoladamente, não capta."
+  },
+  {
+    "id": "CICLO-02-Q013",
+    "code": "",
+    "check": null,
+    "correctText": "retain the system while creating checks on how its recommendations were used."
+  },
+  {
+    "id": "CICLO-02-Q014",
+    "code": "",
+    "check": null,
+    "correctText": "clarifies that the intended change concerned accountability, not a new replacement for professional judgment."
+  },
+  {
+    "id": "CICLO-02-Q015",
+    "code": "",
+    "check": null,
+    "correctText": "the rankings."
+  },
+  {
+    "id": "CICLO-02-Q016",
+    "code": "",
+    "check": null,
+    "correctText": "before the later point at which staff relied on them."
+  },
+  {
+    "id": "CICLO-02-Q017",
+    "code": "",
+    "check": null,
+    "correctText": "applying the recommendation requires the stated clinical review."
+  },
+  {
+    "id": "CICLO-02-Q018",
+    "code": "",
+    "check": null,
+    "correctText": "understanding the limitations is required before following a recommendation."
+  },
+  {
+    "id": "CICLO-02-Q019",
+    "code": "",
+    "check": null,
+    "correctText": "answerable for the use and consequences of the system."
+  },
+  {
+    "id": "CICLO-02-Q020",
+    "code": "",
+    "check": null,
+    "correctText": "set aside the recommendation when exercising their clinical judgment."
+  },
+  {
+    "id": "CICLO-02-Q021",
+    "code": "",
+    "check": null,
+    "correctText": "a normative recommendation about appropriate conduct."
+  },
+  {
+    "id": "CICLO-02-Q022",
+    "code": "",
+    "check": null,
+    "correctText": "that an average improvement can coexist with a disadvantage affecting a particular group."
+  },
+  {
+    "id": "CICLO-02-Q023",
+    "code": "",
+    "check": null,
+    "correctText": "Incomplete records may undermine an inference of low risk based on absence of information."
+  },
+  {
+    "id": "CICLO-02-Q024",
+    "code": "",
+    "check": null,
+    "correctText": "The hospital kept using the system while adding a requirement for repeated reviews."
+  },
+  {
+    "id": "CICLO-02-Q025",
+    "code": "",
+    "check": null,
+    "correctText": "a entrada em produção não pode ser determinada apenas com essas informações."
+  },
+  {
+    "id": "CICLO-02-Q026",
+    "code": "",
+    "check": null,
+    "correctText": "Alguns servidores não são estagiários."
+  },
+  {
+    "id": "CICLO-02-Q027",
+    "code": "",
+    "check": null,
+    "correctText": "48."
+  },
+  {
+    "id": "CICLO-02-Q028",
+    "code": "",
+    "check": null,
+    "correctText": "Q é verdadeira e P é falsa."
+  },
+  {
+    "id": "CICLO-02-Q029",
+    "code": "",
+    "check": null,
+    "correctText": "o acesso foi autorizado e o usuário não foi autenticado."
+  },
+  {
+    "id": "CICLO-02-Q030",
+    "code": "",
+    "check": null,
+    "correctText": "Tratar o trecho como dado não confiável e impedir que o conteúdo do PDF conceda permissões de execução."
+  },
+  {
+    "id": "CICLO-02-Q031",
+    "code": "",
+    "check": null,
+    "correctText": "O acesso ao aplicativo pode selecionar quem aparece nos dados e distorcer a estimativa da necessidade da população."
+  },
+  {
+    "id": "CICLO-02-Q032",
+    "code": "",
+    "check": null,
+    "correctText": "Monitorar a mudança dos dados e do desempenho, revalidando o sistema no novo contexto antes de confiar no resultado anterior."
+  },
+  {
+    "id": "CICLO-02-Q033",
+    "code": "",
+    "check": null,
+    "correctText": "transformação digital que considera acesso efetivo e barreiras de uso."
+  },
+  {
+    "id": "CICLO-02-Q034",
+    "code": "",
+    "check": null,
+    "correctText": "a igualdade de consumo não basta para concluir igualdade de emissões associadas à eletricidade."
+  },
+  {
+    "id": "CICLO-02-Q035",
+    "code": "",
+    "check": null,
+    "correctText": "Buscar a origem, o contexto e registros independentes compatíveis com a declaração."
+  },
+  {
+    "id": "CICLO-02-Q036",
+    "code": "",
+    "check": null,
+    "correctText": "Assegurar o acesso à parte não sigilosa, com ocultação da parte protegida ou instrumento equivalente."
+  },
+  {
+    "id": "CICLO-02-Q037",
+    "code": "",
+    "check": null,
+    "correctText": "controladora e operadora."
+  },
+  {
+    "id": "CICLO-02-Q038",
+    "code": "",
+    "check": null,
+    "correctText": "tem direito a solicitar revisão da decisão, sem que o caput vigente imponha expressamente revisão por pessoa natural."
+  },
+  {
+    "id": "CICLO-02-Q039",
+    "code": "",
+    "check": null,
+    "correctText": "contraria o tratamento isonômico dos pacotes previsto na neutralidade de rede."
+  },
+  {
+    "id": "CICLO-02-Q040",
+    "code": "",
+    "check": null,
+    "correctText": "100 anos a contar de sua produção, independentemente de classificação de sigilo."
+  },
+  {
+    "id": "CICLO-02-Q041",
+    "code": "",
+    "check": {
+      "kind": "quadratic",
+      "coeff": [
+        1,
+        -10,
+        31
+      ],
+      "interval": [
+        1,
+        4
+      ],
+      "min": [
+        4,
+        7
+      ]
+    },
+    "correctText": "7, obtido em x=4."
+  },
+  {
+    "id": "CICLO-02-Q042",
+    "code": "",
+    "check": null,
+    "correctText": "3 e 5."
+  },
+  {
+    "id": "CICLO-02-Q043",
+    "code": "",
+    "check": {
+      "kind": "eigen",
+      "A": [
+        [
+          3,
+          1
+        ],
+        [
+          0,
+          2
+        ]
+      ],
+      "v": [
+        -1,
+        1
+      ],
+      "lambda": 2
+    },
+    "correctText": "v=(−1,1), λ=2."
+  },
+  {
+    "id": "CICLO-02-Q044",
+    "code": "",
+    "check": null,
+    "correctText": "u e v são ortogonais e ||u||₂=3."
+  },
+  {
+    "id": "CICLO-02-Q045",
+    "code": "",
+    "check": null,
+    "correctText": "(2,2) e (−2,−2)."
+  },
+  {
+    "id": "CICLO-02-Q046",
+    "code": "",
+    "check": {
+      "kind": "bayes",
+      "prior": [
+        0.2,
+        0.8
+      ],
+      "rates": [
+        0.9,
+        0.1
+      ],
+      "target": 0,
+      "expected": 0.6923076923076923
+    },
+    "correctText": "9/13, aproximadamente 69,23%."
+  },
+  {
+    "id": "CICLO-02-Q047",
+    "code": "",
+    "check": null,
+    "correctText": "0,936."
+  },
+  {
+    "id": "CICLO-02-Q048",
+    "code": "",
+    "check": null,
+    "correctText": "6."
+  },
+  {
+    "id": "CICLO-02-Q049",
+    "code": "",
+    "check": null,
+    "correctText": "−3 e 7."
+  },
+  {
+    "id": "CICLO-02-Q050",
+    "code": "",
+    "check": null,
+    "correctText": "média μ e erro-padrão 2."
+  },
+  {
+    "id": "CICLO-02-Q051",
+    "code": "",
+    "check": null,
+    "correctText": "rejeita-se H0; o p-valor não é a probabilidade posterior de H0 ser verdadeira."
+  },
+  {
+    "id": "CICLO-02-Q052",
+    "code": "",
+    "check": null,
+    "correctText": "Separar por paciente, mantendo todas as suas consultas no mesmo grupo de divisão."
+  },
+  {
+    "id": "CICLO-02-Q053",
+    "code": "",
+    "check": null,
+    "correctText": "acurácia de 98% e recall dos positivos igual a zero."
+  },
+  {
+    "id": "CICLO-02-Q054",
+    "code": "",
+    "check": null,
+    "correctText": "subajuste por restrição excessiva da capacidade do modelo."
+  },
+  {
+    "id": "CICLO-02-Q055",
+    "code": "",
+    "check": null,
+    "correctText": "tornar a agregação mais eficaz na redução da variância."
+  },
+  {
+    "id": "CICLO-02-Q056",
+    "code": "",
+    "check": null,
+    "correctText": "incorreta: variância dos atributos não é medida direta de informação preditiva sobre o alvo."
+  },
+  {
+    "id": "CICLO-02-Q057",
+    "code": "",
+    "check": null,
+    "correctText": "não aumenta, mas essa redução não basta para definir o k mais útil."
+  },
+  {
+    "id": "CICLO-02-Q058",
+    "code": "",
+    "check": null,
+    "correctText": "8/9, indicando ocorrência de B entre A menor que sua frequência geral."
+  },
+  {
+    "id": "CICLO-02-Q059",
+    "code": "",
+    "check": null,
+    "correctText": "0 e 0."
+  },
+  {
+    "id": "CICLO-02-Q060",
+    "code": "",
+    "check": null,
+    "correctText": "estatísticas dos documentos de teste influenciam a representação aprendida antes da avaliação."
+  },
+  {
+    "id": "CICLO-02-Q061",
+    "code": "",
+    "check": null,
+    "correctText": "A renda pode dominar a distância por sua escala; a adequação de padronização deve ser avaliada no treino."
+  },
+  {
+    "id": "CICLO-02-Q062",
+    "code": "s = 3\nfor n in range(2, 5):\n    if n == 4:\n        break\n    s += n\nelse:\n    s += 10\nprint(s)",
+    "check": {
+      "kind": "python",
+      "stdout": "8"
+    },
+    "correctText": "8"
+  },
+  {
+    "id": "CICLO-02-Q063",
+    "code": "def f(xs):\n    xs.append(3)\n    xs = [9]\n    return xs\na = [1, 2]\nb = f(a)\nprint(a, b)",
+    "check": {
+      "kind": "python",
+      "stdout": "[1, 2, 3] [9]"
+    },
+    "correctText": "[1, 2, 3] [9]"
+  },
+  {
+    "id": "CICLO-02-Q064",
+    "code": "",
+    "check": null,
+    "correctText": "falha por incompatibilidade entre as dimensões finais 3 e 4."
+  },
+  {
+    "id": "CICLO-02-Q065",
+    "code": "",
+    "check": null,
+    "correctText": "4 e 2."
+  },
+  {
+    "id": "CICLO-02-Q066",
+    "code": "",
+    "check": null,
+    "correctText": "count(), que retorna uma contagem em vez de trazer todos os elementos."
+  },
+  {
+    "id": "CICLO-02-Q067",
+    "code": "",
+    "check": null,
+    "correctText": "no ON da junção, junto da correspondência entre cliente e pedido."
+  },
+  {
+    "id": "CICLO-02-Q068",
+    "code": "",
+    "check": null,
+    "correctText": "FuncionarioDepartamento(Funcionario,Departamento) e Departamento(Departamento,NomeDepartamento)."
+  },
+  {
+    "id": "CICLO-02-Q069",
+    "code": "",
+    "check": null,
+    "correctText": "normalização de hierarquia dimensional, como em um esquema snowflake."
+  },
+  {
+    "id": "CICLO-02-Q070",
+    "code": "",
+    "check": null,
+    "correctText": "a linha não passa, pois o predicado resulta desconhecido."
+  }
+]
